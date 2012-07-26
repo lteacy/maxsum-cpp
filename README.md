@@ -30,3 +30,7 @@ For example, on a 4 core machine, run:
 
     make -j 4
     ctest -j 4
+
+Known Issues
+============
+This library is not complete yet!! The initial phase of development is still underway, so there is nothing worthing linking to just yet. 
