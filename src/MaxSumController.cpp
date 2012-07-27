@@ -31,7 +31,29 @@ void MaxSumController::setFactor(FactorID id, const DiscreteFunction& factor)
    // If this factor is currently related to any variables that it is no
    // longer related to, delete the appropriate edges.
    //***************************************************************************
-   // TODO
+   std::vector<VarID> toRemove(oldValue.noVars());
+   std::set_difference(oldValue.varBegin(),oldValue.varEnd(),
+         factor.varBegin(),factor.varEnd(),toRemove.begin());
+
+   for(std::vector<VarID>::const_iterator it=toRemove.begin();
+         it!=toRemove.end(); ++it)
+   {
+      //************************************************************************
+      // Remove the redundant edges from the postoffice graphs
+      //************************************************************************
+      fac2varMsgs_i.removeEdge(id,*it);
+      var2facMsgs_i.removeEdge(*it,id);
+
+      //************************************************************************
+      // If the variable is no longer related to any factors, then we remove
+      // it from the action list.
+      //************************************************************************
+      if(!var2facMsgs_i.hasSender(*it))
+      {
+         actions_i.erase(*it);
+      }
+
+   } // for loop
 
    //***************************************************************************
    // For each variable in this factor's domain
