@@ -598,6 +598,14 @@ namespace maxsum
       } // expand method
 
       /**
+       * Expand the domain of this function to include a named variable.
+       * @param[in] var the id of the variable to add to this function's domain.
+       * @post The domain of this function is the union of its previous domain,
+       * and the additional specified variable.
+       */
+      void expand(const VarID var);
+
+      /**
        * Make the domain of this function include the domain of another.
        * If necessary, the domain of this function is expanded to include the
        * domain of the parameter fun.

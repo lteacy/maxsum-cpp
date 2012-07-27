@@ -61,6 +61,18 @@ void DiscreteFunction::expand(const DiscreteFunction& fun)
 }
 
 /**
+ * Expand the domain of this function to include a named variable.
+ * @param[in] var the id of the variable to add to this function's domain.
+ * @post The domain of this function is the union of its previous domain,
+ * and the additional specified variable.
+ */
+void DiscreteFunction::expand(const VarID var)
+{
+   VarID vars[] = {var};
+   expand(vars,vars+1);
+}
+
+/**
  * Returns true if this function depends on the specified variable.
  * @param[in] var The id of the variable to search for in this function's
  * domain.

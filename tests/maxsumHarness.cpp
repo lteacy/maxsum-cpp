@@ -4,10 +4,12 @@
  * Tests MaxSumController on a few simple graph colouring problems.
  */
 
+#include "common.h"
 #include "MaxSumController.h"
 #include<iostream>
 #include <ctime>
 #include <iomanip>
+#include <cmath>
 #include <set>
 using namespace maxsum;
 
@@ -78,6 +80,38 @@ void genColourUtil_m(DiscreteFunction& factor)
  */
 void genRingGraph_m(int noFactors, FactorMap_m& factors)
 {
+   //***************************************************************************
+   // Register all variables with domain size = number of colours
+   //***************************************************************************
+   for(int k=1; k<=noFactors; ++k)
+   {
+      registerVariable(k,NO_COLOURS);
+   }
+
+   //***************************************************************************
+   // Create each factor depending on its own variable, and those immediately
+   // adjacent in the ring.
+   //***************************************************************************
+   VarID vars[3];
+   for(int k=1; k<=noFactors; ++k)
+   {
+      //************************************************************************
+      // Figure out which variables to connect to
+      //************************************************************************
+      vars[0]=((5+k-2)%5)+1;
+      vars[1]=((k-1)%5)+1;
+      vars[2]=(k%5)+1;
+
+      //************************************************************************
+      // Initialise the function with this domain, and generated graph
+      // colour utilities.
+      //************************************************************************
+      DiscreteFunction curFactor(vars,vars+3);
+      genColourUtil_m(curFactor);
+      factors[k] = curFactor;
+
+   } // for loop
+   
 } // function genRingGraph
 
 /**
@@ -89,18 +123,90 @@ void genRingGraph_m(int noFactors, FactorMap_m& factors)
  */
 void genFullGraph_m(int noFactors, FactorMap_m& factors)
 {
+   //***************************************************************************
+   // Register all variables with domain size = number of colours
+   //***************************************************************************
+   std::vector<VarID> vars(noFactors);
+   for(int k=1; k<=noFactors; ++k)
+   {
+      registerVariable(k,NO_COLOURS);
+      vars[k-1]=k;
+   }
+
+   //***************************************************************************
+   // Create factors which depend on all variables - thus graph is fully
+   // connected.
+   //***************************************************************************
+   for(int k=1; k<=noFactors; ++k)
+   {
+      DiscreteFunction curFactor(vars.begin(),vars.end());
+      genColourUtil_m(curFactor);
+      factors[k]=curFactor;
+   }
+
 } // function genFullGraph
 
 /**
  * Function that generates a tree graph with a specified depth and branching
- * factor.
+ * factor. This function is implemented using recursion.
  * @param[in] depth the depth of the tree
  * @param[in] branchFactor the branching factor of the tree
  * @param[out] factors map in which to store the generated factors.
+ * @param[in] nextID the id of the next factor to add to the graph.
+ * @param[in] parentID the id of this factor's parent in the tree.
+ * @returns the last factor id used by this call.
  * @post any previous contents of <code>factors</code> will be destroyed.
  */
-void genTreeGraph_m(int depth, int branchFactor, FactorMap_m& factors)
+int genTreeGraph_m
+(
+ int depth,
+ int branchFactor,
+ FactorMap_m& factors,
+ int nextID=1,
+ const int parentID=0
+)
 {
+   //***************************************************************************
+   // Register the variable for this node.
+   //***************************************************************************
+   const int myID = nextID; // id of this factor
+   registerVariable(myID,NO_COLOURS);
+
+   //***************************************************************************
+   // Connect this factor to its own variable, and its parent's variable (if
+   // not root).
+   //***************************************************************************
+   DiscreteFunction& curFactor = factors[nextID];
+   curFactor.expand(myID);
+   if(0!=parentID)
+   {
+      curFactor.expand(parentID);
+   }
+
+   //***************************************************************************
+   // If this is a leaf node, then all we need to do is fill in the utility
+   // values and stop.
+   //***************************************************************************
+   if(1>=depth)
+   {
+      genColourUtil_m(curFactor);
+      return nextID;
+   }
+
+   //***************************************************************************
+   // Otherwise, we first need to expand the tree along each branch
+   //***************************************************************************
+   for(int k=0; k<branchFactor; ++k)
+   {
+      nextID = genTreeGraph_m(depth-1, branchFactor, factors, nextID+1, myID);
+   }
+
+   //***************************************************************************
+   // Only now that the function domain is complete, can we fill in the
+   // utility values, and return the nextID
+   //***************************************************************************
+   genColourUtil_m(curFactor);
+   return nextID;
 
 } // function genTreeGraph
 
@@ -401,104 +507,111 @@ int testMaxSum_m(MaxSumController& controller, const FactorMap_m& factors)
  */
 int main()
 {
-   std::cout << "Hello world!\n";
-
-   FactorMap_m factors; // Reusable FactorMap for storing current factors
    int errorCount = 0; // counts the number of failures
-   MaxSumController controller; // MaxSumController for testing
-   std::clock_t runtime = std::clock();
+   try
+   {
+      FactorMap_m factors; // Reusable FactorMap for storing current factors
+      MaxSumController controller; // MaxSumController for testing
+      std::clock_t runtime = std::clock();
 
-   //***************************************************************************
-   // Test behaviour of an uninitialised controller
-   //***************************************************************************
-   std::cout << "***********************************************************\n";
-   std::cout << "* Testing on empty graph                                  *\n";
-   std::cout << "***********************************************************\n";
-   errorCount += testMaxSum_m(controller,factors);
-   std::cout << std::endl;
+      //************************************************************************
+      // Test behaviour of an uninitialised controller
+      //************************************************************************
+      std::cout << "********************************************************\n";
+      std::cout << "* Testing on empty graph                               *\n";
+      std::cout << "********************************************************\n";
+      errorCount += testMaxSum_m(controller,factors);
+      std::cout << std::endl;
 
-   //***************************************************************************
-   // Test on singleton graph, containing only one factor and variable
-   //***************************************************************************
-   std::cout << "***********************************************************\n";
-   std::cout << "* Testing on singleton graph                              *\n";
-   std::cout << "***********************************************************\n";
-   genTreeGraph_m(1,1,factors);
-   errorCount += testMaxSum_m(controller,factors);
-   std::cout << std::endl;
+      //************************************************************************
+      // Test on singleton graph, containing only one factor and variable
+      //************************************************************************
+      std::cout << "********************************************************\n";
+      std::cout << "* Testing on singleton graph                           *\n";
+      std::cout << "********************************************************\n";
+      genTreeGraph_m(1,1,factors);
+      errorCount += testMaxSum_m(controller,factors);
+      std::cout << std::endl;
+   
+      //************************************************************************
+      // Create a MaxSumController and test it on a line graph (i.e. tree graph
+      // with branching factor of 1.
+      //************************************************************************
+      std::cout << "********************************************************\n";
+      std::cout << "* Testing on line graph                                *\n";
+      std::cout << "********************************************************\n";
+      genTreeGraph_m(10,1,factors);
+      errorCount += testMaxSum_m(controller,factors);
+      std::cout << std::endl;
 
-   //***************************************************************************
-   // Create a MaxSumController and test it on a line graph (i.e. tree graph
-   // with branching factor of 1.
-   //***************************************************************************
-   std::cout << "***********************************************************\n";
-   std::cout << "* Testing on line graph                                   *\n";
-   std::cout << "***********************************************************\n";
-   genTreeGraph_m(10,1,factors);
-   errorCount += testMaxSum_m(controller,factors);
-   std::cout << std::endl;
+      //************************************************************************
+      // Test on ring with same number of factors
+      //************************************************************************
+      std::cout << "********************************************************\n";
+      std::cout << "* Testing on ring graph                                *\n";
+      std::cout << "********************************************************\n";
+      genRingGraph_m(10,factors);
+      errorCount += testMaxSum_m(controller,factors);
+      std::cout << std::endl;
 
-   //***************************************************************************
-   // Test on ring with same number of factors
-   //***************************************************************************
-   std::cout << "***********************************************************\n";
-   std::cout << "* Testing on ring graph                                   *\n";
-   std::cout << "***********************************************************\n";
-   genRingGraph_m(10,factors);
-   errorCount += testMaxSum_m(controller,factors);
-   std::cout << std::endl;
+      //************************************************************************
+      // Test on tree with additional factors
+      //************************************************************************
+      std::cout << "********************************************************\n";
+      std::cout << "* Testing on tree graph                                *\n";
+      std::cout << "********************************************************\n";
+      genTreeGraph_m(4,2,factors);
+      errorCount += testMaxSum_m(controller,factors);
+      std::cout << std::endl;
 
-   //***************************************************************************
-   // Test on tree with additional factors
-   //***************************************************************************
-   std::cout << "***********************************************************\n";
-   std::cout << "* Testing on tree graph                                   *\n";
-   std::cout << "***********************************************************\n";
-   genTreeGraph_m(4,2,factors);
-   errorCount += testMaxSum_m(controller,factors);
-   std::cout << std::endl;
+      //************************************************************************
+      // Test removing factors from factor graph in various ways
+      //************************************************************************
+      std::cout << "********************************************************\n";
+      std::cout << "* Testing Factor removal                               *\n";
+      std::cout << "********************************************************\n";
+      errorCount += testRemoval_m(controller,factors);
+      std::cout << std::endl;
 
-   //***************************************************************************
-   // Test removing factors from factor graph in various ways
-   //***************************************************************************
-   std::cout << "***********************************************************\n";
-   std::cout << "* Testing Factor removal                                  *\n";
-   std::cout << "***********************************************************\n";
-   errorCount += testRemoval_m(controller,factors);
-   std::cout << std::endl;
+      //************************************************************************
+      // Test on fully connected graph with last factors.
+      //************************************************************************
+      std::cout << "********************************************************\n";
+      std::cout << "* Testing on colourable fully connected graph          *\n";
+      std::cout << "********************************************************\n";
+      genFullGraph_m(NO_COLOURS,factors);
+      errorCount += testMaxSum_m(controller,factors);
+      std::cout << std::endl;
 
-   //***************************************************************************
-   // Test on fully connected graph with last factors.
-   //***************************************************************************
-   std::cout << "***********************************************************\n";
-   std::cout << "* Testing on colourable fully connected graph             *\n";
-   std::cout << "***********************************************************\n";
-   genFullGraph_m(NO_COLOURS,factors);
-   errorCount += testMaxSum_m(controller,factors);
-   std::cout << std::endl;
+      //************************************************************************
+      // Test on fully connected graph with last factors.
+      //************************************************************************
+      std::cout << "********************************************************\n";
+      std::cout << "* Testing on non-colourable fully connected graph      *\n";
+      std::cout << "********************************************************\n";
+      genFullGraph_m(NO_COLOURS+2,factors);
+      errorCount += testMaxSum_m(controller,factors);
+      std::cout << std::endl;
 
-   //***************************************************************************
-   // Test on fully connected graph with last factors.
-   //***************************************************************************
-   std::cout << "***********************************************************\n";
-   std::cout << "* Testing on non-colourable fully connected graph         *\n";
-   std::cout << "***********************************************************\n";
-   genFullGraph_m(NO_COLOURS+2,factors);
-   errorCount += testMaxSum_m(controller,factors);
-   std::cout << std::endl;
-
-   //***************************************************************************
-   // Report the total runtime and number of failures.
-   //***************************************************************************
-   runtime = std::clock() - runtime;
-   float seconds = static_cast<float>(runtime) / CLOCKS_PER_SEC;
-   std::cout << "***********************************************************\n";
-   std::cout << "* TOTAL RUNTIME: " << std::setw(6) << std::setfill('0');
-   std::cout << std::setprecision(3) << std::fixed;
-   std::cout << seconds <<  "   NUMBER OF ERRORS: ";
-   std::cout << std::setw(4) << std::setfill(' ');
-   std::cout << errorCount << "          *\n";
-   std::cout << "***********************************************************\n";
+      //************************************************************************
+      // Report the total runtime and number of failures.
+      //************************************************************************
+      runtime = std::clock() - runtime;
+      float seconds = static_cast<float>(runtime) / CLOCKS_PER_SEC;
+      std::cout << "********************************************************\n";
+      std::cout << "* TOTAL RUNTIME: " << std::setw(6) << std::setfill('0');
+      std::cout << std::setprecision(3) << std::fixed;
+      std::cout << seconds <<  "   NUMBER OF ERRORS: ";
+      std::cout << std::setw(4) << std::setfill(' ');
+      std::cout << errorCount << "       *\n";
+      std::cout << "********************************************************\n";
+   }
+   catch(std::exception e)
+   {
+      std::cout << "\nCaught unexpected exception in main: " << e.what();
+      std::cout << std::endl;
+      ++errorCount;
+   }
 
    //***************************************************************************
    // Return success if all tests in this harness have passed.
