@@ -81,6 +81,11 @@ void genColourUtil_m(DiscreteFunction& factor)
 void genRingGraph_m(int noFactors, FactorMap_m& factors)
 {
    //***************************************************************************
+   // Clear any previous contents of the factor graph
+   //***************************************************************************
+   factors.clear();
+
+   //***************************************************************************
    // Register all variables with domain size = number of colours
    //***************************************************************************
    for(int k=1; k<=noFactors; ++k)
@@ -124,6 +129,11 @@ void genRingGraph_m(int noFactors, FactorMap_m& factors)
 void genFullGraph_m(int noFactors, FactorMap_m& factors)
 {
    //***************************************************************************
+   // Clear any previous contents of the factor graph
+   //***************************************************************************
+   factors.clear();
+
+   //***************************************************************************
    // Register all variables with domain size = number of colours
    //***************************************************************************
    std::vector<VarID> vars(noFactors);
@@ -166,6 +176,15 @@ int genTreeGraph_m
  const int parentID=0
 )
 {
+   //***************************************************************************
+   // Clear any previous contents of the factor graph (both only if this
+   // call is for the root of the tree).
+   //***************************************************************************
+   if(0==parentID)
+   {
+      factors.clear();
+   }
+
    //***************************************************************************
    // Register the variable for this node.
    //***************************************************************************
@@ -310,6 +329,13 @@ int testRemoval_m(MaxSumController& controller, const FactorMap_m& factors)
    int count=0;
    for(FactorMap_m::const_iterator it=factors.begin(); it!=factors.end(); ++it)
    {
+      if(!controller.hasFactor(it->first))
+      {
+         std::cout << "Aborting removal of missing factor.\n";
+         ++errorCount;
+         return errorCount;
+      }
+
       if(0==count%2)
       {
          controller.removeFactor(it->first);

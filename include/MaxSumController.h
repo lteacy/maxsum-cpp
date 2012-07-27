@@ -30,12 +30,6 @@ namespace maxsum
    private:
 
       /**
-       * Temporary function for skeleton code to reference.
-       * @todo remove this
-       */
-      DiscreteFunction dummy; // TODO remove this
-
-      /**
        * Type of container used to map factor's to their defining functions.
        */
       typedef std::map<FactorID,DiscreteFunction> FactorMap;
@@ -123,7 +117,7 @@ namespace maxsum
        * Default Constructor.
        */
       MaxSumController()
-         : dummy(), maxIterations_i(100), maxNormThreshold_i(1) {}
+         : maxIterations_i(100), maxNormThreshold_i(1) {}
 
       /**
        * Accessor method for factor function.
@@ -135,9 +129,7 @@ namespace maxsum
        * this maxsum::MaxSumController and used to form part of a factor graph.
        * @post Any previous value of the specified factor is overwritten.
        */
-      void setFactor(FactorID id, const DiscreteFunction& factor)
-      {
-      }
+      void setFactor(FactorID id, const DiscreteFunction& factor);
 
       /**
        * Removes the specified factor from this controller's factor graph.
@@ -154,9 +146,7 @@ namespace maxsum
        * @post Any variables that were previously only connected to this
        * factor, will also be removed from the factor graph.
        */
-      void removeFactor(FactorID id)
-      {
-      }
+      void removeFactor(FactorID id);
 
       /**
        * Clear all factors and variables to form an empty factor graph.
@@ -164,10 +154,7 @@ namespace maxsum
        * created by the default constructor, with no registered factors or
        * variables.
        */
-      void clear()
-      {
-      }
-
+      void clear();
 
       /**
        * Returns true if and only if the specified factor is managed by this
@@ -177,7 +164,7 @@ namespace maxsum
        */
       bool hasFactor(FactorID id) const
       {
-         return false;
+         return 0!=factors_i.count(id);;
       }
 
       /**
@@ -192,7 +179,7 @@ namespace maxsum
        */
       bool hasEdge(FactorID id, VarID var) const
       {
-         return false;
+         return var2facMsgs_i.hasEdge(var,id);
       }
 
       /**
@@ -200,7 +187,7 @@ namespace maxsum
        */
       int noFactors() const
       {
-         return 0;
+         return factors_i.size();
       }
       
       /**
@@ -208,7 +195,7 @@ namespace maxsum
        */
       int noVars() const
       {
-         return 0;
+         return var2facMsgs_i.numOfSenders();;
       }
 
       /**
@@ -216,7 +203,7 @@ namespace maxsum
        */
       int noEdges() const
       {
-         return 0;
+         return var2facMsgs_i.numOfEdges();;
       }
 
       /**
@@ -262,7 +249,13 @@ namespace maxsum
        */
       const DiscreteFunction& getFactor(FactorID id) const
       {
-         return dummy;
+         FactorMap::const_iterator pos = factors_i.find(id);
+         if(factors_i.end()==pos)
+         {
+            throw new NoSuchElementException("MaxSumController::getFactor()",
+                  "No such factor in factor graph.");
+         }
+         return pos->second;
       }
 
       /**
@@ -273,7 +266,7 @@ namespace maxsum
        */
       bool hasValue(VarID id) const
       {
-         return false;
+         return 0!=actions_i.count(id);
       }
 
       /**
@@ -289,7 +282,13 @@ namespace maxsum
        */
       ValType getValue(VarID id) const
       {
-         return 0;
+         ActionMap::const_iterator pos = actions_i.find(id);
+         if(actions_i.end()==pos)
+         {
+            throw new NoSuchElementException("MaxSumController::getValue()",
+                  "No such variable in factor graph.");
+         }
+         return pos->second;
       }
 
       /**

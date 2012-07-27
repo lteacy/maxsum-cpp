@@ -10,6 +10,133 @@
 using namespace maxsum;
 
 /**
+* Accessor method for factor function.
+* @param[in] id the unique identifier of the desired factor.
+* @param[in] factor the function representing this factor.
+* @returns a reference to the function associated with the factor with
+* unique identifier <code>id</code>.
+* @post A copy of <code>factor</code> is stored internally by
+* this maxsum::MaxSumController and used to form part of a factor graph.
+* @post Any previous value of the specified factor is overwritten.
+*/
+void MaxSumController::setFactor(FactorID id, const DiscreteFunction& factor)
+{
+   //***************************************************************************
+   // Set the specified factor. (Note: oldValue is created automatically if
+   // necessary).
+   //***************************************************************************
+   DiscreteFunction& oldValue = factors_i[id];
+
+   //***************************************************************************
+   // If this factor is currently related to any variables that it is no
+   // longer related to, delete the appropriate edges.
+   //***************************************************************************
+   // TODO
+
+   //***************************************************************************
+   // For each variable in this factor's domain
+   //***************************************************************************
+   for(DiscreteFunction::VarIterator it=factor.varBegin();
+   it!=factor.varEnd(); ++it)
+   {
+      //************************************************************************
+      // Initialise input and output messages between the factor and
+      // the current variable
+      //************************************************************************
+      fac2varMsgs_i.addEdge(id,*it);
+      var2facMsgs_i.addEdge(*it,id);
+
+      //************************************************************************
+      // Touch the variable to ensure that it is in the action list.
+      // (It will be added by the [] operator if it isn't).
+      //************************************************************************
+      actions_i[*it];
+
+   } // for loop
+
+   //***************************************************************************
+   // Finally, we set the specified factor to its new value.
+   //***************************************************************************
+   factors_i[id] = factor;
+
+} // function setFactor
+
+/**
+ * Removes the specified factor from this controller's factor graph.
+ * In addition, any variables that were previously only connected to this
+ * factor, will also be removed from the factor graph. Notice that this
+ * does not require the remaining nodes to form a connected graph, but
+ * it does mean that variables or factors connect exist in isolation.
+ * For example, although every variable and factor must have at least one
+ * edge, two variable-factor graph pairs may exist without any edges
+ * between the pairs.
+ * @param[in] id the id of the factor to remove from the graph.
+ * @post If the specified factor was previously in the factor graph,
+ * it will be removed by this function.
+ * @post Any variables that were previously only connected to this
+ * factor, will also be removed from the factor graph.
+ */
+void MaxSumController::removeFactor(FactorID id)
+{
+   //***************************************************************************
+   // If the specified factor is not in the factor graph, then we are done.
+   //***************************************************************************
+   FactorMap::iterator facPos = factors_i.find(id);
+   if(factors_i.end()==facPos)
+   {
+      return;
+   }
+   DiscreteFunction& factor = facPos->second;
+
+   //***************************************************************************
+   // Otherwise, for each variable in this factor's domain
+   //***************************************************************************
+   for(DiscreteFunction::VarIterator it=factor.varBegin();
+         it!=factor.varEnd(); ++it)
+   {
+      //************************************************************************
+      // Delete the input and output messages.
+      //************************************************************************
+      fac2varMsgs_i.removeEdge(id,*it);
+      var2facMsgs_i.removeEdge(*it,id);
+
+      //************************************************************************
+      // If the variable is no longer related to any factors, then we remove
+      // it from the action list.
+      //************************************************************************
+      if(!var2facMsgs_i.hasSender(*it))
+      {
+         actions_i.erase(*it);
+      }
+
+   } // for loop
+
+   //***************************************************************************
+   // Finally, we delete the factor from the factors_i map
+   //***************************************************************************
+   factors_i.erase(facPos);
+
+} // function removeFactor
+
+/**
+ * Clear all factors and variables to form an empty factor graph.
+ * @post the state of this maxsum::MaxSumController is reset to that
+ * created by the default constructor, with no registered factors or
+ * variables.
+ */
+ void MaxSumController::clear()
+{
+   //***************************************************************************
+   // Clear all data structures.
+   //***************************************************************************
+   factors_i.clear();
+   actions_i.clear();
+   fac2varMsgs_i.clear();
+   var2facMsgs_i.clear();
+
+} // function clear
+
+/**
  * Infer the factor graph from the given factor domains.
  * This function populates all member variables of MaxSumController by
  * examining the domain of each factor in factors_i

@@ -142,6 +142,14 @@ namespace util
          return const_iterator(pMap_i->find(k));
       }
 
+      /**
+       * Returns true if the specified key is in this set.
+       */
+      bool contains(const value_type& k) const
+      {
+         return 0!=pMap_i->count(k);
+      }
+
    }; // class KeySet
 
    /**

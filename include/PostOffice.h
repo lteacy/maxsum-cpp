@@ -155,6 +155,21 @@ namespace maxsum
       {}
 
       /**
+       * Removes all messages and edges from this postoffice.
+       */
+      void clear()
+      {
+         curOutboxes_i.clear();
+         prevOutboxes_i.clear();
+         curInboxes_i.clear();
+         prevInboxes_i.clear();
+         while(!notices_i.empty())
+         {
+            notices_i.pop();
+         }
+      }
+
+      /**
        * Returns the current set of output messages for a given sender.
        * @throws maxsum::UnknownAddressException if sender is not registered.
        */
@@ -441,6 +456,23 @@ namespace maxsum
          }
 
       } // removeEdge
+
+      /**
+       * Returns true if a specified sender is registered with this postoffice.
+       */
+      bool hasSender(Sender id) const
+      {
+         return senders_i.contains(id);
+      }
+
+      /**
+       * Returns true if a specified receiver is registered with this
+       * postoffice.
+       */
+      bool hasReceiver(Receiver id) const
+      {
+         return receivers_i.contains(id);
+      }
 
       /**
        * Returns true if a specified sender and receiver are connected.
