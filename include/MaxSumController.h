@@ -112,12 +112,32 @@ namespace maxsum
        * Read only iterator for all factors.
        */
       typedef FactorMap::const_iterator ConstFactorIterator;
+      
+      /**
+       * Default maximum number of iterations for max-sum algorithm.
+       */
+      static const int DEFAULT_MAX_ITERATIONS=100;
 
       /**
-       * Default Constructor.
+       * Default maximum maxnorm allowed between the old and new values
+       * of a message, before it is assumed to have converged.
        */
-      MaxSumController()
-         : maxIterations_i(100), maxNormThreshold_i(1) {}
+      static const ValType DEFAULT_MAXNORM_THRESHOLD;
+
+      /**
+       * Construct a new maxsum::MaxSumController.
+       * @param[in] maxIterations The maximum number of iterations for the
+       * max-sum algorithm.
+       * @param[in] maxnorm The maximum maxnorm allowed between the old and new
+       * values of a message, before it is assumed to have converged.
+       */
+      MaxSumController
+      (
+       int maxIterations=DEFAULT_MAX_ITERATIONS,
+       ValType maxnorm=DEFAULT_MAXNORM_THRESHOLD
+      )
+      : maxIterations_i(maxIterations),
+        maxNormThreshold_i(maxnorm) {}
 
       /**
        * Accessor method for factor function.
@@ -300,6 +320,12 @@ namespace maxsum
       int optimise();
 
    }; // MaxSumController class
+
+   /**
+    * Default maximum maxnorm allowed between the old and new values
+    * of a message, before it is assumed to have converged.
+    */
+   const ValType MaxSumController::DEFAULT_MAXNORM_THRESHOLD=0.0; //0000001;
 
 } // maxsum
 

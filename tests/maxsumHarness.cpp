@@ -17,7 +17,7 @@ using namespace maxsum;
  * Scale factor used to divid random numbers in [0,1] to generate
  * a small random utility bias.
  */
-const double BIAS_SCALE_M = 10000;
+const double BIAS_SCALE_M = 1000;
 
 /**
  * Enumeration that represents the colours used in the graph colouring
@@ -51,6 +51,45 @@ struct ConflictResult_m
 typedef std::map<FactorID,DiscreteFunction> FactorMap_m;
 
 /**
+ * Print information about a factor graph.
+ */
+void printFactorMap(const FactorMap_m& factors)
+{
+   std::cout << "FACTORMAP SIZE: " << factors.size() << std::endl;
+   for(FactorMap_m::const_iterator fIt=factors.begin();
+         fIt!=factors.end(); ++fIt)
+   {
+
+      std::cout << "Factor " << fIt->first << ": domain=<";
+      bool printComma=false;
+      for(DiscreteFunction::VarIterator vIt=fIt->second.varBegin();
+            vIt!=fIt->second.varEnd(); ++vIt)
+      {
+         if(!printComma)
+         {
+            printComma=true;
+         }
+         else
+         {
+            std::cout << ',';
+         }
+         std::cout << *vIt;
+
+      } // for loop
+      std::cout << "> maxnorm=" << fIt->second.maxnorm();
+      std::cout << " max=" << fIt->second.max();
+      std::cout << " min=" << fIt->second.min();
+      std::cout << " mean=" << fIt->second.mean();
+      std::cout << std::endl;
+
+   } // for loop
+
+   std::cout << std::endl;
+
+} // function printFactorMap
+
+
+/**
  * Turns a function into a graph colouring utility function, based on its
  * domain. Each variable is functions domain is taken to be a colour variable.
  * The utility is defined as small random bias, minus the number of variables
@@ -77,7 +116,7 @@ void genColourUtil_m(DiscreteFunction& factor)
       // bias - the number of conflicts
       //************************************************************************
       double divider = BIAS_SCALE_M * RAND_MAX;
-      double util = static_cast<double>(std::rand()) / divider;
+      double util = static_cast<double>(1+std::rand()) / divider;
       util -= noConflicts;
       factor(it) = util;
 
@@ -231,7 +270,9 @@ int genTreeGraph_m
    //***************************************************************************
    for(int k=0; k<branchFactor; ++k)
    {
+      int nextChild = nextID+1;
       nextID = genTreeGraph_m(depth-1, branchFactor, factors, nextID+1, myID);
+      curFactor.expand(nextChild);
    }
 
    //***************************************************************************
@@ -606,6 +647,7 @@ int main()
       std::cout << "********************************************************\n";
       std::cout << "* Testing on empty graph                               *\n";
       std::cout << "********************************************************\n";
+      printFactorMap(factors);
       errorCount += testMaxSum_m(controller,factors);
       std::cout << std::endl;
 
@@ -616,6 +658,7 @@ int main()
       std::cout << "* Testing on singleton graph                           *\n";
       std::cout << "********************************************************\n";
       genTreeGraph_m(1,1,factors);
+      printFactorMap(factors);
       errorCount += testMaxSum_m(controller,factors);
       std::cout << std::endl;
    
@@ -627,6 +670,7 @@ int main()
       std::cout << "* Testing on line graph                                *\n";
       std::cout << "********************************************************\n";
       genTreeGraph_m(10,1,factors);
+      printFactorMap(factors);
       errorCount += testMaxSum_m(controller,factors);
       std::cout << std::endl;
 
@@ -637,6 +681,7 @@ int main()
       std::cout << "* Testing on ring graph                                *\n";
       std::cout << "********************************************************\n";
       genRingGraph_m(10,factors);
+      printFactorMap(factors);
       errorCount += testMaxSum_m(controller,factors);
       std::cout << std::endl;
 
@@ -647,6 +692,7 @@ int main()
       std::cout << "* Testing on tree graph                                *\n";
       std::cout << "********************************************************\n";
       genTreeGraph_m(4,2,factors);
+      printFactorMap(factors);
       errorCount += testMaxSum_m(controller,factors);
       std::cout << std::endl;
 
@@ -666,6 +712,7 @@ int main()
       std::cout << "* Testing on colourable fully connected graph          *\n";
       std::cout << "********************************************************\n";
       genFullGraph_m(NO_COLOURS,factors);
+      printFactorMap(factors);
       errorCount += testMaxSum_m(controller,factors);
       std::cout << std::endl;
 
@@ -676,6 +723,7 @@ int main()
       std::cout << "* Testing on non-colourable fully connected graph      *\n";
       std::cout << "********************************************************\n";
       genFullGraph_m(NO_COLOURS+2,factors);
+      printFactorMap(factors);
       errorCount += testMaxSum_m(controller,factors);
       std::cout << std::endl;
 

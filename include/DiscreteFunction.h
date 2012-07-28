@@ -686,6 +686,11 @@ namespace maxsum
       } // condition method
 
       /**
+       * Returns the minimum scalar value of the function across entire domain.
+       */
+      ValType min() const;
+
+      /**
        * Returns the maximum scalar value for function across entire domain.
        */
       ValType max() const; 

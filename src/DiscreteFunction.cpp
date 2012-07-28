@@ -420,6 +420,14 @@ ValType DiscreteFunction::max() const
 }
 
 /**
+ * Returns the maximum scalar value for function across entire domain.
+ */
+ValType DiscreteFunction::min() const
+{
+   return *( std::min_element(values_i.begin(),values_i.end()) );
+}
+
+/**
 * Returns the linear index of the maximum value accross entire domain.
 */
 ValIndex DiscreteFunction::argmax() const

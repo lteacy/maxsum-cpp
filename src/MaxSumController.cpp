@@ -6,6 +6,7 @@
  */
 
 #include "MaxSumController.h"
+#include <iostream>
 
 using namespace maxsum;
 
@@ -59,7 +60,7 @@ void MaxSumController::setFactor(FactorID id, const DiscreteFunction& factor)
    // For each variable in this factor's domain
    //***************************************************************************
    for(DiscreteFunction::VarIterator it=factor.varBegin();
-   it!=factor.varEnd(); ++it)
+         it!=factor.varEnd(); ++it)
    {
       //************************************************************************
       // Initialise input and output messages between the factor and
@@ -70,16 +71,25 @@ void MaxSumController::setFactor(FactorID id, const DiscreteFunction& factor)
 
       //************************************************************************
       // Touch the variable to ensure that it is in the action list.
-      // (It will be added by the [] operator if it isn't).
       //************************************************************************
-      actions_i[*it];
+      ActionMap::iterator pos = actions_i.find(*it);
+      if(actions_i.end()==pos)
+      {
+         actions_i[*it]=0;
+      }
 
    } // for loop
 
    //***************************************************************************
-   // Finally, we set the specified factor to its new value.
+   // Set the specified factor to its new value.
    //***************************************************************************
    factors_i[id] = factor;
+
+   //***************************************************************************
+   // Tell all factors and variables to recheck their mail.
+   //***************************************************************************
+   var2facMsgs_i.notifyAll();
+   fac2varMsgs_i.notifyAll();
 
 } // function setFactor
 
@@ -137,6 +147,12 @@ void MaxSumController::removeFactor(FactorID id)
    // Finally, we delete the factor from the factors_i map
    //***************************************************************************
    factors_i.erase(facPos);
+
+   //***************************************************************************
+   // Tell all factors and variables to recheck their mail.
+   //***************************************************************************
+   var2facMsgs_i.notifyAll();
+   fac2varMsgs_i.notifyAll();
 
 } // function removeFactor
 
@@ -413,7 +429,7 @@ int MaxSumController::optimise()
          break;
       }
 
-   } // for loop
+   } // while loop
 
    //***************************************************************************
    // Return the number of iterations performed.
