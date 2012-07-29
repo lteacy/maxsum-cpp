@@ -597,6 +597,10 @@ int testMaxSum_m(MaxSumController& controller, const FactorMap_m& factors)
             "by a bug in the test harness!!!\n";
          ++errorCount;
       }
+      else if(0 == conflicts.maxConflicts)
+      {
+         // nothing to do in this case - can't do any better!
+      }
       else if(conflicts.noConflicts == conflicts.maxConflicts)
       {
          std::cout << "NUM_OF_CONFLICTS == MAXIMUM: This might be ok, but "

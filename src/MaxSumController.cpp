@@ -66,8 +66,9 @@ void MaxSumController::setFactor(FactorID id, const DiscreteFunction& factor)
       // Initialise input and output messages between the factor and
       // the current variable
       //************************************************************************
-      fac2varMsgs_i.addEdge(id,*it);
-      var2facMsgs_i.addEdge(*it,id);
+      DiscreteFunction msgTemplate(*it,0);
+      fac2varMsgs_i.addEdge(id,*it,msgTemplate);
+      var2facMsgs_i.addEdge(*it,id,msgTemplate);
 
       //************************************************************************
       // Touch the variable to ensure that it is in the action list.
@@ -272,15 +273,18 @@ int MaxSumController::updateFac2VarMsgs()
          // max marginalising.
          //*********************************************************************
          DiscreteFunction sumOfOthers(msgSum);
-         sumOfOthers -= *curInMsgs[it->first];
-         maxMarginal(sumOfOthers,*(it->second));
+         DiscreteFunction& prevOutMsg = *prevOutMsgs[it->first];
+         DiscreteFunction& curOutMsg = *(it->second);
+         DiscreteFunction& curInMsg = *curInMsgs[it->first];
+         sumOfOthers -= curInMsg;
+         maxMarginal(sumOfOthers,curOutMsg);
 
          //*********************************************************************
          // If the max norm threshold has been passed, tell the current 
          // neighbour that they have mail.
          //*********************************************************************
-         DiscreteFunction msgDiff(*(it->second));
-         msgDiff -= *prevOutMsgs[it->first];
+         DiscreteFunction msgDiff(curOutMsg);
+         msgDiff -= prevOutMsg;
          if(msgDiff.maxnorm() > maxNormThreshold_i)
          {
             fac2varMsgs_i.notify(it->first);
@@ -349,20 +353,23 @@ int MaxSumController::updateVar2FacMsgs()
          // Calculate the updated message for the current neighbour subtracting
          // the neighbour's last message from the message sum.
          //*********************************************************************
-         *(it->second) = msgSum;
-         *(it->second) -= *curInMsgs[it->first];
+         DiscreteFunction& prevOutMsg = *prevOutMsgs[it->first];
+         DiscreteFunction& curOutMsg = *(it->second);
+         DiscreteFunction& curInMsg = *curInMsgs[it->first];
+         curOutMsg = msgSum;
+         curOutMsg -= curInMsg;
 
          //*********************************************************************
          // Normalise the current output message
          //*********************************************************************
-         *(it->second) -= it->second->mean();
+         curOutMsg -= curOutMsg.mean();
 
          //*********************************************************************
          // If the max norm threshold has been passed, tell the current 
          // neighbour that they have mail.
          //*********************************************************************
-         DiscreteFunction msgDiff(*(it->second));
-         msgDiff -= *prevOutMsgs[it->first];
+         DiscreteFunction msgDiff(curOutMsg);
+         msgDiff -= prevOutMsg;
          if(msgDiff.maxnorm() > maxNormThreshold_i)
          {
             var2facMsgs_i.notify(it->first);

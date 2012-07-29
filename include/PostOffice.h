@@ -343,6 +343,19 @@ namespace maxsum
        */
       void addEdge(Sender s, Receiver r)
       {
+         addEdge(s,r,Message());
+      }
+
+      /**
+       * Adds an edge between a specified sender and receiver.
+       * @param[in] s the sender's id
+       * @param[in] r the receiver's id
+       * @param[in] msgVal initial value for newly constructed messages.
+       * @post Messages can now be sent from <code>s</code> to <code>s</code>
+       * via this maxsum::PostOffice.
+       */
+      void addEdge(Sender s, Receiver r, const Message& msgVal)
+      {
          //*********************************************************************
          // If we have a message already, then we're done.
          //*********************************************************************
@@ -377,8 +390,8 @@ namespace maxsum
          // Otherwise create new current and previous messages and stick
          // then in the relevent lists.
          //*********************************************************************
-         pCurOutMsg = new DiscreteFunction();
-         pPrevOutMsg = new DiscreteFunction();
+         pCurOutMsg = new Message(msgVal);
+         pPrevOutMsg = new Message(msgVal);
          pCurInMsg = pCurOutMsg;
          pPrevInMsg = pPrevOutMsg;
 
