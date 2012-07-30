@@ -6,6 +6,7 @@
 #ifndef MAXSUM_MAXSUMCONTROLLER_H
 #define MAXSUM_MAXSUMCONTROLLER_H
 
+#include <iostream>
 #include <map>
 #include <stack>
 #include "common.h"
@@ -28,6 +29,13 @@ namespace maxsum
    class MaxSumController
    {
    private:
+
+      /**
+       * Utility function used to dump the current state of this controller
+       * for debugging purposes.
+       */
+      friend std::ostream& operator<<(std::ostream& out,
+            const MaxSumController& controller);
 
       /**
        * Type of container used to map factor's to their defining functions.
@@ -326,6 +334,13 @@ namespace maxsum
     * of a message, before it is assumed to have converged.
     */
    const ValType MaxSumController::DEFAULT_MAXNORM_THRESHOLD=0.0; //0000001;
+
+   /**
+    * Utility function used to dump the current state of this controller
+    * for debugging purposes.
+    */
+   std::ostream& operator<<(std::ostream& out,
+         const MaxSumController& controller);
 
 } // maxsum
 

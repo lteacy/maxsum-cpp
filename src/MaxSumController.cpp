@@ -11,15 +11,26 @@
 using namespace maxsum;
 
 /**
-* Accessor method for factor function.
-* @param[in] id the unique identifier of the desired factor.
-* @param[in] factor the function representing this factor.
-* @returns a reference to the function associated with the factor with
-* unique identifier <code>id</code>.
-* @post A copy of <code>factor</code> is stored internally by
-* this maxsum::MaxSumController and used to form part of a factor graph.
-* @post Any previous value of the specified factor is overwritten.
-*/
+ * Utility function used to dump the current state of this controller
+ * for debugging purposes.
+ */
+std::ostream& maxsum::operator<<(std::ostream& out,
+                  const MaxSumController& controller)
+{
+   return out;
+
+} // maxsum::operator<<
+
+/**
+ * Accessor method for factor function.
+ * @param[in] id the unique identifier of the desired factor.
+ * @param[in] factor the function representing this factor.
+ * @returns a reference to the function associated with the factor with
+ * unique identifier <code>id</code>.
+ * @post A copy of <code>factor</code> is stored internally by
+ * this maxsum::MaxSumController and used to form part of a factor graph.
+ * @post Any previous value of the specified factor is overwritten.
+ */
 void MaxSumController::setFactor(FactorID id, const DiscreteFunction& factor)
 {
    //***************************************************************************
@@ -409,6 +420,7 @@ int MaxSumController::optimise()
    // While the algorithm has not converged, or the maximum number of
    // iterations has not been reached.
    //***************************************************************************
+   std::cout << "OPTIMISING...\n";
    int iterationCount = 0;
    while(iterationCount<maxIterations_i)
    {
@@ -416,16 +428,21 @@ int MaxSumController::optimise()
       // Update the number of iterations that we've performed
       //************************************************************************
       ++iterationCount;
+      std::cout << "ITERATION: " << iterationCount << std::endl;
 
       //************************************************************************
       // Update the factor to variable messages
       //************************************************************************
+      std::cout << "UPDATING FAC2VAR MESSAGES...\n";
       int numOfUpdates = updateFac2VarMsgs();
+      std::cout << *this << std::endl;
 
       //************************************************************************
       // Update the variable to factor messages
       //************************************************************************
+      std::cout << "UPDATING VAR2FAC MESSAGES...\n";
       numOfUpdates += updateVar2FacMsgs();
+      std::cout << *this << std::endl;
 
       //************************************************************************
       // If there have been no message updates since the last iteration, then
@@ -437,6 +454,7 @@ int MaxSumController::optimise()
       }
 
    } // while loop
+   std::cout << "DONE\n\n";
 
    //***************************************************************************
    // Return the number of iterations performed.
