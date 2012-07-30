@@ -8,6 +8,8 @@ Dependencies
 Currently this project has no platform specific or third-party dependencies, other than the C++ Standard Library.
 However, this may change as development proceeds.
 
+doxygen is required to compile documentation in html. In addition, LaTeX is required to generate forumla's included in the html, and to generate a pdf version of the documentation.
+
 Installation
 ============
 Install CMake (see http://www.cmake.org/) and follow the general instructions for building CMake projects for your platform.
