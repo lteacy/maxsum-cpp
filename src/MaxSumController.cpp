@@ -546,7 +546,7 @@ int MaxSumController::optimise()
    // While the algorithm has not converged, or the maximum number of
    // iterations has not been reached.
    //***************************************************************************
-   std::cout << "OPTIMISING...\n";
+   //std::cout << "OPTIMISING...\n";
    int iterationCount = 0;
    while(iterationCount<maxIterations_i)
    {
@@ -554,24 +554,24 @@ int MaxSumController::optimise()
       // Update the number of iterations that we've performed
       //************************************************************************
       ++iterationCount;
-      std::cout << "ITERATION: " << iterationCount << std::endl;
+      //std::cout << "ITERATION: " << iterationCount << std::endl;
 
       //************************************************************************
       // Update the factor to variable messages
       //************************************************************************
-      std::cout << "UPDATING FAC2VAR MESSAGES...\n";
+      //std::cout << "UPDATING FAC2VAR MESSAGES...\n";
       int numOfUpdates = updateFac2VarMsgs();
-      std::cout << *this << std::endl;
+      //std::cout << *this << std::endl;
       int tmp = numOfUpdates;
-      std::cout << "NUMBER OF FAC2VAR UPDATES: " << numOfUpdates << "\n";
+      //std::cout << "NUMBER OF FAC2VAR UPDATES: " << numOfUpdates << "\n";
 
       //************************************************************************
       // Update the variable to factor messages
       //************************************************************************
-      std::cout << "UPDATING VAR2FAC MESSAGES...\n";
+      //std::cout << "UPDATING VAR2FAC MESSAGES...\n";
       numOfUpdates += updateVar2FacMsgs();
-      std::cout << *this << std::endl;
-      std::cout << "NUMBER OF VAR2FAC UPDATES: " << numOfUpdates-tmp << "\n";
+      //std::cout << *this << std::endl;
+      //std::cout << "NUMBER OF VAR2FAC UPDATES: " << numOfUpdates-tmp << "\n";
 
       //************************************************************************
       // If there have been no message updates since the last iteration, then
@@ -583,7 +583,7 @@ int MaxSumController::optimise()
       }
 
    } // while loop
-   std::cout << "DONE\n\n";
+   //std::cout << "DONE\n\n";
 
    //***************************************************************************
    // Return the number of iterations performed.
