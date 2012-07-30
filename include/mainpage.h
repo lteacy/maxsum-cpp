@@ -7,20 +7,31 @@
 
 /**
  * @mainpage
- * This is the main page
  * @section intro Overview
- * This library defines some stuff.
- * @section future Future Work
- * As future work we plan to optimise this library by using the vectorisation
- * functionality of the eigen3 library. In particular, if we analysis the
- * domain intersection for two or more maxsum::DiscreteFunction objects, we
- * should be able to identify subblocks of values that can be operated on
- * in parallel. Replicating vectors column-wise or row-wise might be one way
- * to achieve this. Think about order of variables - if domain of one operand
- * is a continuous subset of the other, then iterating over continuous blocks
- * rather than individual elements might be possible. However, we should keep
- * non-vectorised code for comparision, and as conditional compilation option
- * when the eigen library is not available.
- * @todo write main page documentation
- * @todo vectorise library using eigen3.
+ * This library provides an implementation of the max-sum algorithm in C++.
+ * For more details about the purpose and theory behind this algorithm, please
+ * see http://eprints.soton.ac.uk/265159/
+ *
+ * @section Basic Usage
+ * There are two main classes that define the interface to this library:
+ * \li maxsum::DiscreteFunction, which is used to represent mathematical
+ * functions that depend on the cartesian product of a set of variables with
+ * finite domains; and
+ * \li maxsum::MaxSumController, which operates on a \em factor \em graph,
+ * to optimise the values assigned to a set of (action) variables.
+ *
+ * @section Future Work
+ * Although the basic implementation of this library is now complete, this
+ * project is still under going its first phase of active development. 
+ * Accurate results are thus not yet guarranteed, and in fact, bugs are
+ * very much still to be expected.
+ *
+ * For now, our main priority is thus continued testing and debugging.
+ * Beyond that, we also plan to look at various options for optimising the
+ * code. For example, one option is to link to the
+ * <a href="http://eigen.tuxfamily.org">eigen3</a> linear algebra library,
+ * to take advantage of its hardware vectorisation.
+ *
+ * We will also continue to improve this documentation of the API.
+ * 
  */

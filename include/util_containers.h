@@ -153,9 +153,12 @@ namespace util
    }; // class KeySet
 
    /**
-    * Map type which stores pointer values, but dereferences before
-    * returning them. This class is useful for presenting the same access
-    * interface as a map that owns its objects, without actually owning them.
+    * This class provides a read only wrapper around an existing map, such
+    * as that provided by std::map.
+    * In particular, this class provides a const implementation of the
+    * [] operator, which throws an exception if the requested key is not
+    * already in the underlying map, rather than trying to insert it.
+    * This functionality is not provided by the standard library.
     * <p>Note: Currently, we only implement that subset of the map iterface
     * that we actually require for our purposes.</p>
     * @attention This class is used as part of the implementation of the
