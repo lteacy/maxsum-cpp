@@ -376,7 +376,7 @@ main();
 
 
 ?>
-<hr size="1"><address style="text-align: right;"><small>Generated on Mon Jul 30 16:40:55 2012 for Max-Sum by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Mon Jul 30 17:00:03 2012 for Max-Sum by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.9 </small></address>
 </body>
