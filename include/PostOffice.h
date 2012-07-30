@@ -571,7 +571,7 @@ namespace maxsum
        * </pre>
        * @see PostOffice::senderEnd
        */
-      SenderIt senderBegin()
+      SenderIt senderBegin() const
       {
          return senders_i.begin();
       }
@@ -592,7 +592,7 @@ namespace maxsum
        * </pre>
        * @see PostOffice::senderBegin
        */
-      SenderIt senderEnd()
+      SenderIt senderEnd() const
       {
          return senders_i.end();
       }

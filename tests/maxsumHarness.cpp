@@ -150,21 +150,20 @@ void genRingGraph_m(int noFactors, FactorMap_m& factors)
    // Create each factor depending on its own variable, and those immediately
    // adjacent in the ring.
    //***************************************************************************
-   VarID vars[3];
+   VarID vars[2];
    for(int k=1; k<=noFactors; ++k)
    {
       //************************************************************************
       // Figure out which variables to connect to
       //************************************************************************
-      vars[0]=((5+k-2)%5)+1;
-      vars[1]=((k-1)%5)+1;
-      vars[2]=(k%5)+1;
+      vars[0]=((noFactors+k-2)%noFactors)+1;
+      vars[1]=((k-1)%noFactors)+1;
 
       //************************************************************************
       // Initialise the function with this domain, and generated graph
       // colour utilities.
       //************************************************************************
-      DiscreteFunction curFactor(vars,vars+3);
+      DiscreteFunction curFactor(vars,vars+2);
       genColourUtil_m(curFactor);
       factors[k] = curFactor;
 
@@ -272,7 +271,7 @@ int genTreeGraph_m
    {
       int nextChild = nextID+1;
       nextID = genTreeGraph_m(depth-1, branchFactor, factors, nextID+1, myID);
-      curFactor.expand(nextChild);
+      //curFactor.expand(nextChild);
    }
 
    //***************************************************************************

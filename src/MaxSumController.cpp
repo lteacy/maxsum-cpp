@@ -10,13 +10,137 @@
 
 using namespace maxsum;
 
+namespace
+{
+#ifndef MAXSUM_VERBOSE
+
+   /**
+    * Utility method to print functions in compact form.
+    */
+   inline std::ostream& printFunction_m(std::ostream& out,
+         const DiscreteFunction& func)
+   {
+      // do nothing
+      return out;
+   }
+
+#else
+
+   /**
+    * Utility method to print functions in compact form.
+    */
+   std::ostream& printFunction_m(std::ostream& out,
+         const DiscreteFunction& func)
+   {
+      //************************************************************************
+      // Print domain
+      //************************************************************************
+      out << "<";
+      bool printComma = false;
+      for(DiscreteFunction::VarIterator it=func.varBegin(); it!=func.varEnd();
+            ++it)
+      {
+         if(printComma)
+         {
+            out << ',';
+         }
+         else
+         {
+            printComma=true;
+         }
+         out << *it;
+      }
+
+      //************************************************************************
+      // Print values
+      //************************************************************************
+      out << " : ";
+      printComma = false;
+      for(int k=0; k<func.domainSize(); ++k)
+      {
+         if(printComma)
+         {
+            out << ',';
+         }
+         else
+         {
+            printComma=true;
+         }
+         out << func(k);
+      }
+      out << ">";
+
+      return out;
+
+   }  // function printFunction_m
+
+#endif // IF MAXSUM_VERBOSE
+
+} // module namespace
+
 /**
  * Utility function used to dump the current state of this controller
  * for debugging purposes.
  */
 std::ostream& maxsum::operator<<(std::ostream& out,
-                  const MaxSumController& controller)
+                  MaxSumController& controller)
 {
+   //***************************************************************************
+   // Print factors
+   //***************************************************************************
+   //out << "FACTORS:\n";
+   //typedef MaxSumController::FactorMap::const_iterator FactorIterator;
+   //for(FactorIterator it=controller.factors_i.begin();
+         //it!=controller.factors_i.end(); ++it)
+   //{
+      //out << it->first << " : ";
+      //printFunction_m(out, it->second);
+      //out << std::endl;
+   //}
+
+   //***************************************************************************
+   // Print factor to variable messages
+   //***************************************************************************
+   out << "CURRENT FACTOR TO VARIABLE MESSAGES:\n";
+   for(F2VPostOffice::SenderIt it=controller.fac2varMsgs_i.senderBegin();
+         it!=controller.fac2varMsgs_i.senderEnd(); ++it)
+   {
+      F2VPostOffice::OutMsgMap msgs = controller.fac2varMsgs_i.curOutMsgs(*it);
+      for(F2VPostOffice::OutMsgIt k=msgs.begin(); k!=msgs.end(); ++k)
+      {
+         out << "F" << *it << "->V" << k->first << ": ";
+         printFunction_m(out,*(k->second));
+         out << std::endl;
+      }
+   }
+
+   //***************************************************************************
+   // Print variable to factor messages
+   //***************************************************************************
+   out << "VARIABLE TO FACTOR MESSAGES:\n";
+   for(V2FPostOffice::SenderIt it=controller.var2facMsgs_i.senderBegin();
+         it!=controller.var2facMsgs_i.senderEnd(); ++it)
+   {
+      V2FPostOffice::OutMsgMap msgs = controller.var2facMsgs_i.curOutMsgs(*it);
+      for(F2VPostOffice::OutMsgIt k=msgs.begin(); k!=msgs.end(); ++k)
+      {
+         out << "V" << *it << "->F" << k->first << ": ";
+         printFunction_m(out,*(k->second));
+         out << std::endl;
+      }
+   }
+
+   //***************************************************************************
+   // Print variables
+   //***************************************************************************
+   out << "ACTIONS: ";
+   typedef MaxSumController::ActionMap::const_iterator VarIterator;
+   for(VarIterator it=controller.actions_i.begin();
+         it!=controller.actions_i.end(); ++it)
+   {
+      out << "(" << it->first << "," << it->second << ") ";
+   }
+
    return out;
 
 } // maxsum::operator<<
@@ -99,9 +223,11 @@ void MaxSumController::setFactor(FactorID id, const DiscreteFunction& factor)
 
    //***************************************************************************
    // Tell all factors and variables to recheck their mail.
+   // Only need to do this for factors, because once the factor 2 variable
+   // messages have been updated, the variables will in turn be notified of
+   // any change.
    //***************************************************************************
    var2facMsgs_i.notifyAll();
-   fac2varMsgs_i.notifyAll();
 
 } // function setFactor
 
@@ -436,6 +562,8 @@ int MaxSumController::optimise()
       std::cout << "UPDATING FAC2VAR MESSAGES...\n";
       int numOfUpdates = updateFac2VarMsgs();
       std::cout << *this << std::endl;
+      int tmp = numOfUpdates;
+      std::cout << "NUMBER OF FAC2VAR UPDATES: " << numOfUpdates << "\n";
 
       //************************************************************************
       // Update the variable to factor messages
@@ -443,6 +571,7 @@ int MaxSumController::optimise()
       std::cout << "UPDATING VAR2FAC MESSAGES...\n";
       numOfUpdates += updateVar2FacMsgs();
       std::cout << *this << std::endl;
+      std::cout << "NUMBER OF VAR2FAC UPDATES: " << numOfUpdates-tmp << "\n";
 
       //************************************************************************
       // If there have been no message updates since the last iteration, then
