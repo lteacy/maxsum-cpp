@@ -12,6 +12,9 @@
  * For more details about the purpose and theory behind this algorithm, please
  * see http://eprints.soton.ac.uk/265159/
  *
+ * To source code for this library can be dowloaded from
+ * <a href="https://github.com/lteacy/maxsum-cpp">here</a>.
+ *
  * @section Basic Usage
  * There are two main classes that define the interface to this library:
  * \li maxsum::DiscreteFunction, which is used to represent mathematical
