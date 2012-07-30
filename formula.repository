@@ -1,0 +1,3 @@
+\form#0:\[ \|f(k)\|_{\infty} = \max_k |f(k)| \]
+\form#1:$ \forall k \; f(k)=val$
+\form#2:$this + \sum_k funcs[k]$
