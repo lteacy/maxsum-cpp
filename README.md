@@ -3,6 +3,8 @@ maxsum-cpp
 
 Implementation of the Max-Sum Algorithm in C++
 
+The API documentation for this library can be viewed online <a href="http://lteacy.github.com/maxsum-cpp/index.html">here</a>.
+
 Dependencies
 ============
 Currently this project has no platform specific or third-party dependencies, other than the C++ Standard Library.
