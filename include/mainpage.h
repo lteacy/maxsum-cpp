@@ -7,6 +7,7 @@
 
 /**
  * @mainpage
+ * \tableofcontents
  * @section intro Overview
  * This library provides an implementation of the max-sum algorithm in C++.
  * For more details about the purpose and theory behind this algorithm, please
@@ -15,17 +16,37 @@
  * To source code for this library can be dowloaded from
  * <a href="https://github.com/lteacy/maxsum-cpp">here</a>.
  *
- * @section usage Basic Usage
- * There are two main classes that define the interface to this library:
+ * @section usage Library Organisation
+ * The contents of this library are organised into two main namespaces:
+ * \li ::maxsum, which contains all functions and classes that form part the
+ * public iterface to this library; and
+ * \li maxsum::util, which contains utility code that forms part of the
+ * library implementation.
+ *
+ * Our intention here is that only functions and types that are of direct
+ * interest to third party developers should be located in the ::maxsum
+ * namespace. In contrast, those in the maxsum::util interface are not
+ * intended to form part of the public interface to the library, and so
+ * should only be of interest to developers intended to extend or modify this
+ * library.
+ *
+ * Of the classes in the maxsum namespace, three provide the bulk of the 
+ * library's functionality, and should be of particular interest to anyone
+ * wishing to apply the max-sum algorithm:
  * \li maxsum::DiscreteFunction, which is used to represent mathematical
  * functions that depend on the cartesian product of a set of variables with
- * finite domains; and
+ * finite domains;
+ * \li maxsum::DomainIterator, which provides methods for iterating over the
+ * domain of maxsum::DiscreteFunction objects; and
  * \li maxsum::MaxSumController, which operates on a \em factor \em graph,
  * to optimise the values assigned to a set of (action) variables.
  *
+ * The following sections describe each of these classes in more detail,
+ * together with example extracts of code to demonstrate their proper use.
+ *
  * @section function_usage The DiscreteFunction Class
  * The maxsum::DiscreteFunction class is the main workhorse of the maxsum
- * library, which not only provides a way to represent mathematical functions
+ * library, which not only provides a way to represent mathematical functions,
  * but also to manipulate their values, and combine them using various
  * mathematical operators to form new functions. As the class name suggests,
  * the main limitation is that only functions with a finite domain can be
@@ -36,7 +57,6 @@
  * represent functions with continuous domains. However, for now, the
  * DiscreteFunction class provides all the operations necessary to apply the
  * max-sum algorithm to finite domains.
- *
  * In particular, the following subsections describe the main operations that
  * can be performed using this class.
  *
@@ -170,20 +190,42 @@
  * maxsum::DiscreteFunction::at is also provided for convenient element access
  * through pointers. For example, the following code is valid:
  * <pre>
- * maxsum::registerVariable(3,5);
+ * maxsum::registerVariable (3,5);
  * maxsum::DiscreteFunction func(3,4.5);
  * maxsum::DiscreteFunction* pFunc = &func;
  * val = (*pFunc)(2);  // works, but ugly
  * val = pFunc->at(2); // equivalent, but more readable
  * </pre>
  *
+ * @subsection math_ops Mathematical Operations
+ * Three main types of mathematical operation are provided by the
+ * maxsum::DiscreteFunction class:
+ * \li \em scalar operations, which return a single scalar value based on all
+ * values for a maxsum::DiscreteFunction across its domain;
+ * \li \em domain operations, which expand or reduce the domain of a single
+ * function; and
+ * \li \em arithmetic operations, which combine one or more functions to
+ * form a new maxsum::DiscreteFunction.
+ * 
+ * We describe each of these in turn below.
+ * @subsubsection scalar_ops Scalar Operations
+ * todo
+ *
+ * @subsubsection domain_ops Domain Operations
+ *
+ * @subsubsection arithmetic_ops Arithmetic Operations
+ *
+ * @subsection comparision_ops Comparison Operations
+ *
+ * @subsection misc_ops Miscellaneous Operations
+ *
+ * @section domainIterator The DomainIterator Class
+ * Todo.
+ *
+ * @section maxsumcontroller The MaxSumController Class
+ * Todo.
+
  * @section tips Tips on Writing Efficient Code
- * Todo.
- *
- * @section The DomainIterator Class
- * Todo.
- *
- * @section The MaxSumController Class
  * Todo.
  *
  * @section futurework Future Work
