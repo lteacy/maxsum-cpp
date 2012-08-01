@@ -137,7 +137,7 @@
  * with corresponding domain sizes 2 and 3, then we have the following
  * correspondence between variable values and linear indices:
  * <TABLE>
- * <TR><TD>Variable 3</TD><TD>Variable 5</TD><TD>Linear Index</TD></TR>
+ * <TR><TH>Variable 3</TH><TH>Variable 5</TH><TH>Linear Index</TH></TR>
  * <TR><TD>0</TD><TD>0</TD><TD>0</TD></TR>
  * <TR><TD>1</TD><TD>0</TD><TD>1</TD></TR>
  * <TR><TD>0</TD><TD>1</TD><TD>2</TD></TR>
@@ -164,7 +164,7 @@
  * maxsum::registerVariables (vars,vars+3,siz,size+3);
  * maxsum::DiscreteFunction func(vars,vars+3); // values initialised to 0
  *
- *  std::vector<VarID> varVec(vars,vars+3); // copy ids into vector
+ * std::vector<VarID> varVec(vars,vars+3); // copy ids into vector
  * std::vector<ValIndex> valVec(3); // vector of size 3
  * valVec[0] = 2; // index value for variable 1
  * valVec[1] = 4; // index value for variable 4
@@ -192,7 +192,7 @@
  * <pre>
  * maxsum::registerVariable (3,5);
  * maxsum::DiscreteFunction func(3,4.5);
- * maxsum::DiscreteFunction* pFunc = &func;
+ * maxsum::DiscreteFunction* pFunc = \&func;
  * val = (*pFunc)(2);  // works, but ugly
  * val = pFunc->at(2); // equivalent, but more readable
  * </pre>
@@ -209,7 +209,18 @@
  * 
  * We describe each of these in turn below.
  * @subsubsection scalar_ops Scalar Operations
- * todo
+ * The main purpose of scalar operations is to calculate specific statistics
+ * about a function's values over its domain. The table below summarises the
+ * available scalar operations, together with their mathematical definition
+ * w.r.t. a maxsum::DiscreteFunction, \f$f\f$, with linear indices 1 to \c N.
+ *
+ * <TABLE>
+ * <TR><TH>Member Function</TH><TH>Definition</TH></TR>
+ * <TR><TD>maxsum::DiscreteFunction::mean</TD><TD>\f$\frac{1}{N} \sum_{k=1}^N f(k)\f$</TD></TR>
+ * <TR><TD>maxsum::DiscreteFunction::max</TD><TD>\f$\max_k f(k)\f$</TD></TR>
+ * <TR><TD>maxsum::DiscreteFunction::min</TD><TD>\f$\min_k f(k)\f$</TD></TR>
+ * <TR><TD>maxsum::DiscreteFunction::maxnorm</TD><TD>\f$\max_k |f(k)|\f$</TD></TR>
+ * </TABLE>
  *
  * @subsubsection domain_ops Domain Operations
  *
