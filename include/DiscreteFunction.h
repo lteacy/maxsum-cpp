@@ -64,6 +64,8 @@ namespace maxsum
        * @param[in] begin Iterator to start of variable list.
        * @param[in] end  Iterator to end of variable list.
        * @param[in] val inital scalar value output for function.
+       * @throws UnknownVariableException if any variable in the list specified
+       * by \c begin and \c end is not registered.
        */
       template<class VarIt> DiscreteFunction
       (
@@ -101,6 +103,7 @@ namespace maxsum
        * @param[in] var the variable to put in this function's domain.
        * @param[in] val scalar value used to initialise function across domain.
        * @post \f$ \forall k \; f(k)=val\f$
+       * @throws UnknownVariableException if \c var is not registered.
        */
       DiscreteFunction(VarID var, ValType val)
          : vars_i(1,var), size_i(1,getDomainSize(var)),
