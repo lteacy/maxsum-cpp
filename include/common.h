@@ -1,9 +1,10 @@
 /**
  * @file common.h
  * Common types and functions used by Max-Sum library.
- * In particular, this file defines Exception classes used by the library, and
- * functions for calculating subindices and linear indices for referencing
- * the contents of N-D arrays.
+ * In particular, this file defines common typedefs, and functions for
+ * calculating subindices and linear indices for referencing the contents
+ * of N-D arrays. These resemble similar functions defined in the Matlab
+ * environment.
  * @author Luke Teacy
  */
 #ifndef MAX_SUM_COMMON_H
@@ -12,7 +13,7 @@
 #include <cfloat>
 #include <string>
 #include <vector>
-#include <exception>
+#include "exceptions.h"
 
 /**
  * Namespace for all public types and functions defined by the Max-Sum library.
@@ -21,434 +22,49 @@ namespace maxsum
 {
    /**
     * Type of values stored by maxsum::DiscreteFunction objects.
+    * This is, this type is used to represent the codomain of
+    * mathematical functions represented by maxsum::DiscreteFunction objects.
+    * @see maxsum::DiscreteFunction
     */
    typedef double ValType;
 
    /**
     * Default tolerance used for comparing values of type maxsum::ValType.
-    * This is the default value used by the maxsum::equalWithinTolerance()
+    * This is the default value used by the maxsum::equalWithinTolerance
     * function, when comparing to maxsum::DiscreteFunction objects for equality.
     * Note, if ValType is ever redefined, then this value should be changed
     * appropriately also.
+    * @see maxsum::equalWithinTolerance
     */
    const ValType DEFAULT_VALUE_TOLERANCE = DBL_EPSILON * 1000.0;
 
    /**
     * Type used for uniquely identifying variables.
-    * This is purposely an integer type - want this to be efficient for
-    * storing and passing between functions. Note, bitwise operations can
+    * This is purposely an integer type, because we want this to be efficient
+    * for storing and passing between functions. Note: bitwise operations can
     * be used in some addressing schemes, e.g. something like IP addresses.
+    * @see maxsum::FactorID
     */
    typedef unsigned int VarID;
 
    /**
     * Type used for uniquely identifying factors in a factor graph.
-    * This is purposely an integer type - want this to be efficient for
-    * storing and passing between functions. Note, bitwise operations can
+    * This is purposely an integer type, because we want this to be efficient
+    * for storing and passing between functions. Note: bitwise operations can
     * be used in some addressing schemes, e.g. something like IP addresses.
+    * @see maxsum::VarID
     */
    typedef unsigned int FactorID;
 
    /**
-    * Integer type used for indexing coefficient values.
+    * Integer type used for indexing coefficient values. This is the value
+    * type for all variables that are referenced an identified using
+    * maxsum::VarID. In particular, if a value of type maxsum::ValIndex
+    * is specified for each variable in a maxsum::DiscreteFunction object's
+    * domain, then exactly one value of type maxsum::ValType will be returned
+    * by element accessor functions, such as maxsum::DiscreteFunction::at
     */
    typedef int ValIndex;
-
-   /**
-    * Exception thrown when there has been an attempt to access an element of
-    * a container that does not exist, and cannot be created on demand.
-    */
-   class NoSuchElementException : public std::exception
-   {
-   protected:
-
-      /**
-       * String identifying the source code locatioin where this exceptioin
-       * was generated.
-       */
-      const std::string where;
-
-      /**
-       * Message describing the cause of this exception.
-       */
-      const std::string mesg;
-
-   public:
-
-      /**
-       * Constructs a new exception with specified location and message.
-       * @param[in] where_ the source code location where this exception was
-       * generated.
-       * @param[in] mesg_ Message describing the reason for this exception.
-       */
-      NoSuchElementException 
-         (const std::string where_, const std::string mesg_)
-         throw(): where(where_), mesg(mesg_) {}
-
-      /**
-       * Returns a message describing the cause of this exception, and
-       * the location it was thrown.
-       * @returns a message describing the cause of this exception, and
-       * the location it was thrown.
-       */
-      const char* what() const throw()
-      {
-         return std::string("NoSuchElementException: " + mesg +
-               "\t[ in "+where +" ]").c_str();
-      }
-
-      /**
-       * Destroys this exception and free's its allocated resources.
-       */
-      virtual ~NoSuchElementException() throw() {}
-
-   }; // NoSuchElementException
-
-   /**
-    * Exception thrown by PostOffice::popNotice when there are no active
-    * notices.
-    * @see PostOffice::popNotice
-    */
-   class EmptyNoticeException : public std::exception
-   {
-   protected:
-
-      /**
-       * String identifying the source code locatioin where this exceptioin
-       * was generated.
-       */
-      const std::string where;
-
-      /**
-       * Message describing the cause of this exception.
-       */
-      const std::string mesg;
-
-   public:
-
-      /**
-       * Constructs a new exception with specified location and message.
-       * @param[in] where_ the source code location where this exception was
-       * generated.
-       * @param[in] mesg_ Message describing the reason for this exception.
-       */
-      EmptyNoticeException 
-         (const std::string where_, const std::string mesg_)
-         throw(): where(where_), mesg(mesg_) {}
-
-      /**
-       * Returns a message describing the cause of this exception, and
-       * the location it was thrown.
-       * @returns a message describing the cause of this exception, and
-       * the location it was thrown.
-       */
-      const char* what() const throw()
-      {
-         return std::string("EmptyNoticeException: " + mesg +
-               "\t[ in "+where +" ]").c_str();
-      }
-
-      /**
-       * Destroys this exception and free's its allocated resources.
-       */
-      virtual ~EmptyNoticeException() throw() {}
-
-   }; // EmptyNoticeException
-
-   /**
-    * Exception thrown when a maxsum::PostOffice does not recognise the ID of
-    * a Sender or Receiver.
-    */
-   class UnknownAddressException : public std::exception
-   {
-   protected:
-
-      /**
-       * String identifying the source code locatioin where this exceptioin
-       * was generated.
-       */
-      const std::string where;
-
-      /**
-       * Message describing the cause of this exception.
-       */
-      const std::string mesg;
-
-   public:
-
-      /**
-       * Constructs a new exception with specified location and message.
-       * @param[in] where_ the source code location where this exception was
-       * generated.
-       * @param[in] mesg_ Message describing the reason for this exception.
-       */
-      UnknownAddressException
-         (const std::string where_, const std::string mesg_)
-         throw(): where(where_), mesg(mesg_) {}
-
-      /**
-       * Returns a message describing the cause of this exception, and
-       * the location it was thrown.
-       * @returns a message describing the cause of this exception, and
-       * the location it was thrown.
-       */
-      const char* what() const throw()
-      {
-         return std::string("UnknownAddressException: " + mesg +
-               "\t[ in "+where +" ]").c_str();
-      }
-
-      /**
-       * Destroys this exception and free's its allocated resources.
-       */
-      virtual ~UnknownAddressException() throw() {}
-
-   }; // UnknownAddressException
-
-   /**
-    * Exception thrown when subindices are incorrectly specified for a function.
-    */
-   class BadDomainException : public std::exception
-   {
-   protected:
-
-      /**
-       * String identifying the source code locatioin where this exceptioin
-       * was generated.
-       */
-      const std::string where;
-
-      /**
-       * Message describing the cause of this exception.
-       */
-      const std::string mesg;
-
-   public:
-
-      /**
-       * Constructs a new exception with specified location and message.
-       * @param[in] where_ the source code location where this exception was
-       * generated.
-       * @param[in] mesg_ Message describing the reason for this exception.
-       */
-      BadDomainException
-         (const std::string where_, const std::string mesg_)
-         throw(): where(where_), mesg(mesg_) {}
-
-      /**
-       * Returns a message describing the cause of this exception, and
-       * the location it was thrown.
-       * @returns a message describing the cause of this exception, and
-       * the location it was thrown.
-       */
-      const char* what() const throw()
-      {
-         return std::string("BadDomainException: " + mesg +
-               "\t[ in "+where +" ]").c_str();
-      }
-
-      /**
-       * Destroys this exception and free's its allocated resources.
-       */
-      virtual ~BadDomainException() throw() {}
-
-   }; // BadDomainException
-
-   /**
-    * Exception thrown when indices are out of range.
-    */
-   class OutOfRangeException : public std::exception
-   {
-   protected:
-
-      /**
-       * String identifying the source code locatioin where this exceptioin
-       * was generated.
-       */
-      const std::string where;
-
-      /**
-       * Message describing the cause of this exception.
-       */
-      const std::string mesg;
-
-   public:
-
-      /**
-       * Constructs a new exception with specified location and message.
-       * @param[in] where_ the source code location where this exception was
-       * generated.
-       * @param[in] mesg_ Message describing the reason for this exception.
-       */
-      OutOfRangeException(const std::string where_, const std::string mesg_)
-         throw(): where(where_), mesg(mesg_) {}
-
-      /**
-       * Returns a message describing the cause of this exception, and
-       * the location it was thrown.
-       * @returns a message describing the cause of this exception, and
-       * the location it was thrown.
-       */
-      const char* what() const throw()
-      {
-         return std::string("Out of range exception: " + mesg +
-               "\t[ in "+where +" ]").c_str();
-      }
-
-      /**
-       * Destroys this exception and free's its allocated resources.
-       */
-      virtual ~OutOfRangeException() throw() {}
-
-   }; // out of range exception
-
-   /**
-    * Exception thrown conflicting domains are specified for a variable.
-    */
-   class DomainConflictException : public std::exception
-   {
-   protected:
-
-      /**
-       * String identifying the source code locatioin where this exceptioin
-       * was generated.
-       */
-      const std::string where;
-
-      /**
-       * Message describing the cause of this exception.
-       */
-      const std::string mesg;
-
-   public:
-
-      /**
-       * Creates a new expection of this type.
-       * @param[in] where_ the position in the source code where this was
-       * generated.
-       * @param[in] mesg_ message describing the cause of this exception.
-       */
-      DomainConflictException(const std::string where_, const std::string mesg_)
-         throw(): where(where_), mesg(mesg_) {}
-
-      /**
-       * Returns a message describing the cause of this exception, and
-       * the location it was thrown.
-       * @returns a message describing the cause of this exception, and
-       * the location it was thrown.
-       */
-      const char* what() const throw()
-      {
-         return std::string("Domain conflict exception: " + mesg +
-               "\t[ in "+where +" ]").c_str();
-      }
-
-      /**
-       * Destroys this exception and free's its allocated resources.
-       */
-      virtual ~DomainConflictException() throw() {}
-
-   }; // Domain conflict exception
-
-   /**
-    * Exception thrown when a variable is not registered.
-    */
-   class UnknownVariableException : public std::exception
-   {
-   protected:
-
-      /**
-       * String identifying the source code locatioin where this exceptioin
-       * was generated.
-       */
-      const std::string where;
-
-      /**
-       * Message describing the cause of this exception.
-       */
-      const std::string mesg;
-
-   public:
-
-      /**
-       * Creates a new expection of this type.
-       * @param[in] where_ the position in the source code where this was
-       * generated.
-       * @param[in] mesg_ message describing the cause of this exception.
-       */
-      UnknownVariableException(const std::string where_, const std::string mesg_)
-         throw(): where(where_), mesg(mesg_) {}
-
-      /**
-       * Returns a message describing the cause of this exception, and
-       * the location it was thrown.
-       * @returns a message describing the cause of this exception, and
-       * the location it was thrown.
-       */
-      const char* what() const throw()
-      {
-         return std::string("Unknown variable exception: " + mesg +
-               "\t[ in "+where +" ]").c_str();
-      }
-
-      /**
-       * Destroys this exception and free's its allocated resources.
-       */
-      virtual ~UnknownVariableException() throw() {}
-
-   }; // UnknownVariableException
-
-   /**
-    * Exception thrown when variable domains are inconsistent.
-    */
-   class InconsistentDomainException : public std::exception
-   {
-   protected:
-
-      /**
-       * String identifying the source code locatioin where this exceptioin
-       * was generated.
-       */
-      const std::string where;
-
-      /**
-       * Message describing the cause of this exception.
-       */
-      const std::string mesg;
-
-   public:
-
-      /**
-       * Creates a new expection of this type.
-       * @param[in] where_ the position in the source code where this was
-       * generated.
-       * @param[in] mesg_ message describing the cause of this exception.
-       */
-      InconsistentDomainException
-      (
-       const std::string where_,
-       const std::string mesg_
-      )
-      throw(): where(where_), mesg(mesg_) {}
-
-      /**
-       * Returns a message describing the cause of this exception, and
-       * the location it was thrown.
-       * @returns a message describing the cause of this exception, and
-       * the location it was thrown.
-       */
-      const char* what() const throw()
-      {
-         return std::string("Domain conflict exception: " + mesg +
-               "\t[ in "+where +" ]").c_str();
-      }
-
-      /**
-       * Destroys this exception and free's its allocated resources.
-       */
-      virtual ~InconsistentDomainException() throw() {}
-
-   }; // InconsistentDomainException
 
    /**
     * C++ Implementation of Matlab ind2sub function.
