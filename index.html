@@ -163,7 +163,7 @@ val = func(1);  // val == 3.45
 </pre><p>As in matlab, or indeed any scheme for indexing N-D arrays, these linear indices depend on the order in which each dimension is stored in memory. In our case, each variable in a function's domain corresponds to a dimension in an N-D array, with variables ordered from least to most significant according to their ID. For example, if <code>func</code> depends on variables 3 and 5 with corresponding domain sizes 2 and 3, then we have the following correspondence between variable values and linear indices: </p>
 <table class="doxtable">
 <tr>
-<td>Variable 3</td><td>Variable 5</td><td>Linear Index </td></tr>
+<th>Variable 3</th><th>Variable 5</th><th>Linear Index </th></tr>
 <tr>
 <td>0</td><td>0</td><td>0 </td></tr>
 <tr>
@@ -183,7 +183,7 @@ val = func(1);  // val == 3.45
 <a class="el" href="namespacemaxsum.html#a572e59b0c017dac30927fc445aa28216" title="Type used for uniquely identifying variables.">maxsum::VarID</a> vars[] = {1,4,8}; // array of size 3
 <a class="el" href="namespacemaxsum.html#a2703843fa0f76002b3285d94f1693d26" title="Integer type used for indexing coefficient values.">maxsum::ValIndex</a> siz[] = {5,10,15}; // var 1 has domain size 5 etc.
 <a class="el" href="namespacemaxsum.html#a18bbaee58df9fdda98966952ad990c85" title="Register a list of variables with specified domain sizes.">maxsum::registerVariables</a> (vars,vars+3,siz,size+3);
-<a class="el" href="classmaxsum_1_1_discrete_function.html" title="Class representing functions of sets of variables with discrete domains.">maxsum::DiscreteFunction</a> func(vars,vars+3); // values initialised to 0</pre><pre> std::vector&lt;VarID&gt; varVec(vars,vars+3); // copy ids into vector
+<a class="el" href="classmaxsum_1_1_discrete_function.html" title="Class representing functions of sets of variables with discrete domains.">maxsum::DiscreteFunction</a> func(vars,vars+3); // values initialised to 0</pre><pre>std::vector&lt;VarID&gt; varVec(vars,vars+3); // copy ids into vector
 std::vector&lt;ValIndex&gt; valVec(3); // vector of size 3
 valVec[0] = 2; // index value for variable 1
 valVec[1] = 4; // index value for variable 4
@@ -200,7 +200,7 @@ func(varVec.begin(),varVec.end(),valVec.begin(),valVec.end());
 <pre>
 <a class="el" href="namespacemaxsum.html#a373fa742a9678cc654e76384cb04d7b0" title="Registers a variable with a specified domain size.">maxsum::registerVariable</a> (3,5);
 <a class="el" href="classmaxsum_1_1_discrete_function.html" title="Class representing functions of sets of variables with discrete domains.">maxsum::DiscreteFunction</a> func(3,4.5);
-<a class="el" href="classmaxsum_1_1_discrete_function.html" title="Class representing functions of sets of variables with discrete domains.">maxsum::DiscreteFunction</a>* pFunc = 
+<a class="el" href="classmaxsum_1_1_discrete_function.html" title="Class representing functions of sets of variables with discrete domains.">maxsum::DiscreteFunction</a>* pFunc = &amp;func;
 val = (*pFunc)(2);  // works, but ugly
 val = pFunc-&gt;at(2); // equivalent, but more readable
 </pre><h2><a class="anchor" id="math_ops"></a>
@@ -214,7 +214,19 @@ Mathematical Operations</h2>
 <p>We describe each of these in turn below. </p>
 <h3><a class="anchor" id="scalar_ops"></a>
 Scalar Operations</h3>
-<p>todo</p>
+<p>The main purpose of scalar operations is to calculate specific statistics about a function's values over its domain. The table below summarises the available scalar operations, together with their mathematical definition w.r.t. a <a class="el" href="classmaxsum_1_1_discrete_function.html" title="Class representing functions of sets of variables with discrete domains.">maxsum::DiscreteFunction</a>, <img class="formulaInl" alt="$f$" src="form_6.png"/>, with linear indices 1 to <code>N</code>.</p>
+<table class="doxtable">
+<tr>
+<th>Member Function</th><th>Definition </th></tr>
+<tr>
+<td><a class="el" href="classmaxsum_1_1_discrete_function.html#af23096f6b1f8460b5899367ca5cf16ce" title="Returns the mean scalar value for function across entire domain.">maxsum::DiscreteFunction::mean</a></td><td><img class="formulaInl" alt="$\frac{1}{N} \sum_{k=1}^N f(k)$" src="form_9.png"/> </td></tr>
+<tr>
+<td><a class="el" href="classmaxsum_1_1_discrete_function.html#a8808e251912f0bb3ad768948b754a3f4" title="Returns the maximum scalar value for function across entire domain.">maxsum::DiscreteFunction::max</a></td><td><img class="formulaInl" alt="$\max_k f(k)$" src="form_10.png"/> </td></tr>
+<tr>
+<td><a class="el" href="classmaxsum_1_1_discrete_function.html#ab1391246a7b2b192fdab3400d2e36407" title="Returns the minimum scalar value of the function across entire domain.">maxsum::DiscreteFunction::min</a></td><td><img class="formulaInl" alt="$\min_k f(k)$" src="form_11.png"/> </td></tr>
+<tr>
+<td><a class="el" href="classmaxsum_1_1_discrete_function.html#a949b94c6527b4115a92357adc249a3a8" title="Returns the maxnorm for this function.">maxsum::DiscreteFunction::maxnorm</a></td><td><img class="formulaInl" alt="$\max_k |f(k)|$" src="form_12.png"/> </td></tr>
+</table>
 <h3><a class="anchor" id="domain_ops"></a>
 Domain Operations</h3>
 <h3><a class="anchor" id="arithmetic_ops"></a>
@@ -240,7 +252,7 @@ Future Work</h1>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Aug 1 2012 19:00:46 for Max-Sum by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Aug 1 2012 21:09:15 for Max-Sum by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.1.2
 </small></address>
