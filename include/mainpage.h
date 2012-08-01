@@ -178,6 +178,13 @@
  * </pre>
  *
  * @section tips Tips on Writing Efficient Code
+ * Todo.
+ *
+ * @section The DomainIterator Class
+ * Todo.
+ *
+ * @section The MaxSumController Class
+ * Todo.
  *
  * @section futurework Future Work
  * Although the basic implementation of this library is now complete, this
