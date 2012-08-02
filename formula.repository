@@ -5,9 +5,7 @@
 \form#4:$[0,N_k]$
 \form#5:$[0,9]$
 \form#6:$f$
-\form#7:$k$
-\form#8:$f(k)$
-\form#9:$\frac{1}{N} \sum_{k=1}^N f(k)$
-\form#10:$\max_k f(k)$
-\form#11:$\min_k f(k)$
-\form#12:$\max_k |f(k)|$
+\form#7:$\frac{1}{N} \sum_{k=1}^N f(k)$
+\form#8:$\max_k f(k)$
+\form#9:$\min_k f(k)$
+\form#10:$\max_k |f(k)|$
