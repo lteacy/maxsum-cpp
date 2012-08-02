@@ -65,12 +65,12 @@ namespace maxsum
       /**
        * PostOffice for factor to variable messages.
        */
-      F2VPostOffice fac2varMsgs_i;
+      util::F2VPostOffice fac2varMsgs_i;
 
       /**
        * PostOffice for variable to factor messages.
        */
-      V2FPostOffice var2facMsgs_i;
+      util::V2FPostOffice var2facMsgs_i;
 
       /**
        * The maximum number of max-sum iterations allowed before the
@@ -340,7 +340,7 @@ namespace maxsum
     * for debugging purposes.
     */
    std::ostream& operator<<(std::ostream& out,
-         const MaxSumController& controller);
+         MaxSumController& controller);
 
 } // maxsum
 

@@ -85,6 +85,7 @@ namespace
 std::ostream& maxsum::operator<<(std::ostream& out,
                   MaxSumController& controller)
 {
+   using namespace util;
    //***************************************************************************
    // Print factors
    //***************************************************************************
@@ -367,6 +368,7 @@ void MaxSumController::inferGraph()
  */
 int MaxSumController::updateFac2VarMsgs()
 {
+   using namespace util;
    //***************************************************************************
    // For each factor with a non-empty inbox
    //***************************************************************************
@@ -449,6 +451,7 @@ int MaxSumController::updateFac2VarMsgs()
  */
 int MaxSumController::updateVar2FacMsgs()
 {
+   using namespace util;
    //***************************************************************************
    // For each variable with a non-empty inbox
    //***************************************************************************
@@ -537,7 +540,7 @@ int MaxSumController::updateVar2FacMsgs()
 
 /**
  * Runs the max-sum algorithm to optimise the values for each variable.
- * @post MaxSumController::getValue will return the optimal value
+ * @post maxsum::MaxSumController::getValue will return the optimal value
  * for the the variable with unique identifier <code>id</code>.
  */
 int MaxSumController::optimise()

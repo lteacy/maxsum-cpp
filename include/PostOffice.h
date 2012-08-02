@@ -16,6 +16,8 @@
 
 namespace maxsum
 {
+namespace util
+{
    /**
     * Class used to store and manage messages sent between factor graph nodes.
     * @tparam Sender Type used to uniquely identify message senders, e.g.
@@ -697,6 +699,7 @@ namespace maxsum
     */
    typedef PostOffice<FactorID,FactorID> F2FPostOffice;
 
+} // namespace util
 } // namespace maxsum
 
 

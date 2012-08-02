@@ -9,6 +9,7 @@
 #include <set>
 
 using namespace maxsum;
+using namespace maxsum::util;
 
 /**
  * Represents an edge between sender and receiver.

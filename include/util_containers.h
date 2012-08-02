@@ -82,7 +82,7 @@ namespace util
 
       /**
        * Construct a new maxsum::KeySet backed by a specified map.
-       * @param[in] keyMap the backend map whoses key set we wish to present
+       * @param[in] pKeyMap the backend map whoses key set we wish to present
        * through this class. Changes to keyMap are tracked by this object,
        * but no modificiations can be made to keyMap through this object.
        * @attention If pKeyMap is null, then it must be set to point to a valid
@@ -180,12 +180,24 @@ namespace util
        */
       typedef std::map<Key,Val> PtrMap;
 
+      /**
+       * Iterator type returned by this map.
+       */
       typedef typename PtrMap::const_iterator const_iterator;
 
+      /**
+       * Key-Value pair type stored by this map.
+       */
       typedef typename PtrMap::value_type value_type;
 
+      /**
+       * Key type used to index this map.
+       */
       typedef typename PtrMap::value_type key_type;
 
+      /**
+       * Value type stored by this map.
+       */
       typedef typename PtrMap::mapped_type mapped_type;
 
    private:
