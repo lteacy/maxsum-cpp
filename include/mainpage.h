@@ -13,7 +13,7 @@ namespace maxsum {
  * For more details about the purpose and theory behind this algorithm, please
  * see http://eprints.soton.ac.uk/265159/
  *
- * To source code for this library can be dowloaded from
+ * The source code for this library can be dowloaded from
  * <a href="https://github.com/lteacy/maxsum-cpp">here</a>.
  *
  * If you have any comments or suggestions about this library or its
@@ -21,9 +21,9 @@ namespace maxsum {
  * <a href="https://github.com/lteacy/maxsum-cpp">project website</a>.
  *
  * @section usage Library Organisation
- * The contents of this library are organised into two main namespaces:
+ * The contents of this library are organised into two namespaces:
  * \li ::maxsum, which contains all functions and classes that form part the
- * public iterface to this library; and
+ * public interface to this library; and
  * \li maxsum::util, which contains utility code that forms part of the
  * library implementation.
  *
@@ -31,7 +31,7 @@ namespace maxsum {
  * interest to third party developers should be located in the ::maxsum
  * namespace. In contrast, those in the maxsum::util interface are not
  * intended to form part of the public interface to the library, and so
- * should only be of interest to developers intended to extend or modify this
+ * should only be of interest to developers who wish to extend or modify the 
  * library.
  *
  * Of the classes in the maxsum namespace, three provide the bulk of the 
