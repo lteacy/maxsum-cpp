@@ -16,6 +16,10 @@ namespace maxsum {
  * To source code for this library can be dowloaded from
  * <a href="https://github.com/lteacy/maxsum-cpp">here</a>.
  *
+ * If you have any comments or suggestions about this library or its
+ * documentation, please let me know via the main
+ * <a href="https://github.com/lteacy/maxsum-cpp">project website</a>.
+ *
  * @section usage Library Organisation
  * The contents of this library are organised into two main namespaces:
  * \li ::maxsum, which contains all functions and classes that form part the
@@ -371,6 +375,19 @@ namespace maxsum {
  * <TR><TD><CODE>f *= g</CODE></TD><TD>Element-wise multiplication, storing result in \c f.</TD></TR>
  * <TR><TD><CODE>    -g</CODE></TD><TD>Unary Minus.</TD></TR>
  * </TABLE>
+ * The right operand, \c g,
+ * can also be replaced by a scalar value of any numeric type convertable to
+ * ::ValType. In this case, the scalar is operated on with each element in the
+ * DiscreteFunction's domain e.g.
+ * <pre>
+ * DiscreteFunction z = f + 100.5;
+ * // z(0) == f(0) + 100.5 == 1.0 + 100.5 == 101.5
+ * // z(1) == f(1) + 100.5 == 1.1 + 100.5 == 101.6
+ * </pre>
+ * Since adding a number of DiscreteFunctions together is a common procedure, a
+ * member function DiscreteFunction::add is also provided, which takes
+ * iterators to the start and end of a sequence of DiscreteFunctions, and adds them
+ * all to the current DiscreteFunction, expanding its domain if necessary.
  *
  * @subsection comparision_ops Comparison Operations
  * Equality between DiscreteFunctions can be defined in several ways, and for
@@ -397,15 +414,137 @@ namespace maxsum {
  * </TABLE>
  *
  * @subsection misc_ops Miscellaneous Operations
+ * The DiscreteFunction class includes a number of members that do not directly
+ * relate to a DiscreteFunction's values, but instead provide meta data about
+ * the function, and enable various house keeping operations. These are
+ * summarised in the following table.
+ * <TABLE>
+ * <TR><TH>Function</TH><TH>Description</TH></TR>
+ * <TR><TD>DiscreteFunction::domainSize</TD>
+ * <TD>Returns the size of this DiscreteFunction's domain, defined as the
+ * product of the domain sizes for each variable in its domain.</TD></TR>
+ * <TR><TD>DiscreteFunction::noVars</TD>
+ * <TD>Returns the number of variables in this DiscreteFunction's domain.</TD></TR>
+ * <TR><TD>DiscreteFunction::dependsOn</TD>
+ * <TD>Returns \c true if a specified variable is in this DiscreteFunction's domain.</TD></TR>
+ * <TR><TD>DiscreteFunction::varBegin</TD>
+ * <TD>Returns an iterator to the start of the list of variables in this
+ * DiscreteFunction's domain.</TD></TR>
+ * <TR><TD>DiscreteFunction::varEnd</TD>
+ * <TD>Returns an iterator to the end of the list of variables in this
+ * DiscreteFunction's domain.</TD></TR>
+ * <TR><TD>DiscreteFunction::sizeBegin</TD>
+ * <TD>Returns an iterator to the start of a list of domain sizes, in which
+ * the kth element gives the domain size for the kth variable in this
+ * DiscreteFunction's domain.</TD></TR>
+ * <TR><TD>DiscreteFunction::sizeEnd</TD>
+ * <TD>Returns an iterator to the end of a list of domain sizes, in which
+ * the kth element gives the domain size for the kth variable in this
+ * DiscreteFunction's domain.</TD></TR>
+ * </TABLE>
  *
  * @section domainIterator The DomainIterator Class
  * Todo.
  *
  * @section maxsumcontroller The MaxSumController Class
- * Todo.
-
+ * MaxSumController is the main class responsible for implementing
+ * the max-sum algorithm, and providing its results. To run the algorithm
+ * using this class, the following steps are all that is required:
+ * -# Register all variables in the factor graph using either 
+ *  ::registerVariable or ::registerVariables.
+ * -# Create a set of DiscreteFunction objects, representing each
+ *    factor in the target problem's factor graph.
+ * -# Construct a new MaxSumController object, optionally specifying
+ * termination conditions.
+ * -# Use the MaxSumController::setFactor member function to specify
+ *    the set of factors from the previously created list of
+ *    DiscreteFunction objects.
+ * -# Call MaxSumController::optimise to run the max-sum algorithm
+ * -# Use MaxSumController::valBegin and MaxSumController::valEnd
+ *    to iterator through all variables in the factor graph, and
+ *    retrieve there optimal values.
+ *
+ * For example, the following code illustrates how these steps may be
+ * implemented in practice:
+ * <pre>
+ * using namespace maxsum;
+ * std::vector<VarID> vars; // list of variables in factor graph
+ * std::vector<ValIndex> sizes; // sizes[k] == domain size for vars[k]
+ * // ... populate above containers with appropriate values
+ * registerVariables(vars.begin(),vars.end(),sizes.begin(),sizes.end());
+ *
+ * std::map<FactorID,DiscreteFunction> factors; // factors mapped to ids
+ * // populate factors with DiscreteFunctions mapped to factor ids
+ *
+ * MaxSumController controller(100,0.0001); // new controller with custom stopping conditions
+ *                                          // see MaxSumController::MaxSumController for details
+ * // set up factor graph inside controller
+ * // edges of graph are inferred automatically for factor domains
+ * typedef std::map<FactorID,DiscreteFunction>::const_iterator Iterator;
+ * for(Iterator it=factors.begin(); it!=factors.end(); ++it)
+ * {
+ *    controller.setFactor(it->first,it->second);
+ * }
+ *
+ * controller.optimise(); // run the max-sum algorithm
+ *
+ * for(MaxSumController::ConstValueIterator it=controller.valBegin();
+ *     it!=controller.valEnd(); ++it)
+ * {
+ *    std::cout << "Optimal value for variable " << it->first
+ *              << " is " << it->second << std::endl;
+ * }
+ * </pre>
+ *
+ * In addition to these functions, MaxSumController class also provides a
+ * number of other member functions to set, change, and query the factor graph
+ * in different ways. These are particular useful in the problems were the
+ * factor values, or the shape of the factor graph can change over time.
+ * For further information, see the manual page for MaxSumController. 
+ *
  * @section tips Tips on Writing Efficient Code
- * Todo.
+ * In general, the guidelines for writing efficient C++ code in any context
+ * also apply to code written using the maxsum library. In particular, one
+ * key piece of advice is to, as far as possible, avoid creating temporary
+ * objects in memory, when existing objects can be modified and reused.
+ * 
+ * One place where temporary objects are unavoidable is in the use of 
+ * certain overloaded operators:
+ * \li The arithmetic operators, \c +, \c -, and \c * all create
+ * temporary objects to store their result
+ * \li The postfix increment operator, \c ++, returns a copy of its
+ * operand, before incrementing the operands value.
+ *
+ * Where possible, it is therefore better to avoid these operators, and
+ * instead use \em destructive alternatives, which replace an operands
+ * original value with the result:
+ * <TABLE>
+ * <TR><TH>Operation</TH><TH>Efficient Alternative</TH></TR>
+ * <TR><TD><CODE>it++</CODE></TD><TD><CODE>++it</CODE></TD></TR>
+ * <TR><TD><CODE>f = f + g</CODE></TD><TD><CODE>f+=g</CODE></TD></TR>
+ * <TR><TD><CODE>f = f - g</CODE></TD><TD><CODE>f-=g</CODE></TD></TR>
+ * <TR><TD><CODE>f = f * g</CODE></TD><TD><CODE>f*=g</CODE></TD></TR>
+ * <TR><TD><CODE>f =   - f</CODE></TD><TD><CODE>f *= -1</CODE></TD></TR>
+ * </TABLE>
+ * When performing arithmetic with DiscreteFunctions, another useful
+ * technique to expand a function's domain to its final size, rather
+ * than allowing its domain to change incrementally with each operation.
+ * For example, suppose DiscreteFunctions \c f, \c g and \c h depend on
+ * the single variables 1, 2, and 3 respectively. Now consider the
+ * following code.
+ * <pre>
+ * // f starts with domain {1} only
+ * f += g; // f reallocated to expand domain to {1,2}
+ * f += h; // f reallocated to expand domain to {1,2,3}
+ * </pre>
+ * On the otherhand, if we know the final domain in advance, we can
+ * improve efficiency by doing the following:
+ * <pre>
+ * VarID vars[] = {1,2,3};
+ * f.expand(vars,vars+3); // domain of f is now {1,2,3}
+ * f += g; // more efficient: no domain change necessary
+ * f += h; 
+ * </pre>
  *
  * @section futurework Future Work
  * Although the basic implementation of this library is now complete, this
