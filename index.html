@@ -113,17 +113,17 @@ Library Organisation</h1>
 <p>Of the classes in the maxsum namespace, three provide the bulk of the library's functionality, and should be of particular interest to anyone wishing to apply the max-sum algorithm: </p>
 <ul>
 <li><a class="el" href="classmaxsum_1_1_discrete_function.html" title="Class representing functions of sets of variables with discrete domains.">maxsum::DiscreteFunction</a>, which is used to represent mathematical functions that depend on the cartesian product of a set of variables with finite domains; </li>
-<li><a class="el" href="classmaxsum_1_1_domain_iterator.html" title="This class provides methods for iterating over the Cartesian product for a set of variable domains...">maxsum::DomainIterator</a>, which provides methods for iterating over the domain of <a class="el" href="classmaxsum_1_1_discrete_function.html" title="Class representing functions of sets of variables with discrete domains.">maxsum::DiscreteFunction</a> objects; and </li>
+<li><a class="el" href="classmaxsum_1_1_domain_iterator.html" title="This class provides methods for iterating over the Cartesian product for a set of variable domains...">maxsum::DomainIterator</a>, which provides methods for iterating over the domain of <a class="el" href="classmaxsum_1_1_discrete_function.html" title="Class representing functions of sets of variables with discrete domains.">DiscreteFunction</a> objects; and </li>
 <li><a class="el" href="classmaxsum_1_1_max_sum_controller.html" title="This class maintains a factor graph and implements the max-sum algorithm.">maxsum::MaxSumController</a>, which operates on a <em>factor</em> <em>graph</em>, to optimise the values assigned to a set of (action) variables.</li>
 </ul>
 <p>The following sections describe each of these classes in more detail, together with example extracts of code to demonstrate their proper use.</p>
 <h1><a class="anchor" id="function_usage"></a>
 The DiscreteFunction Class</h1>
-<p>The <a class="el" href="classmaxsum_1_1_discrete_function.html" title="Class representing functions of sets of variables with discrete domains.">maxsum::DiscreteFunction</a> class is the main workhorse of the maxsum library, which not only provides a way to represent mathematical functions, but also to manipulate their values, and combine them using various mathematical operators to form new functions. As the class name suggests, the main limitation is that only functions with a finite domain can be represented, values of which are stored internally for each possible value of a function's domain.</p>
-<p>In future versions, we may provide other classes which can be used to represent functions with continuous domains. However, for now, the DiscreteFunction class provides all the operations necessary to apply the max-sum algorithm to finite domains. In particular, the following subsections describe the main operations that can be performed using this class.</p>
+<p>The <a class="el" href="classmaxsum_1_1_discrete_function.html" title="Class representing functions of sets of variables with discrete domains.">DiscreteFunction</a> class is the main workhorse of the maxsum library, which not only provides a way to represent mathematical functions, but also to manipulate their values, and combine them using various mathematical operators to form new functions. As the class name suggests, the main limitation is that only functions with a finite domain can be represented, values of which are stored internally for each possible value of a function's domain.</p>
+<p>In future versions, we may provide other classes which can be used to represent functions with continuous domains. However, for now, the <a class="el" href="classmaxsum_1_1_discrete_function.html" title="Class representing functions of sets of variables with discrete domains.">DiscreteFunction</a> class provides all the operations necessary to apply the max-sum algorithm to finite domains. In particular, the following subsections describe the main operations that can be performed using this class.</p>
 <h2><a class="anchor" id="function_construction"></a>
 Construction</h2>
-<p>The domain of each <a class="el" href="classmaxsum_1_1_discrete_function.html" title="Class representing functions of sets of variables with discrete domains.">maxsum::DiscreteFunction</a> is specified by a set of variables, identified by ids of type <a class="el" href="namespacemaxsum.html#a572e59b0c017dac30927fc445aa28216" title="Type used for uniquely identifying variables.">maxsum::VarID</a>. Each variables, <code>k</code>, is associated with a fixed domain size, <img class="formulaInl" alt="$N_k$" src="form_3.png"/>, which must be registered before the variable is used, and must remain the same through a program's execution. Once registered, a variable can then take on any integer value in the range <img class="formulaInl" alt="$[0,N_k]$" src="form_4.png"/>. For example, to create a DiscreteFunction that depends on a single variable, <code>2</code>, we may execute the following code: </p>
+<p>The domain of each <a class="el" href="classmaxsum_1_1_discrete_function.html" title="Class representing functions of sets of variables with discrete domains.">DiscreteFunction</a> is specified by a set of variables, identified by ids of type <a class="el" href="namespacemaxsum.html#a572e59b0c017dac30927fc445aa28216" title="Type used for uniquely identifying variables.">maxsum::VarID</a>. Each variables, <code>k</code>, is associated with a fixed domain size, <img class="formulaInl" alt="$N_k$" src="form_3.png"/>, which must be registered before the variable is used, and must remain the same through a program's execution. Once registered, a variable can then take on any integer value in the range <img class="formulaInl" alt="$[0,N_k]$" src="form_4.png"/>. For example, to create a <a class="el" href="classmaxsum_1_1_discrete_function.html" title="Class representing functions of sets of variables with discrete domains.">DiscreteFunction</a> that depends on a single variable, <code>2</code>, we may execute the following code: </p>
 <pre>
 <a class="el" href="namespacemaxsum.html#a373fa742a9678cc654e76384cb04d7b0" title="Registers a variable with a specified domain size.">maxsum::registerVariable</a> (2, 10);
 <a class="el" href="classmaxsum_1_1_discrete_function.html" title="Class representing functions of sets of variables with discrete domains.">maxsum::DiscreteFunction</a> func(2,3.2);
@@ -135,7 +135,7 @@ val = func(0);  // val == 3.2
 ...
 val = func(9);  // val == 3.2
 val = func(10); // result undefined!!
-</pre><p> In addition to depending on a single value, DiscreteFunction's can also depend on multiple variables, or the empty set. In the latter, case the function encapsulates a single scalar constant, which does not depend on any variable, and is index by 0: </p>
+</pre><p> In addition to depending on a single value, <a class="el" href="classmaxsum_1_1_discrete_function.html" title="Class representing functions of sets of variables with discrete domains.">DiscreteFunction</a>'s can also depend on multiple variables, or the empty set. In the latter, case the function encapsulates a single scalar constant, which does not depend on any variable, and is index by 0: </p>
 <pre>
 <a class="el" href="classmaxsum_1_1_discrete_function.html" title="Class representing functions of sets of variables with discrete domains.">maxsum::DiscreteFunction</a> func(4.5); // depends on no variables
 num = func.noVars();     // num==0 (depends on no variables)
@@ -153,10 +153,10 @@ siz = func.domainSize(); // siz=5*10*15 (size of cartesian product)
 val = func(0);   // val == 0
 val = func(749); // val == 0 (see below for full explanation)
 val = func(750); // result undefined!!
-</pre><p> In addition to these, other constructors include a copy constructor and matching assignment operator; and a default constructor, which creates a function that depends on no variables and has a single value of 0. For details, see the manual page for <a class="el" href="classmaxsum_1_1_discrete_function.html" title="Class representing functions of sets of variables with discrete domains.">maxsum::DiscreteFunction</a>.</p>
+</pre><p> In addition to these, other constructors include a copy constructor and matching assignment operator; and a default constructor, which creates a function that depends on no variables and has a single value of 0. For details, see the manual page for <a class="el" href="classmaxsum_1_1_discrete_function.html" title="Class representing functions of sets of variables with discrete domains.">DiscreteFunction</a>.</p>
 <h2><a class="anchor" id="function_access"></a>
 Element Access</h2>
-<p>As demonstrated in the examples above, the basic and most efficient way to access the values of a function, is to pass a single integer value to the overloaded () operator. This single integer value acts like a linear index for N-D arrays in matlab, except that values start from 0 rather than 1. Moreover, all versions of the () operator return references to values in a DiscreteFunction, and so can be used for setting as well as reading values. For example, the following code is valid. </p>
+<p>As demonstrated in the examples above, the basic and most efficient way to access the values of a function, is to pass a single integer value to the overloaded () operator. This single integer value acts like a linear index for N-D arrays in matlab, except that values start from 0 rather than 1. Moreover, all versions of the () operator return references to values in a <a class="el" href="classmaxsum_1_1_discrete_function.html" title="Class representing functions of sets of variables with discrete domains.">DiscreteFunction</a>, and so can be used for setting as well as reading values. For example, the following code is valid. </p>
 <pre>
 func(1) = 3.45; // set func(1) to 3.45
 val = func(1);  // val == 3.45
@@ -198,37 +198,92 @@ func(varVec.begin(),varVec.end(),valVec.begin(),valVec.end());
 </pre><p> Here, the last three variants all work by specifying named variables and corresponding values in lists, either by passing reference to containers directly (which must supply interfaces consistent with standard library containers), or by passing iterators to such lists. In each case, the kth value is assumed to correspond to the kth named variable. Any values specified for variables that are not in the functions domain are ignored.</p>
 <p>For some versions of the () operator, the member function <a class="el" href="classmaxsum_1_1_discrete_function.html#a7cc147d43c4e523d54a0601150e1954b" title="Access coefficient using scalar index.">maxsum::DiscreteFunction::at</a> is also provided for convenient element access through pointers. For example, the following code is valid: </p>
 <pre>
-<a class="el" href="namespacemaxsum.html#a373fa742a9678cc654e76384cb04d7b0" title="Registers a variable with a specified domain size.">maxsum::registerVariable</a> (3,5);
-<a class="el" href="classmaxsum_1_1_discrete_function.html" title="Class representing functions of sets of variables with discrete domains.">maxsum::DiscreteFunction</a> func(3,4.5);
-<a class="el" href="classmaxsum_1_1_discrete_function.html" title="Class representing functions of sets of variables with discrete domains.">maxsum::DiscreteFunction</a>* pFunc = &amp;func;
+using namespace <a class="el" href="namespacemaxsum.html" title="Namespace for all public types and functions defined by the Max-Sum library.">maxsum</a>;
+<a class="el" href="namespacemaxsum.html#a373fa742a9678cc654e76384cb04d7b0" title="Registers a variable with a specified domain size.">registerVariable</a> (3,5);
+<a class="el" href="classmaxsum_1_1_discrete_function.html" title="Class representing functions of sets of variables with discrete domains.">DiscreteFunction</a> func(3,4.5);
+DiscreteFunction* pFunc = &amp;func;
 val = (*pFunc)(2);  // works, but ugly
 val = pFunc-&gt;at(2); // equivalent, but more readable
 </pre><h2><a class="anchor" id="math_ops"></a>
 Mathematical Operations</h2>
-<p>Three main types of mathematical operation are provided by the <a class="el" href="classmaxsum_1_1_discrete_function.html" title="Class representing functions of sets of variables with discrete domains.">maxsum::DiscreteFunction</a> class: </p>
-<ul>
-<li><em>scalar</em> operations, which return a single scalar value based on all values for a <a class="el" href="classmaxsum_1_1_discrete_function.html" title="Class representing functions of sets of variables with discrete domains.">maxsum::DiscreteFunction</a> across its domain; </li>
-<li><em>domain</em> operations, which expand or reduce the domain of a single function; and </li>
-<li><em>arithmetic</em> operations, which combine one or more functions to form a new <a class="el" href="classmaxsum_1_1_discrete_function.html" title="Class representing functions of sets of variables with discrete domains.">maxsum::DiscreteFunction</a>.</li>
-</ul>
-<p>We describe each of these in turn below. </p>
+<p>Three main types of mathematical operation are provided by the <a class="el" href="classmaxsum_1_1_discrete_function.html" title="Class representing functions of sets of variables with discrete domains.">maxsum::DiscreteFunction</a> class, each of which are described below. </p>
 <h3><a class="anchor" id="scalar_ops"></a>
 Scalar Operations</h3>
-<p>The main purpose of scalar operations is to calculate specific statistics about a function's values over its domain. The table below summarises the available scalar operations, together with their mathematical definition w.r.t. a <a class="el" href="classmaxsum_1_1_discrete_function.html" title="Class representing functions of sets of variables with discrete domains.">maxsum::DiscreteFunction</a>, <img class="formulaInl" alt="$f$" src="form_6.png"/>, with linear indices 1 to <code>N</code>.</p>
+<p><em>Scalar</em> operations are used to calculate specific statistics about a function's values over its domain. The table below summarises the available scalar operations, together with their mathematical definition w.r.t. a <a class="el" href="classmaxsum_1_1_discrete_function.html" title="Class representing functions of sets of variables with discrete domains.">maxsum::DiscreteFunction</a>, <img class="formulaInl" alt="$f$" src="form_6.png"/>, with linear indices 1 to <code>N</code>. </p>
 <table class="doxtable">
 <tr>
 <th>Member Function</th><th>Definition </th></tr>
 <tr>
-<td><a class="el" href="classmaxsum_1_1_discrete_function.html#af23096f6b1f8460b5899367ca5cf16ce" title="Returns the mean scalar value for function across entire domain.">maxsum::DiscreteFunction::mean</a></td><td><img class="formulaInl" alt="$\frac{1}{N} \sum_{k=1}^N f(k)$" src="form_9.png"/> </td></tr>
+<td><a class="el" href="classmaxsum_1_1_discrete_function.html#af23096f6b1f8460b5899367ca5cf16ce" title="Returns the mean scalar value for function across entire domain.">DiscreteFunction::mean</a></td><td><img class="formulaInl" alt="$\frac{1}{N} \sum_{k=1}^N f(k)$" src="form_9.png"/> </td></tr>
 <tr>
-<td><a class="el" href="classmaxsum_1_1_discrete_function.html#a8808e251912f0bb3ad768948b754a3f4" title="Returns the maximum scalar value for function across entire domain.">maxsum::DiscreteFunction::max</a></td><td><img class="formulaInl" alt="$\max_k f(k)$" src="form_10.png"/> </td></tr>
+<td><a class="el" href="classmaxsum_1_1_discrete_function.html#a8808e251912f0bb3ad768948b754a3f4" title="Returns the maximum scalar value for function across entire domain.">DiscreteFunction::max</a></td><td><img class="formulaInl" alt="$\max_k f(k)$" src="form_10.png"/> </td></tr>
 <tr>
-<td><a class="el" href="classmaxsum_1_1_discrete_function.html#ab1391246a7b2b192fdab3400d2e36407" title="Returns the minimum scalar value of the function across entire domain.">maxsum::DiscreteFunction::min</a></td><td><img class="formulaInl" alt="$\min_k f(k)$" src="form_11.png"/> </td></tr>
+<td><a class="el" href="classmaxsum_1_1_discrete_function.html#ab1391246a7b2b192fdab3400d2e36407" title="Returns the minimum scalar value of the function across entire domain.">DiscreteFunction::min</a></td><td><img class="formulaInl" alt="$\min_k f(k)$" src="form_11.png"/> </td></tr>
 <tr>
-<td><a class="el" href="classmaxsum_1_1_discrete_function.html#a949b94c6527b4115a92357adc249a3a8" title="Returns the maxnorm for this function.">maxsum::DiscreteFunction::maxnorm</a></td><td><img class="formulaInl" alt="$\max_k |f(k)|$" src="form_12.png"/> </td></tr>
+<td><a class="el" href="classmaxsum_1_1_discrete_function.html#a949b94c6527b4115a92357adc249a3a8" title="Returns the maxnorm for this function.">DiscreteFunction::maxnorm</a></td><td><img class="formulaInl" alt="$\max_k |f(k)|$" src="form_12.png"/> </td></tr>
 </table>
 <h3><a class="anchor" id="domain_ops"></a>
 Domain Operations</h3>
+<p><em>Domain</em> operations operate on a single <a class="el" href="classmaxsum_1_1_discrete_function.html" title="Class representing functions of sets of variables with discrete domains.">DiscreteFunction</a> object to reduce or expand its domain in some way. In particular, the <a class="el" href="classmaxsum_1_1_discrete_function.html#a6490769ee942e61ea54dd91cc6f7ff25" title="Make this function depend on additional variables.">DiscreteFunction::expand</a> member extends the set of variables that a <a class="el" href="classmaxsum_1_1_discrete_function.html" title="Class representing functions of sets of variables with discrete domains.">DiscreteFunction</a> depends on, such that its new domain is the union of its previous domain, and a set of variables specified by the expand function's arguments. Several overloaded versions exist that allow the new set of variables to be specified in different ways: </p>
+<table class="doxtable">
+<tr>
+<th>Member Function</th><th>Description </th></tr>
+<tr>
+<td><a class="el" href="classmaxsum_1_1_discrete_function.html#a8497dfc35f67d66cbca3c6f072ff188f" title="Expand the domain of this function to include a named variable.">DiscreteFunction::expand(const VarID var)</a> </td><td>Expands the domain to include the variable <code>var</code>. </td></tr>
+<tr>
+<td><a class="el" href="classmaxsum_1_1_discrete_function.html#ad1b43bd614257887b4084ee2de1e721b" title="Make the domain of this function include the domain of another.">DiscreteFunction::expand(const DiscreteFunction&amp; fun)</a> </td><td>Expands the domain of <code>this</code> <a class="el" href="classmaxsum_1_1_discrete_function.html" title="Class representing functions of sets of variables with discrete domains.">DiscreteFunction</a> to include all variables in the domain of <code>fun</code>. </td></tr>
+<tr>
+<td>template&lt;class VarInd&gt; <a class="el" href="classmaxsum_1_1_discrete_function.html#a6490769ee942e61ea54dd91cc6f7ff25" title="Make this function depend on additional variables.">DiscreteFunction::expand(VarInd begin,VarInd end)</a> </td><td>Expands the domain to include all variables in the sequence pointed to by the iterators <code>begin</code> and <code>end</code>. </td></tr>
+</table>
+<p>After a call to <code>expand</code>, the <a class="el" href="classmaxsum_1_1_discrete_function.html" title="Class representing functions of sets of variables with discrete domains.">DiscreteFunction</a>'s values remain the same for all elements of its previous domain. For example </p>
+<pre>
+using namespace maxsum;
+<a class="el" href="namespacemaxsum.html#a373fa742a9678cc654e76384cb04d7b0" title="Registers a variable with a specified domain size.">registerVariable</a> (1,3);
+<a class="el" href="namespacemaxsum.html#a373fa742a9678cc654e76384cb04d7b0" title="Registers a variable with a specified domain size.">registerVariable</a> (2,3);
+<a class="el" href="classmaxsum_1_1_discrete_function.html" title="Class representing functions of sets of variables with discrete domains.">DiscreteFunction</a> func(2,0); // depends only on variable 2
+func(0) = 1.1;
+func(1) = 2.2;
+func(2) = 3.3;</pre><pre>func.expand(1);   // func now depends on variables 1 and 2
+val = func(1,0);  // val == 1.1
+val = func(2,0);  // val == 1.1
+val = func(1,2);  // val == 3.3
+val = func(2,2);  // val == 3.3
+</pre><p> As well as expanding a <a class="el" href="classmaxsum_1_1_discrete_function.html" title="Class representing functions of sets of variables with discrete domains.">DiscreteFunction</a>'s domain, it is often necessary to <em>reduce</em> its domain. In general, this results in a loss of information, so it is necessary to specify how the values in the new smaller domain are derived from those in the original larger domain. Currently, there are two ways to do this.</p>
+<p>First, the <a class="el" href="classmaxsum_1_1_discrete_function.html#ae0bc8ada042a00e5cd917d8af8dfd0e8" title="Condition function on specified variable values.">DiscreteFunction::condition</a> member function can be used to specify fixed values for a set of variables that are to be removed from a function's domain. For example, following on from the code in the last example, we may may reduce the domain of <code>func</code> as follows. </p>
+<pre>
+<a class="el" href="namespacemaxsum.html#a572e59b0c017dac30927fc445aa28216" title="Type used for uniquely identifying variables.">VarID</a> toRemove[] = {2}; // list of variables to remove
+<a class="el" href="namespacemaxsum.html#a2703843fa0f76002b3285d94f1693d26" title="Integer type used for indexing coefficient values.">ValIndex</a> vals[] = {1};   // fixed values for removed variables
+func.condition (toRemove,toRemove+1,vals,vals+1); // specify iterators over arrays</pre><pre>val = func(0); // val == 2.2 (because variable 2 was given fixed value 1)
+val = func(1); // val == 2.2 (see code above)
+val = func(2); // val == 2.2
+</pre><p>Second, rather than conditioning on specific values for the removed removed variables, we can <em>marginalise</em> by somehow aggregating all the values for the removed variables to produce a single value. In particular, the definition of the max-sum algorithm requires variables to be removed by taking a function's maximum value across the removed variables. Here, this is achieved using the <a class="el" href="namespacemaxsum.html#a219e2e817c1601121cdb149147c14abc" title="Marginalise a maxsum::DiscreteFunction by maximisation.">maxMarginal</a> function, which takes the maximum value of one <a class="el" href="classmaxsum_1_1_discrete_function.html" title="Class representing functions of sets of variables with discrete domains.">DiscreteFunction</a> across a set variables, and stores the result in another <a class="el" href="classmaxsum_1_1_discrete_function.html" title="Class representing functions of sets of variables with discrete domains.">DiscreteFunction</a>.</p>
+<p>This works by passing references to two DiscreteFunctions: the first, <code>inFun</code>, is the original function to be marginalised, and the second, <code>outFun</code>, is a function with a smaller domain, in which the result will be stored. The domain of <code>outFun</code> must not be larger than the domain of <code>inFun</code>, and any variables that are in the domain of <code>inFun</code>, but not in the domain of <code>outFun</code>, will be marginalised. This procedure is demonstrated in the following code. </p>
+<pre>
+<a class="el" href="namespacemaxsum.html#a572e59b0c017dac30927fc445aa28216" title="Type used for uniquely identifying variables.">VarID</a> vars = {1,2};
+<a class="el" href="namespacemaxsum.html#a2703843fa0f76002b3285d94f1693d26" title="Integer type used for indexing coefficient values.">ValIndex</a> siz = {2,3}; // variable 1 has domain size 2, etc.
+<a class="el" href="namespacemaxsum.html#a18bbaee58df9fdda98966952ad990c85" title="Register a list of variables with specified domain sizes.">registerVariables</a> (vars,vars+2,siz,siz+2);
+<a class="el" href="classmaxsum_1_1_discrete_function.html" title="Class representing functions of sets of variables with discrete domains.">DiscreteFunction</a> inFun(vars,vars+2);  // depends on variables 1 and 2
+<a class="el" href="classmaxsum_1_1_discrete_function.html" title="Class representing functions of sets of variables with discrete domains.">DiscreteFunction</a> outFun(vars,vars+1); // depends on variable 1 only</pre><pre>inFun(0,0) = 1; // assign some values to inFun
+inFun(1,1) = 2;
+inFun(0,2) = 3;
+inFun(1,0) = 4;
+inFun(0,1) = 5;
+inFun(1,2) = 6;</pre><pre><a class="el" href="namespacemaxsum.html#a219e2e817c1601121cdb149147c14abc" title="Marginalise a maxsum::DiscreteFunction by maximisation.">maxMarginal</a> (inFun,outFun); // max marginalise inFun and store result in outFun</pre><pre>val = outFun(0);  // val==5 (maximum value for variable 1=0 in inFun)
+val = outFun(1);  // val==6 (maximum value for variable 1=1 in inFun)
+</pre><p> The reason for this style is efficiency: by preallocating <code>outFun</code> to store the result, we do not need to not need to allocate temporary objects in memory, and if necessary, can reuse <code>outFun</code> to store the result of several similar marginalisations.</p>
+<p>More generally, the maxsum library also provides a number marginalisation functions, which aggregate across the removed variables in different ways. These are summarised in the table below. However, only the <a class="el" href="namespacemaxsum.html#a219e2e817c1601121cdb149147c14abc" title="Marginalise a maxsum::DiscreteFunction by maximisation.">maxMarginal</a> function is actually required to implement the max-sum algorithm. See <a href="#maxsumcontroller">The MaxSumController Class</a> for details. </p>
+<table class="doxtable">
+<tr>
+<th>Function</th><th>Description </th></tr>
+<tr>
+<td><a class="el" href="namespacemaxsum.html#a219e2e817c1601121cdb149147c14abc" title="Marginalise a maxsum::DiscreteFunction by maximisation.">maxMarginal</a> </td><td>Marginalise by maximising across removed variables. </td></tr>
+<tr>
+<td><a class="el" href="namespacemaxsum.html#a3a82ee0162acb2c89417e5365be4f854" title="Marginalise a maxsum::DiscreteFunction by minimisation.">minMarginal</a> </td><td>Marginalise by minimising across removed variables. </td></tr>
+<tr>
+<td><a class="el" href="namespacemaxsum.html#a555aaedda317f2d7a06fedd8c0636d5c" title="Marginalise a maxsum::DiscreteFunction by averaging.">meanMarginal</a> </td><td>Marginalise by averaging across removed variables. </td></tr>
+<tr>
+<td><a class="el" href="namespacemaxsum.html#ae48b4828eefae581abf6b475b8d8f60c" title="Marginalise a maxsum::DiscreteFunction using a specified aggregation function.">marginal</a> </td><td>Marginalise using a custom aggregation function. </td></tr>
+</table>
 <h3><a class="anchor" id="arithmetic_ops"></a>
 Arithmetic Operations</h3>
 <h2><a class="anchor" id="comparision_ops"></a>
@@ -252,7 +307,7 @@ Future Work</h1>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Aug 1 2012 21:16:07 for Max-Sum by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Aug 2 2012 09:47:32 for Max-Sum by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.1.2
 </small></address>
