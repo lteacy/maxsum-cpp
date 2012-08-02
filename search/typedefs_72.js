@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['receiverit',['ReceiverIt',['../classmaxsum_1_1_post_office.html#a0b8222b4db57fb0e840e61be409ab11c',1,'maxsum::PostOffice']]]
+  ['receiverit',['ReceiverIt',['../classmaxsum_1_1util_1_1_post_office.html#aac4f630e2383e35a09422b9380d82e97',1,'maxsum::util::PostOffice']]]
 ];

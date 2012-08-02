@@ -1,6 +1,7 @@
 var searchData=
 [
   ['mainpage_2eh',['mainpage.h',['../mainpage_8h.html',1,'']]],
+  ['mapped_5ftype',['mapped_type',['../classmaxsum_1_1util_1_1_ref_map.html#a04f04dce3cf74b506ac27356df2666e8',1,'maxsum::util::RefMap']]],
   ['marginal',['marginal',['../namespacemaxsum.html#ae48b4828eefae581abf6b475b8d8f60c',1,'maxsum']]],
   ['max',['max',['../classmaxsum_1_1_discrete_function.html#a8808e251912f0bb3ad768948b754a3f4',1,'maxsum::DiscreteFunction']]],
   ['maxmarginal',['maxMarginal',['../namespacemaxsum.html#a219e2e817c1601121cdb149147c14abc',1,'maxsum']]],

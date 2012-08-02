@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['f2fpostoffice',['F2FPostOffice',['../namespacemaxsum.html#aba3b3b89155eeec99cff8f330fe9948b',1,'maxsum']]],
-  ['f2vpostoffice',['F2VPostOffice',['../namespacemaxsum.html#a6cc54b9fce21b60cf66dca62e5f06fc3',1,'maxsum']]],
+  ['f2fpostoffice',['F2FPostOffice',['../namespacemaxsum_1_1util.html#a0b0db2991eeb1d87b6530442d00d7d24',1,'maxsum::util']]],
+  ['f2vpostoffice',['F2VPostOffice',['../namespacemaxsum_1_1util.html#a696eb9458ae264d2385a36a113b29060',1,'maxsum::util']]],
   ['factorbegin',['factorBegin',['../classmaxsum_1_1_max_sum_controller.html#a6369d699468aab5f0f15ad2a0fe1454d',1,'maxsum::MaxSumController']]],
   ['factorend',['factorEnd',['../classmaxsum_1_1_max_sum_controller.html#a29b31f01a2b2fa78adc83f8c736052e5',1,'maxsum::MaxSumController']]],
   ['factorid',['FactorID',['../namespacemaxsum.html#a2bce04bab0e368fa664de701b05b3690',1,'maxsum']]],

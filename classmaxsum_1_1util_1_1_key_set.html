@@ -135,7 +135,7 @@ class maxsum::util::KeySet&lt; Map &gt;</h3>
 
 <p>Utility class for presenting the keys of a map in a read-only container. </p>
 <p>Provides methods for iterating over this set that adhere to standard library concepts. </p>
-<dl class="section attention"><dt>Attention</dt><dd>This class is used as part of the implementation of the <a class="el" href="classmaxsum_1_1_post_office.html" title="Class used to store and manage messages sent between factor graph nodes.">maxsum::PostOffice</a> class only, and so does not need to be referenced directly by calling libraries. We therefore only implement the subset of the standard container iterface that we actually need for our own purposes. </dd></dl>
+<dl class="section attention"><dt>Attention</dt><dd>This class is used as part of the implementation of the maxsum::PostOffice class only, and so does not need to be referenced directly by calling libraries. We therefore only implement the subset of the standard container iterface that we actually need for our own purposes. </dd></dl>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">Map</td><td>the class of underlying map referenced by this object. </td></tr>
@@ -170,7 +170,7 @@ template&lt;class Map&gt; </div>
 <p>Construct a new maxsum::KeySet backed by a specified map. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">keyMap</td><td>the backend map whoses key set we wish to present through this class. Changes to keyMap are tracked by this object, but no modificiations can be made to keyMap through this object. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">pKeyMap</td><td>the backend map whoses key set we wish to present through this class. Changes to keyMap are tracked by this object, but no modificiations can be made to keyMap through this object. </td></tr>
   </table>
   </dd>
 </dl>
@@ -299,7 +299,7 @@ template&lt;class Map&gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Aug 2 2012 14:11:39 for Max-Sum by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Aug 2 2012 14:35:50 for Max-Sum by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.1.2
 </small></address>

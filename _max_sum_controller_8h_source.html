@@ -114,9 +114,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;      ActionMap actions_i;</div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;      <a class="code" href="classmaxsum_1_1_post_office.html">F2VPostOffice</a> fac2varMsgs_i;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;      <a class="code" href="classmaxsum_1_1util_1_1_post_office.html" title="Class used to store and manage messages sent between factor graph nodes.">util::F2VPostOffice</a> fac2varMsgs_i;</div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;      <a class="code" href="classmaxsum_1_1_post_office.html">V2FPostOffice</a> var2facMsgs_i;</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;      <a class="code" href="classmaxsum_1_1util_1_1_post_office.html" title="Class used to store and manage messages sent between factor graph nodes.">util::V2FPostOffice</a> var2facMsgs_i;</div>
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;</div>
 <div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;      <span class="keywordtype">int</span> maxIterations_i;</div>
 <div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;</div>
@@ -159,7 +159,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;</div>
 <div class="line"><a name="l00208"></a><span class="lineno"><a class="code" href="classmaxsum_1_1_max_sum_controller.html#ac5fea2dfb4b90642baf88be55bf00dd6">  208</a></span>&#160;      <span class="keywordtype">bool</span> <a class="code" href="classmaxsum_1_1_max_sum_controller.html#ac5fea2dfb4b90642baf88be55bf00dd6" title="Returns true if and only if the specified variable, var and factor, fac are known to this maxsum::Max...">hasEdge</a>(<a class="code" href="namespacemaxsum.html#a2bce04bab0e368fa664de701b05b3690" title="Type used for uniquely identifying factors in a factor graph.">FactorID</a> <span class="keywordtype">id</span>, <a class="code" href="namespacemaxsum.html#a572e59b0c017dac30927fc445aa28216" title="Type used for uniquely identifying variables.">VarID</a> var)<span class="keyword"> const</span></div>
 <div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;<span class="keyword">      </span>{</div>
-<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;         <span class="keywordflow">return</span> var2facMsgs_i.<a class="code" href="classmaxsum_1_1_post_office.html#a9df4c8433ad1e592317b44bdcbae571e" title="Returns true if a specified sender and receiver are connected.">hasEdge</a>(var,<span class="keywordtype">id</span>);</div>
+<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;         <span class="keywordflow">return</span> var2facMsgs_i.<a class="code" href="classmaxsum_1_1util_1_1_post_office.html#aa65f112aacbe8fc4be59323ae5cab8e7" title="Returns true if a specified sender and receiver are connected.">hasEdge</a>(var,<span class="keywordtype">id</span>);</div>
 <div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;      }</div>
 <div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;</div>
 <div class="line"><a name="l00216"></a><span class="lineno"><a class="code" href="classmaxsum_1_1_max_sum_controller.html#adae1bf2aca76783b08b376e754eb2135">  216</a></span>&#160;      <span class="keywordtype">int</span> <a class="code" href="classmaxsum_1_1_max_sum_controller.html#adae1bf2aca76783b08b376e754eb2135" title="Returns the number of factors know to this factor graph.">noFactors</a>()<span class="keyword"> const</span></div>
@@ -169,12 +169,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;      </div>
 <div class="line"><a name="l00224"></a><span class="lineno"><a class="code" href="classmaxsum_1_1_max_sum_controller.html#a6319a1727d1fe2af9bc8c171394ba6c0">  224</a></span>&#160;      <span class="keywordtype">int</span> <a class="code" href="classmaxsum_1_1_max_sum_controller.html#a6319a1727d1fe2af9bc8c171394ba6c0" title="Returns the number of variables known to this factor graph.">noVars</a>()<span class="keyword"> const</span></div>
 <div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;<span class="keyword">      </span>{</div>
-<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;         <span class="keywordflow">return</span> var2facMsgs_i.<a class="code" href="classmaxsum_1_1_post_office.html#a944ca1f7aa46c3fd15254e7bcc03d4aa" title="Returns the number of Sender&#39;s registered with this PostOffice.">numOfSenders</a>();;</div>
+<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;         <span class="keywordflow">return</span> var2facMsgs_i.<a class="code" href="classmaxsum_1_1util_1_1_post_office.html#a635030e637fdd3cf62139f4bc5f95768" title="Returns the number of Sender&#39;s registered with this PostOffice.">numOfSenders</a>();;</div>
 <div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;      }</div>
 <div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;</div>
 <div class="line"><a name="l00232"></a><span class="lineno"><a class="code" href="classmaxsum_1_1_max_sum_controller.html#a2f801dbc4fe6b2cd7f9adbd4f5bb4af8">  232</a></span>&#160;      <span class="keywordtype">int</span> <a class="code" href="classmaxsum_1_1_max_sum_controller.html#a2f801dbc4fe6b2cd7f9adbd4f5bb4af8" title="Returns the number of edges in the factor graph.">noEdges</a>()<span class="keyword"> const</span></div>
 <div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;<span class="keyword">      </span>{</div>
-<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;         <span class="keywordflow">return</span> var2facMsgs_i.<a class="code" href="classmaxsum_1_1_post_office.html#a31b4956d2fe506dfaee4d81f559ed54d" title="Returns the number of edges (routes between sender&#39;s and receivers) registered in this PostOffice...">numOfEdges</a>();;</div>
+<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;         <span class="keywordflow">return</span> var2facMsgs_i.<a class="code" href="classmaxsum_1_1util_1_1_post_office.html#a6a776783f03da07d3f1dc55f34418940" title="Returns the number of edges (routes between sender&#39;s and receivers) registered in this PostOffice...">numOfEdges</a>();;</div>
 <div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;      }</div>
 <div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;</div>
 <div class="line"><a name="l00241"></a><span class="lineno"><a class="code" href="classmaxsum_1_1_max_sum_controller.html#a85f0c0425df7ed76c5fa9a44665a0d27">  241</a></span>&#160;      <a class="code" href="classmaxsum_1_1_max_sum_controller.html#ad0681a9da6c5a678d5c1b3213c772d9e" title="Read only iterator for all variable value assigments.">ConstActionIterator</a> <a class="code" href="classmaxsum_1_1_max_sum_controller.html#a85f0c0425df7ed76c5fa9a44665a0d27" title="Returns a read only iterator to the beginning of the action value map.">actionBegin</a>()<span class="keyword"> const</span></div>
@@ -231,7 +231,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;   <span class="keyword">const</span> <a class="code" href="namespacemaxsum.html#add02fc7a161c705a735b15646b2b6733" title="Type of values stored by maxsum::DiscreteFunction objects.">ValType</a> <a class="code" href="classmaxsum_1_1_max_sum_controller.html#ab2e17a7559f828c54c8cfb109fb4ef8b" title="Default maximum maxnorm allowed between the old and new values of a message, before it is assumed to ...">MaxSumController::DEFAULT_MAXNORM_THRESHOLD</a>=0.0000001;</div>
 <div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;</div>
 <div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;   std::ostream&amp; <a class="code" href="namespacemaxsum.html#a5a71b4f9ef67a9784db88235c47938ae" title="Pretty prints a maxsum::DiscreteFunction Format is similar to the disp function in Matlab for N-D arr...">operator&lt;&lt;</a>(std::ostream&amp; out,</div>
-<div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160;         <span class="keyword">const</span> MaxSumController&amp; controller);</div>
+<div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160;         MaxSumController&amp; controller);</div>
 <div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160;</div>
 <div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;} <span class="comment">// maxsum</span></div>
 <div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160;</div>
@@ -240,7 +240,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Aug 2 2012 14:11:39 for Max-Sum by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Aug 2 2012 14:35:49 for Max-Sum by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.1.2
 </small></address>
