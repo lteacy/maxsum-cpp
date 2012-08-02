@@ -101,6 +101,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 Overview</h1>
 <p>This library provides an implementation of the max-sum algorithm in C++. For more details about the purpose and theory behind this algorithm, please see <a href="http://eprints.soton.ac.uk/265159/">http://eprints.soton.ac.uk/265159/</a></p>
 <p>To source code for this library can be dowloaded from <a href="https://github.com/lteacy/maxsum-cpp">here</a>.</p>
+<p>If you have any comments or suggestions about this library or its documentation, please let me know via the main <a href="https://github.com/lteacy/maxsum-cpp">project website</a>.</p>
 <h1><a class="anchor" id="usage"></a>
 Library Organisation</h1>
 <p>The contents of this library are organised into two main namespaces: </p>
@@ -324,6 +325,12 @@ h(1,0) = 4.0; h(1,1) = 4.1; h(1,2) = 4.2;</pre><pre><a class="el" href="classmax
 <tr>
 <td><code> -g</code></td><td>Unary Minus. </td></tr>
 </table>
+<p>The right operand, <code>g</code>, can also be replaced by a scalar value of any numeric type convertable to <a class="el" href="namespacemaxsum.html#add02fc7a161c705a735b15646b2b6733" title="Type of values stored by maxsum::DiscreteFunction objects.">ValType</a>. In this case, the scalar is operated on with each element in the <a class="el" href="classmaxsum_1_1_discrete_function.html" title="Class representing functions of sets of variables with discrete domains.">DiscreteFunction</a>'s domain e.g. </p>
+<pre>
+<a class="el" href="classmaxsum_1_1_discrete_function.html" title="Class representing functions of sets of variables with discrete domains.">DiscreteFunction</a> z = f + 100.5;
+// z(0) == f(0) + 100.5 == 1.0 + 100.5 == 101.5
+// z(1) == f(1) + 100.5 == 1.1 + 100.5 == 101.6
+</pre><p> Since adding a number of DiscreteFunctions together is a common procedure, a member function <a class="el" href="classmaxsum_1_1_discrete_function.html#a3c9adbf572284ec843755691d34ded79" title="Adds a list of Functions to this one, expanding the domain if necessary.">DiscreteFunction::add</a> is also provided, which takes iterators to the start and end of a sequence of DiscreteFunctions, and adds them all to the current <a class="el" href="classmaxsum_1_1_discrete_function.html" title="Class representing functions of sets of variables with discrete domains.">DiscreteFunction</a>, expanding its domain if necessary.</p>
 <h2><a class="anchor" id="comparision_ops"></a>
 Comparison Operations</h2>
 <p>Equality between DiscreteFunctions can be defined in several ways, and for this reason the maxsum library provides three different functions for testing equality between <a class="el" href="classmaxsum_1_1_discrete_function.html" title="Class representing functions of sets of variables with discrete domains.">DiscreteFunction</a> objects: </p>
@@ -348,16 +355,96 @@ Comparison Operations</h2>
 </table>
 <h2><a class="anchor" id="misc_ops"></a>
 Miscellaneous Operations</h2>
+<p>The <a class="el" href="classmaxsum_1_1_discrete_function.html" title="Class representing functions of sets of variables with discrete domains.">DiscreteFunction</a> class includes a number of members that do not directly relate to a <a class="el" href="classmaxsum_1_1_discrete_function.html" title="Class representing functions of sets of variables with discrete domains.">DiscreteFunction</a>'s values, but instead provide meta data about the function, and enable various house keeping operations. These are summarised in the following table. </p>
+<table class="doxtable">
+<tr>
+<th>Function</th><th>Description </th></tr>
+<tr>
+<td><a class="el" href="classmaxsum_1_1_discrete_function.html#a4f0cb99d85930efbb6945e7e4de60197" title="Accessor method for the total size this function&#39;s domain.">DiscreteFunction::domainSize</a> </td><td>Returns the size of this <a class="el" href="classmaxsum_1_1_discrete_function.html" title="Class representing functions of sets of variables with discrete domains.">DiscreteFunction</a>'s domain, defined as the product of the domain sizes for each variable in its domain. </td></tr>
+<tr>
+<td><a class="el" href="classmaxsum_1_1_discrete_function.html#a863f6c668486665117318c96e6e407d7" title="Returns the number of variables on which this function depends.">DiscreteFunction::noVars</a> </td><td>Returns the number of variables in this <a class="el" href="classmaxsum_1_1_discrete_function.html" title="Class representing functions of sets of variables with discrete domains.">DiscreteFunction</a>'s domain. </td></tr>
+<tr>
+<td><a class="el" href="classmaxsum_1_1_discrete_function.html#aef0c2cd95197bf66b65a6df099069179" title="Returns true if this function depends on the specified variable.">DiscreteFunction::dependsOn</a> </td><td>Returns <code>true</code> if a specified variable is in this <a class="el" href="classmaxsum_1_1_discrete_function.html" title="Class representing functions of sets of variables with discrete domains.">DiscreteFunction</a>'s domain. </td></tr>
+<tr>
+<td><a class="el" href="classmaxsum_1_1_discrete_function.html#a27dbb69c84f206e251d6c80122a61888" title="Returns an iterator to the start of this function&#39;s domain variable list.">DiscreteFunction::varBegin</a> </td><td>Returns an iterator to the start of the list of variables in this <a class="el" href="classmaxsum_1_1_discrete_function.html" title="Class representing functions of sets of variables with discrete domains.">DiscreteFunction</a>'s domain. </td></tr>
+<tr>
+<td><a class="el" href="classmaxsum_1_1_discrete_function.html#a5551045d4c693a4d70ba4cd0984cd789" title="Returns an iterator to the end of this function&#39;s domain variable list.">DiscreteFunction::varEnd</a> </td><td>Returns an iterator to the end of the list of variables in this <a class="el" href="classmaxsum_1_1_discrete_function.html" title="Class representing functions of sets of variables with discrete domains.">DiscreteFunction</a>'s domain. </td></tr>
+<tr>
+<td><a class="el" href="classmaxsum_1_1_discrete_function.html#a3dd0befdfa370727d737cee0da9d1c5b" title="Returns an iterator to the start of this function&#39;s domain variable size list.">DiscreteFunction::sizeBegin</a> </td><td>Returns an iterator to the start of a list of domain sizes, in which the kth element gives the domain size for the kth variable in this <a class="el" href="classmaxsum_1_1_discrete_function.html" title="Class representing functions of sets of variables with discrete domains.">DiscreteFunction</a>'s domain. </td></tr>
+<tr>
+<td><a class="el" href="classmaxsum_1_1_discrete_function.html#ae3ba7896985decae2e3d369a6ff8321c" title="Returns an iterator to the end of this function&#39;s domain variable size list.">DiscreteFunction::sizeEnd</a> </td><td>Returns an iterator to the end of a list of domain sizes, in which the kth element gives the domain size for the kth variable in this <a class="el" href="classmaxsum_1_1_discrete_function.html" title="Class representing functions of sets of variables with discrete domains.">DiscreteFunction</a>'s domain. </td></tr>
+</table>
 <h1><a class="anchor" id="domainIterator"></a>
 The DomainIterator Class</h1>
 <p>Todo.</p>
 <h1><a class="anchor" id="maxsumcontroller"></a>
 The MaxSumController Class</h1>
-<p>Todo.</p>
+<p><a class="el" href="classmaxsum_1_1_max_sum_controller.html" title="This class maintains a factor graph and implements the max-sum algorithm.">MaxSumController</a> is the main class responsible for implementing the max-sum algorithm, and providing its results. To run the algorithm using this class, the following steps are all that is required:</p>
+<ol type="1">
+<li>Register all variables in the factor graph using either <a class="el" href="namespacemaxsum.html#a373fa742a9678cc654e76384cb04d7b0" title="Registers a variable with a specified domain size.">registerVariable</a> or <a class="el" href="namespacemaxsum.html#a18bbaee58df9fdda98966952ad990c85" title="Register a list of variables with specified domain sizes.">registerVariables</a>.</li>
+<li>Create a set of <a class="el" href="classmaxsum_1_1_discrete_function.html" title="Class representing functions of sets of variables with discrete domains.">DiscreteFunction</a> objects, representing each factor in the target problem's factor graph.</li>
+<li>Construct a new <a class="el" href="classmaxsum_1_1_max_sum_controller.html" title="This class maintains a factor graph and implements the max-sum algorithm.">MaxSumController</a> object, optionally specifying termination conditions.</li>
+<li>Use the <a class="el" href="classmaxsum_1_1_max_sum_controller.html#a4cff3513f4d480dfa6dcd77f72c51d4d" title="Accessor method for factor function.">MaxSumController::setFactor</a> member function to specify the set of factors from the previously created list of <a class="el" href="classmaxsum_1_1_discrete_function.html" title="Class representing functions of sets of variables with discrete domains.">DiscreteFunction</a> objects.</li>
+<li>Call <a class="el" href="classmaxsum_1_1_max_sum_controller.html#ace444371d6159fba0fc1548bf9a2aeb2" title="Runs the max-sum algorithm to optimise the values for each variable.">MaxSumController::optimise</a> to run the max-sum algorithm</li>
+<li>Use <a class="el" href="classmaxsum_1_1_max_sum_controller.html#a12c928d544373c3329c77fbff5522098" title="Returns a read only iterator to the beginning of the variable value map.">MaxSumController::valBegin</a> and <a class="el" href="classmaxsum_1_1_max_sum_controller.html#ab6ee62aefe2e6ece7999a3f5b9779a4d" title="Returns a read only iterator to the end of the variable value map.">MaxSumController::valEnd</a> to iterator through all variables in the factor graph, and retrieve there optimal values.</li>
+</ol>
+<p>For example, the following code illustrates how these steps may be implemented in practice: </p>
+<pre>
+using namespace maxsum;
+std::vector&lt;VarID&gt; vars; // list of variables in factor graph
+std::vector&lt;ValIndex&gt; sizes; // sizes[k] == domain size for vars[k]
+// ... populate above containers with appropriate values
+registerVariables(vars.begin(),vars.end(),sizes.begin(),sizes.end());</pre><pre>std::map&lt;FactorID,DiscreteFunction&gt; factors; // factors mapped to ids
+// populate factors with DiscreteFunctions mapped to factor ids</pre><pre><a class="el" href="classmaxsum_1_1_max_sum_controller.html" title="This class maintains a factor graph and implements the max-sum algorithm.">MaxSumController</a> controller(100,0.0001); // new controller with custom stopping conditions
+                                         // see <a class="el" href="classmaxsum_1_1_max_sum_controller.html#a6702ee30f5ae1730f20900262d01d16e" title="Construct a new maxsum::MaxSumController.">MaxSumController::MaxSumController</a> for details
+// set up factor graph inside controller
+// edges of graph are inferred automatically for factor domains
+typedef std::map&lt;FactorID,DiscreteFunction&gt;::const_iterator Iterator;
+for(Iterator it=factors.begin(); it!=factors.end(); ++it)
+{
+   controller.setFactor(it-&gt;first,it-&gt;second);
+}</pre><pre>controller.optimise(); // run the max-sum algorithm</pre><pre>for(<a class="el" href="classmaxsum_1_1_max_sum_controller.html#a5074c6aa98e12286cb6cea9d69c22dcd" title="Read only iterator for all variable value assigments.">MaxSumController::ConstValueIterator</a> it=controller.valBegin();
+    it!=controller.valEnd(); ++it)
+{
+   std::cout &lt;&lt; "Optimal value for variable " &lt;&lt; it-&gt;first
+             &lt;&lt; " is " &lt;&lt; it-&gt;second &lt;&lt; std::endl;
+}
+</pre><p>In addition to these functions, <a class="el" href="classmaxsum_1_1_max_sum_controller.html" title="This class maintains a factor graph and implements the max-sum algorithm.">MaxSumController</a> class also provides a number of other member functions to set, change, and query the factor graph in different ways. These are particular useful in the problems were the factor values, or the shape of the factor graph can change over time. For further information, see the manual page for <a class="el" href="classmaxsum_1_1_max_sum_controller.html" title="This class maintains a factor graph and implements the max-sum algorithm.">MaxSumController</a>.</p>
 <h1><a class="anchor" id="tips"></a>
 Tips on Writing Efficient Code</h1>
-<p>Todo.</p>
-<h1><a class="anchor" id="futurework"></a>
+<p>In general, the guidelines for writing efficient C++ code in any context also apply to code written using the maxsum library. In particular, one key piece of advice is to, as far as possible, avoid creating temporary objects in memory, when existing objects can be modified and reused.</p>
+<p>One place where temporary objects are unavoidable is in the use of certain overloaded operators: </p>
+<ul>
+<li>The arithmetic operators, <code>+</code>, <code>-</code>, and <code>*</code> all create temporary objects to store their result </li>
+<li>The postfix increment operator, <code>++</code>, returns a copy of its operand, before incrementing the operands value.</li>
+</ul>
+<p>Where possible, it is therefore better to avoid these operators, and instead use <em>destructive</em> alternatives, which replace an operands original value with the result: </p>
+<table class="doxtable">
+<tr>
+<th>Operation</th><th>Efficient Alternative </th></tr>
+<tr>
+<td><code>it++</code></td><td><code>++it</code> </td></tr>
+<tr>
+<td><code>f = f + g</code></td><td><code>f+=g</code> </td></tr>
+<tr>
+<td><code>f = f - g</code></td><td><code>f-=g</code> </td></tr>
+<tr>
+<td><code>f = f * g</code></td><td><code>f*=g</code> </td></tr>
+<tr>
+<td><code>f = - f</code></td><td><code>f *= -1</code> </td></tr>
+</table>
+<p>When performing arithmetic with DiscreteFunctions, another useful technique to expand a function's domain to its final size, rather than allowing its domain to change incrementally with each operation. For example, suppose DiscreteFunctions <code>f</code>, <code>g</code> and <code>h</code> depend on the single variables 1, 2, and 3 respectively. Now consider the following code. </p>
+<pre>
+// f starts with domain {1} only
+f += g; // f reallocated to expand domain to {1,2}
+f += h; // f reallocated to expand domain to {1,2,3}
+</pre><p> On the otherhand, if we know the final domain in advance, we can improve efficiency by doing the following: </p>
+<pre>
+VarID vars[] = {1,2,3};
+f.expand(vars,vars+3); // domain of f is now {1,2,3}
+f += g; // more efficient: no domain change necessary
+f += h; 
+</pre><h1><a class="anchor" id="futurework"></a>
 Future Work</h1>
 <p>Although the basic implementation of this library is now complete, this project is still under going its first phase of active development. Accurate results are thus not yet guarranteed, and in fact, bugs are very much still to be expected.</p>
 <p>For now, our main priority is thus continued testing and debugging. Beyond that, we also plan to look at various options for optimising the code. For example, one option is to link to the <a href="http://eigen.tuxfamily.org">eigen3</a> linear algebra library, to take advantage of its hardware vectorisation.</p>
@@ -365,7 +452,7 @@ Future Work</h1>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Aug 2 2012 14:50:46 for Max-Sum by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Aug 2 2012 17:37:31 for Max-Sum by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.1.2
 </small></address>
