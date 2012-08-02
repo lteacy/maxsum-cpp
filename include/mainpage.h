@@ -4,7 +4,7 @@
  * purpose only.
  * @author Dr W. T. Luke Teacy, University of Southampton
  */
-
+namespace maxsum {
 /**
  * @mainpage
  * \tableofcontents
@@ -37,7 +37,7 @@
  * functions that depend on the cartesian product of a set of variables with
  * finite domains;
  * \li maxsum::DomainIterator, which provides methods for iterating over the
- * domain of maxsum::DiscreteFunction objects; and
+ * domain of DiscreteFunction objects; and
  * \li maxsum::MaxSumController, which operates on a \em factor \em graph,
  * to optimise the values assigned to a set of (action) variables.
  *
@@ -45,7 +45,7 @@
  * together with example extracts of code to demonstrate their proper use.
  *
  * @section function_usage The DiscreteFunction Class
- * The maxsum::DiscreteFunction class is the main workhorse of the maxsum
+ * The DiscreteFunction class is the main workhorse of the maxsum
  * library, which not only provides a way to represent mathematical functions,
  * but also to manipulate their values, and combine them using various
  * mathematical operators to form new functions. As the class name suggests,
@@ -61,7 +61,7 @@
  * can be performed using this class.
  *
  * @subsection function_construction Construction
- * The domain of each maxsum::DiscreteFunction is specified by a set of
+ * The domain of each DiscreteFunction is specified by a set of
  * variables, identified by ids of type maxsum::VarID. Each variables, \c k,
  * is associated with a fixed domain size, \f$N_k\f$, which must be registered
  * before the variable is used, and must remain the same through a program's 
@@ -114,7 +114,7 @@
  * In addition to these, other constructors include a copy constructor
  * and matching assignment operator; and a default constructor,
  * which creates a function that depends on no variables and has a single value
- * of 0. For details, see the manual page for maxsum::DiscreteFunction.
+ * of 0. For details, see the manual page for DiscreteFunction.
  *
  * @subsection function_access Element Access
  * As demonstrated in the examples above, the basic and most efficient way
@@ -190,39 +190,142 @@
  * maxsum::DiscreteFunction::at is also provided for convenient element access
  * through pointers. For example, the following code is valid:
  * <pre>
- * maxsum::registerVariable (3,5);
- * maxsum::DiscreteFunction func(3,4.5);
- * maxsum::DiscreteFunction* pFunc = \&func;
+ * using namespace ::maxsum;
+ * ::registerVariable (3,5);
+ * DiscreteFunction func(3,4.5);
+ * DiscreteFunction* pFunc = \&func;
  * val = (*pFunc)(2);  // works, but ugly
  * val = pFunc->at(2); // equivalent, but more readable
  * </pre>
  *
  * @subsection math_ops Mathematical Operations
  * Three main types of mathematical operation are provided by the
- * maxsum::DiscreteFunction class:
- * \li \em scalar operations, which return a single scalar value based on all
- * values for a maxsum::DiscreteFunction across its domain;
- * \li \em domain operations, which expand or reduce the domain of a single
- * function; and
- * \li \em arithmetic operations, which combine one or more functions to
- * form a new maxsum::DiscreteFunction.
- * 
- * We describe each of these in turn below.
+ * maxsum::DiscreteFunction class, each of which are described below.
  * @subsubsection scalar_ops Scalar Operations
- * The main purpose of scalar operations is to calculate specific statistics
+ * \em Scalar operations are used to calculate specific statistics
  * about a function's values over its domain. The table below summarises the
  * available scalar operations, together with their mathematical definition
  * w.r.t. a maxsum::DiscreteFunction, \f$f\f$, with linear indices 1 to \c N.
- *
  * <TABLE>
  * <TR><TH>Member Function</TH><TH>Definition</TH></TR>
- * <TR><TD>maxsum::DiscreteFunction::mean</TD><TD>\f$\frac{1}{N} \sum_{k=1}^N f(k)\f$</TD></TR>
- * <TR><TD>maxsum::DiscreteFunction::max</TD><TD>\f$\max_k f(k)\f$</TD></TR>
- * <TR><TD>maxsum::DiscreteFunction::min</TD><TD>\f$\min_k f(k)\f$</TD></TR>
- * <TR><TD>maxsum::DiscreteFunction::maxnorm</TD><TD>\f$\max_k |f(k)|\f$</TD></TR>
+ * <TR><TD>DiscreteFunction::mean</TD><TD>\f$\frac{1}{N} \sum_{k=1}^N f(k)\f$</TD></TR>
+ * <TR><TD>DiscreteFunction::max</TD><TD>\f$\max_k f(k)\f$</TD></TR>
+ * <TR><TD>DiscreteFunction::min</TD><TD>\f$\min_k f(k)\f$</TD></TR>
+ * <TR><TD>DiscreteFunction::maxnorm</TD><TD>\f$\max_k |f(k)|\f$</TD></TR>
  * </TABLE>
  *
  * @subsubsection domain_ops Domain Operations
+ * \em Domain operations operate on a single DiscreteFunction object to reduce
+ * or expand its domain in some way. In particular, the
+ * DiscreteFunction::expand member extends the set of variables that a
+ * DiscreteFunction depends on, such that its new domain is the union of its
+ * previous domain, and a set of variables specified by the expand function's
+ * arguments. Several overloaded versions exist that allow the new set of 
+ * variables to be specified in different ways:
+ * <TABLE>
+ * <TR><TH>Member Function</TH><TH>Description</TH></TR>
+ * <TR><TD>DiscreteFunction::expand(const VarID var)</TD>
+ * <TD>Expands the domain to include the variable \c var.</TD></TR>
+ * <TR><TD>DiscreteFunction::expand(const DiscreteFunction& fun)</TD>
+ * <TD>Expands the domain of \c this DiscreteFunction to include all variables
+ * in the domain of \c fun.</TD></TR>
+ * <TR><TD>template<class VarInd> DiscreteFunction::expand(VarInd begin,VarInd end)</TD>
+ * <TD>Expands the domain to include all variables in the sequence pointed to
+ *     by the iterators \c begin and \c end.</TD></TR>
+ * </TABLE>
+ * After a call to \c expand, the DiscreteFunction's values remain the same for all
+ * elements of its previous domain. For example
+ * <pre>
+ * using namespace maxsum;
+ * ::registerVariable (1,3);
+ * ::registerVariable (2,3);
+ * DiscreteFunction func(2,0); // depends only on variable 2
+ * func(0) = 1.1;
+ * func(1) = 2.2;
+ * func(2) = 3.3;
+ *
+ * func.expand(1);   // func now depends on variables 1 and 2
+ * val = func(1,0);  // val == 1.1
+ * val = func(2,0);  // val == 1.1
+ * val = func(1,2);  // val == 3.3
+ * val = func(2,2);  // val == 3.3
+ * </pre>
+ * As well as expanding a DiscreteFunction's domain, it is often necessary
+ * to \em reduce its domain. In general, this results in a loss of information,
+ * so it is necessary to specify how the values in the new smaller domain are
+ * derived from those in the original larger domain. Currently, there are two
+ * ways to do this.
+ *
+ * First, the DiscreteFunction::condition member function can be used to
+ * specify fixed values for a set of variables that are to be removed from
+ * a function's domain. For example, following on from the code in the
+ * last example, we may may reduce the domain of \c func as follows.
+ * <pre>
+ * ::VarID toRemove[] = {2}; // list of variables to remove
+ * ::ValIndex vals[] = {1};   // fixed values for removed variables
+ * func.condition (toRemove,toRemove+1,vals,vals+1); // specify iterators over arrays
+ *
+ * val = func(0); // val == 2.2 (because variable 2 was given fixed value 1)
+ * val = func(1); // val == 2.2 (see code above)
+ * val = func(2); // val == 2.2
+ * </pre>
+ *
+ * Second, rather than conditioning on specific values for the removed
+ * removed variables, we can \em marginalise by somehow aggregating all the
+ * values for the removed variables to produce a single value. In particular,
+ * the definition of the max-sum algorithm requires variables to be removed
+ * by taking a function's maximum value across the removed variables. Here,
+ * this is achieved using the ::maxMarginal function, which takes the
+ * maximum value of one DiscreteFunction across a set variables, and
+ * stores the result in another DiscreteFunction.
+ *
+ * This works by passing references to two DiscreteFunctions: the first,
+ * \c inFun, is the original function to be marginalised, and the second,
+ * \c outFun, is a function with a smaller domain, in which the result will be
+ * stored. The domain of \c outFun must not be larger than the domain of
+ * \c inFun, and any variables that are in the domain of \c inFun, but not
+ * in the domain of \c outFun, will be marginalised. This procedure is 
+ * demonstrated in the following code.
+ * <pre>
+ * ::VarID vars = {1,2};
+ * ::ValIndex siz = {2,3}; // variable 1 has domain size 2, etc.
+ * ::registerVariables (vars,vars+2,siz,siz+2);
+ * DiscreteFunction inFun(vars,vars+2);  // depends on variables 1 and 2
+ * DiscreteFunction outFun(vars,vars+1); // depends on variable 1 only
+ *
+ * inFun(0,0) = 1; // assign some values to inFun
+ * inFun(1,1) = 2;
+ * inFun(0,2) = 3;
+ * inFun(1,0) = 4;
+ * inFun(0,1) = 5;
+ * inFun(1,2) = 6;
+ *
+ * ::maxMarginal (inFun,outFun); // max marginalise inFun and store result in outFun
+ *
+ * val = outFun(0);  // val==5 (maximum value for variable 1=0 in inFun)
+ * val = outFun(1);  // val==6 (maximum value for variable 1=1 in inFun)
+ * </pre>
+ * The reason for this style is efficiency: by preallocating \c outFun to
+ * store the result, we do not need to not need to allocate temporary objects
+ * in memory, and if necessary, can reuse \c outFun to store the result of
+ * several similar marginalisations.
+ * 
+ * More generally, the maxsum library also provides a number marginalisation
+ * functions, which aggregate across the removed variables in different ways.
+ * These are summarised in the table below. However, only the ::maxMarginal
+ * function is actually required to implement the max-sum algorithm. See
+ * <a href="#maxsumcontroller">The MaxSumController Class</a> for details.
+ * <TABLE>
+ * <TR><TH>Function</TH><TH>Description</TH></TR>
+ * <TR><TD>::maxMarginal</TD>
+ * <TD>Marginalise by maximising across removed variables.</TD></TR>
+ * <TR><TD>::minMarginal</TD>
+ * <TD>Marginalise by minimising across removed variables.</TD></TR>
+ * <TR><TD>::meanMarginal</TD>
+ * <TD>Marginalise by averaging across removed variables.</TD></TR>
+ * <TR><TD>::marginal</TD>
+ * <TD>Marginalise using a custom aggregation function.</TD></TR>
+ * </TABLE>
  *
  * @subsubsection arithmetic_ops Arithmetic Operations
  *
@@ -254,3 +357,4 @@
  * We will also continue to improve this documentation of the API.
  * 
  */
+} // maxsum namespace
