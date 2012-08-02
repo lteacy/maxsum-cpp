@@ -1,3 +1,7 @@
+/**
+ * @file DiscreteFunction.h
+ * Defines the maxsum::DiscreteFunction class and related utility functions.
+ */
 #ifndef MAX_SUM_DISCRETE_FUNCTION_H
 #define MAX_SUM_DISCRETE_FUNCTION_H
 

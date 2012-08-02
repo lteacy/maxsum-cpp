@@ -328,8 +328,73 @@ namespace maxsum {
  * </TABLE>
  *
  * @subsubsection arithmetic_ops Arithmetic Operations
+ * Arithmetric operations on DiscreteFunction's are provided by overloading
+ * the standardard arithmetric operators in C++, including \c +, \c -, and \c *.
+ * These operations are applied elementwise across the cartesian product of
+ * the operands' domains, as illustrated in the following example:
+ * <pre>
+ * ::VarID vars = {1,2};
+ * ::ValIndex siz = {2,3}; // variable 1 has domain size 2, etc.
+ * ::registerVariables (vars,vars+2,siz,siz+2);
+ * DiscreteFunction f(vars,vars+1);   // depends only on variable 1
+ * DiscreteFunction g(vars+1,vars+2); // depends only on variable 2
+ * DiscreteFunction h(vars,vars+2);   // depends on variables 1 and 2
+ *
+ * // assign some values
+ *   f(0) = 1.0;   f(1) = 1.1;
+ *   g(0) = 2.0;   g(1) = 2.1;   g(2) = 2.2;
+ * h(0,0) = 3.0; h(0,1) = 3.1; h(0,2) = 3.2;
+ * h(1,0) = 4.0; h(1,1) = 4.1; h(1,2) = 4.2;
+ *
+ * DiscreteFunction x = f+g;
+ * // x(0,0) == f(0) + g(0) == 1.0 + 2.0 == 3.0;
+ * // x(1,0) == f(1) + g(0) == 1.1 + 2.0 == 3.1;
+ * // ....
+ * // x(1,2) == f(1) + g(2) == 1.1 + 2.2 == 3.3;
+ *
+ * DiscreteFunction y = f+h;
+ * // y(0,0) == f(0) + h(0,0) == 1.0 + 3.0 == 4.0;
+ * // y(1,0) == f(1) + h(1,0) == 1.1 + 4.0 == 5.1;
+ * // ....
+ * // y(1,2) == f(1) + h(1,2) == 1.1 + 4.2 == 5.3;
+ * </pre>
+ * Here, notice that the domain of the results, \c x and \c y, are
+ * automatically set to the cartesian product of the domains of the operands.
+ * The following operations are all similarly defined.
+ * <TABLE>
+ * <TR><TH>Operation</TH><TH>Description</TH></TR>
+ * <TR><TD><CODE>f +  g</CODE></TD><TD>Element-wise addition.</TD></TR>
+ * <TR><TD><CODE>f -  g</CODE></TD><TD>Element-wise subtraction.</TD></TR>
+ * <TR><TD><CODE>f *  g</CODE></TD><TD>Element-wise multiplication.</TD></TR>
+ * <TR><TD><CODE>f += g</CODE></TD><TD>Element-wise addition, storing result in \c f.</TD></TR>
+ * <TR><TD><CODE>f -= g</CODE></TD><TD>Element-wise subtraction, storing result in \c f.</TD></TR>
+ * <TR><TD><CODE>f *= g</CODE></TD><TD>Element-wise multiplication, storing result in \c f.</TD></TR>
+ * <TR><TD><CODE>    -g</CODE></TD><TD>Unary Minus.</TD></TR>
+ * </TABLE>
  *
  * @subsection comparision_ops Comparison Operations
+ * Equality between DiscreteFunctions can be defined in several ways, and for
+ * this reason the maxsum library provides three different functions for
+ * testing equality between DiscreteFunction objects:
+ * <TABLE>
+ * <TR><TH>Function</TH><TH>Description</TH></TR>
+ * <TR><TD>::sameDomain(const DiscreteFunction& f1, const DiscreteFunction& f2)</TD><TD>Returns true iff \c f1 and \c f2 have the same domain.</TD></TR>
+ * <TR><TD>::equalWithinTolerance(const DiscreteFunction& f1, const DiscreteFunction& f2, ValType tol)</TD>
+ *     <TD>Returns true iff \c f1 and \c f2 are equal across the cartesian product of their domains, within a given tolerance, \c tol.</TD></TR>
+ * <TR><TD>::strictlyEqualWithinTolerance(const DiscreteFunction& f1, const DiscreteFunction& f2, ValType tol)</TD>
+ *     <TD>Returns true iff <CODE>sameDomain(f1,f2) && equalWithinTolerance(f1,f2,tol)</CODE></TD></TR>
+ * </TABLE>
+ * The functions ::equalWithinTolerance and ::strictlyEqualWithinTolerance are
+ * provided so that two DiscreteFunctions can be treated as equal in cases
+ * where their values differ only by some small rounding error. For cases 
+ * in which strict equality is required between values is required
+ * (i.e. the error tolerance is 0), the
+ * standard equality and inequality operators may also be used:
+ * <TABLE>
+ * <TR><TH>Operator</TH><TH>Definition</TH></TR>
+ * <TR><TD><CODE>f1==f2</CODE></TD><TD><CODE>equalWithinTolerance(f1,f2,0)</CODE></TD></TR>
+ * <TR><TD><CODE>f1!=f2</CODE></TD><TD><CODE>!equalWithinTolerance(f1,f2,0)</CODE></TD></TR>
+ * </TABLE>
  *
  * @subsection misc_ops Miscellaneous Operations
  *
