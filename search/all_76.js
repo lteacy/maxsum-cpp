@@ -1,6 +1,8 @@
 var searchData=
 [
   ['v2fpostoffice',['V2FPostOffice',['../namespacemaxsum_1_1util.html#af32317dad80c867a67415700be70ae47',1,'maxsum::util']]],
+  ['valbegin',['valBegin',['../classmaxsum_1_1_max_sum_controller.html#a12c928d544373c3329c77fbff5522098',1,'maxsum::MaxSumController']]],
+  ['valend',['valEnd',['../classmaxsum_1_1_max_sum_controller.html#ab6ee62aefe2e6ece7999a3f5b9779a4d',1,'maxsum::MaxSumController']]],
   ['validaterange',['validateRange',['../classmaxsum_1_1_domain_iterator.html#aa94438034a428503bbca3b883b493f0b',1,'maxsum::DomainIterator']]],
   ['valindex',['ValIndex',['../namespacemaxsum.html#a2703843fa0f76002b3285d94f1693d26',1,'maxsum']]],
   ['valtype',['ValType',['../namespacemaxsum.html#add02fc7a161c705a735b15646b2b6733',1,'maxsum']]],

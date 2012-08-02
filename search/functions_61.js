@@ -1,7 +1,5 @@
 var searchData=
 [
-  ['actionbegin',['actionBegin',['../classmaxsum_1_1_max_sum_controller.html#a85f0c0425df7ed76c5fa9a44665a0d27',1,'maxsum::MaxSumController']]],
-  ['actionend',['actionEnd',['../classmaxsum_1_1_max_sum_controller.html#a7abe47da0212f9b5d4f2abdb9442102c',1,'maxsum::MaxSumController']]],
   ['add',['add',['../classmaxsum_1_1_discrete_function.html#a3c9adbf572284ec843755691d34ded79',1,'maxsum::DiscreteFunction']]],
   ['addedge',['addEdge',['../classmaxsum_1_1util_1_1_post_office.html#ae322a34670303e909d58830ed02a60ec',1,'maxsum::util::PostOffice::addEdge(Sender s, Receiver r)'],['../classmaxsum_1_1util_1_1_post_office.html#a5e4ce7b159fb1d4e764242db4d67eab2',1,'maxsum::util::PostOffice::addEdge(Sender s, Receiver r, const Message &amp;msgVal)']]],
   ['addvars',['addVars',['../classmaxsum_1_1_domain_iterator.html#abe18aa9f512c18c19b56b1d6dc9e804c',1,'maxsum::DomainIterator']]],
