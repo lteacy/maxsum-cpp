@@ -16,6 +16,9 @@ namespace maxsum {
  * The source code for this library can be dowloaded from
  * <a href="https://github.com/lteacy/maxsum-cpp">here</a>.
  *
+ * A pdf version of this documentation is also available
+ * <a href="maxsum_api.pdf">here</a>.
+ *
  * If you have any comments or suggestions about this library or its
  * documentation, please let me know via the main
  * <a href="https://github.com/lteacy/maxsum-cpp">project website</a>.
