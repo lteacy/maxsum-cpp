@@ -135,9 +135,9 @@ std::ostream& maxsum::operator<<(std::ostream& out,
    // Print variables
    //***************************************************************************
    out << "ACTIONS: ";
-   typedef MaxSumController::ActionMap::const_iterator VarIterator;
-   for(VarIterator it=controller.actions_i.begin();
-         it!=controller.actions_i.end(); ++it)
+   typedef MaxSumController::ValueMap::const_iterator VarIterator;
+   for(VarIterator it=controller.values_i.begin();
+         it!=controller.values_i.end(); ++it)
    {
       out << "(" << it->first << "," << it->second << ") ";
    }
@@ -183,11 +183,11 @@ void MaxSumController::setFactor(FactorID id, const DiscreteFunction& factor)
 
       //************************************************************************
       // If the variable is no longer related to any factors, then we remove
-      // it from the action list.
+      // it from the value list.
       //************************************************************************
       if(!var2facMsgs_i.hasSender(*it))
       {
-         actions_i.erase(*it);
+         values_i.erase(*it);
       }
 
    } // for loop
@@ -207,12 +207,12 @@ void MaxSumController::setFactor(FactorID id, const DiscreteFunction& factor)
       var2facMsgs_i.addEdge(*it,id,msgTemplate);
 
       //************************************************************************
-      // Touch the variable to ensure that it is in the action list.
+      // Touch the variable to ensure that it is in the value list.
       //************************************************************************
-      ActionMap::iterator pos = actions_i.find(*it);
-      if(actions_i.end()==pos)
+      ValueMap::iterator pos = values_i.find(*it);
+      if(values_i.end()==pos)
       {
-         actions_i[*it]=0;
+         values_i[*it]=0;
       }
 
    } // for loop
@@ -273,11 +273,11 @@ void MaxSumController::removeFactor(FactorID id)
 
       //************************************************************************
       // If the variable is no longer related to any factors, then we remove
-      // it from the action list.
+      // it from the value list.
       //************************************************************************
       if(!var2facMsgs_i.hasSender(*it))
       {
-         actions_i.erase(*it);
+         values_i.erase(*it);
       }
 
    } // for loop
@@ -307,7 +307,7 @@ void MaxSumController::removeFactor(FactorID id)
    // Clear all data structures.
    //***************************************************************************
    factors_i.clear();
-   actions_i.clear();
+   values_i.clear();
    fac2varMsgs_i.clear();
    var2facMsgs_i.clear();
 
@@ -338,10 +338,10 @@ void MaxSumController::inferGraph()
             vIt != curFunc.varEnd(); ++vIt)
       {
          //*********************************************************************
-         // Ensure that that variable's value is present in the actions list,
+         // Ensure that that variable's value is present in the value list,
          // and initialised to zero.
          //*********************************************************************
-         actions_i[*vIt] = 0;
+         values_i[*vIt] = 0;
 
          //*********************************************************************
          // Add an edge between the current factor and variable to the 
@@ -521,11 +521,11 @@ int MaxSumController::updateVar2FacMsgs()
       // If the optimal value for this variable has changed, update its value,
       // and tell all neighbours to check their mail.
       //************************************************************************
-      ValIndex& curAction = actions_i[var];
-      ValIndex bestAction = msgSum.argmax();
-      if(bestAction != curAction)
+      ValIndex& curValue = values_i[var];
+      ValIndex bestValue = msgSum.argmax();
+      if(bestValue != curValue)
       {
-         curAction = bestAction;
+         curValue = bestValue;
          var2facMsgs_i.notifyAll();
       }
 

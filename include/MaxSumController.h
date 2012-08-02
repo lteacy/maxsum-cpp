@@ -52,15 +52,13 @@ namespace maxsum
        * Type of container used to map (action) variables to their currently
        * assigned values.
        */
-      typedef std::map<VarID,ValIndex> ActionMap;
+      typedef std::map<VarID,ValIndex> ValueMap;
 
       /**
        * Map storing the current values of all variables in the union of
-       * the function domains mapped by factors_i. We call these actions
-       * because we generally think of variables in a max-sum as corresponding
-       * to actions in a decision problem.
+       * the function domains mapped by factors_i.
        */
-      ActionMap actions_i;
+      ValueMap values_i;
 
       /**
        * PostOffice for factor to variable messages.
@@ -114,7 +112,7 @@ namespace maxsum
       /**
        * Read only iterator for all variable value assigments.
        */
-      typedef ActionMap::const_iterator ConstActionIterator;
+      typedef ValueMap::const_iterator ConstValueIterator;
 
       /**
        * Read only iterator for all factors.
@@ -236,19 +234,19 @@ namespace maxsum
 
       /**
        * Returns a read only iterator to the beginning of the 
-       * action value map.
+       * variable value map.
        */
-      ConstActionIterator actionBegin() const
+      ConstValueIterator valBegin() const
       {
-         return actions_i.begin();
+         return values_i.begin();
       }
 
       /**
-       * Returns a read only iterator to the end of the action value map.
+       * Returns a read only iterator to the end of the variable value map.
        */
-      ConstActionIterator actionEnd() const
+      ConstValueIterator valEnd() const
       {
-         return actions_i.end();
+         return values_i.end();
       }
 
       /**
@@ -294,7 +292,7 @@ namespace maxsum
        */
       bool hasValue(VarID id) const
       {
-         return 0!=actions_i.count(id);
+         return 0!=values_i.count(id);
       }
 
       /**
@@ -310,8 +308,8 @@ namespace maxsum
        */
       ValType getValue(VarID id) const
       {
-         ActionMap::const_iterator pos = actions_i.find(id);
-         if(actions_i.end()==pos)
+         ValueMap::const_iterator pos = values_i.find(id);
+         if(values_i.end()==pos)
          {
             throw new NoSuchElementException("MaxSumController::getValue()",
                   "No such variable in factor graph.");
