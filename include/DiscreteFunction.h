@@ -241,6 +241,15 @@ namespace maxsum
       }
 
       /**
+       * Identity function.
+       * @returns a reference to this function.
+       */
+      DiscreteFunction& operator+()
+      {
+         return *this;
+      }
+
+      /**
        * Adds a function to this one, expanding the domain if necessary.
        */
       DiscreteFunction& operator+=(const DiscreteFunction& rhs);

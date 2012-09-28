@@ -241,7 +241,7 @@ int testOperators(DiscreteFunction f1, DiscreteFunction f2, DiscreteFunction f3)
    DiscreteFunction allFun[] = {f1,f2,f3};
    DiscreteFunction add3 = SCALE_FACTOR;
    add3.add(allFun,allFun+3);
-   DiscreteFunction add4 = f3 + SCALE_FACTOR + f1 + f2;
+   DiscreteFunction add4 = f3 + SCALE_FACTOR + (+f1) + f2;
 
    DiscreteFunction allAdd[] = {add1,add2,add3,add4};
 
