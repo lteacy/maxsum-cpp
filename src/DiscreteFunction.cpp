@@ -346,6 +346,18 @@ DiscreteFunction& DiscreteFunction::operator*=(ValType val)
 }
 
 /**
+ * Divides this function by a scalar.
+ */
+DiscreteFunction& DiscreteFunction::operator/=(ValType val)
+{
+   for(int k=0; k<values_i.size(); ++k)
+   {
+      values_i[k] /= val;
+   }
+   return *this;
+}
+
+/**
  * Adds a function to this one, expanding the domain if necessary.
  */
 DiscreteFunction& DiscreteFunction::operator+=(const DiscreteFunction& rhs)
@@ -406,6 +418,28 @@ DiscreteFunction& DiscreteFunction::operator*=(const DiscreteFunction& rhs)
    for(DomainIterator it(*this); it.hasNext(); ++it)
    {
       this->at(it.getInd()) *= rhs(it);
+   }
+   
+   return *this;
+}
+
+/**
+ * Divides this function by another, expanding domain if necessary.
+ */
+DiscreteFunction& DiscreteFunction::operator/=(const DiscreteFunction& rhs)
+{
+   //***************************************************************************
+   // If necessary, expand the domain of this function to include the domain
+   // of the input function
+   //***************************************************************************
+   expand(rhs); 
+
+   //***************************************************************************
+   // Multiply corresponding elements of input function to this one.
+   //***************************************************************************
+   for(DomainIterator it(*this); it.hasNext(); ++it)
+   {
+      this->at(it.getInd()) /= rhs(it);
    }
    
    return *this;

@@ -233,7 +233,7 @@ int testOperators(DiscreteFunction f1, DiscreteFunction f2, DiscreteFunction f3)
    //***************************************************************************
    // Apply addition operators
    //***************************************************************************
-   DiscreteFunction add1 = f1 + f2 + f3 + SCALE_FACTOR;
+   DiscreteFunction add1 = f1 + f2 + (SCALE_FACTOR/2 + f3) + (SCALE_FACTOR/2);
    DiscreteFunction add2(f1);
    add2 += f3;
    add2 += SCALE_FACTOR;
@@ -298,7 +298,7 @@ int testOperators(DiscreteFunction f1, DiscreteFunction f2, DiscreteFunction f3)
    DiscreteFunction part3 = part2 - SCALE_FACTOR;
    DiscreteFunction part4 = (-f2) - SCALE_FACTOR;
    DiscreteFunction part5 = part1 + part4;
-   DiscreteFunction minus3 = (f3+f1) + (-f2) - SCALE_FACTOR;
+   DiscreteFunction minus3 = (f3+f1) + (0-f2) - SCALE_FACTOR;
    DiscreteFunction allMinus[] = {minus1,minus2,minus3};
 
    //***************************************************************************
@@ -344,11 +344,10 @@ int testOperators(DiscreteFunction f1, DiscreteFunction f2, DiscreteFunction f3)
    //***************************************************************************
    // Apply product operators
    //***************************************************************************
-   DiscreteFunction prod1 = f2 * f3 * SCALE_FACTOR * f1;
+   DiscreteFunction prod1 = 1 * f2 * f3 * (SCALE_FACTOR * f1);
    DiscreteFunction prod2(f3);
    prod2 *= f2;
-   prod2 *= f1;
-   prod2 *= SCALE_FACTOR;
+   prod2 *= (f1*SCALE_FACTOR);
    DiscreteFunction allProd[] = {prod1,prod2};
 
    //***************************************************************************
@@ -386,23 +385,77 @@ int testOperators(DiscreteFunction f1, DiscreteFunction f2, DiscreteFunction f3)
    } // outer for loop
 
    //***************************************************************************
+   // Apply division operators
+   //***************************************************************************
+   DiscreteFunction div1 = 1 / f2 / f3 / SCALE_FACTOR / f1;
+   DiscreteFunction div2(1/f3);
+   div2 /= f2;
+   div2 /= f1;
+   div2 /= SCALE_FACTOR;
+   DiscreteFunction div3 = 1 / f2 / (f3 * SCALE_FACTOR * f1);
+   DiscreteFunction allDiv[] = {1/prod1,div1,div2,div3};
+
+   //***************************************************************************
+   // Check division operators for consistency
+   //***************************************************************************
+   for(int k=0; k<4; ++k)
+   {
+      for(int j=0; j<4; ++j)
+      {
+         if(!strictlyEqualWithinTolerance(allDiv[k],allDiv[j]))
+         {
+            std::cout << "Division results " << k << " and " << j <<
+               " are inconsistent.\n";
+            return EXIT_FAILURE;
+         }
+
+      } // inner loop
+
+   } // outer loop
+
+   //***************************************************************************
+   // Check that division results are correct
+   //***************************************************************************
+   for(int k=0; k<4; ++k)
+   {
+      for(DomainIterator it(domainUnion.begin(),domainUnion.end());
+            it.hasNext(); ++it)
+      {
+         ValType f1_j = f1(domainUnion,it.getSubInd());
+         ValType f2_j = f2(domainUnion,it.getSubInd());
+         ValType f3_j = f3(domainUnion,it.getSubInd());
+         ValType correctResult = 1 / f1_j / f2_j / f3_j / SCALE_FACTOR;
+         ValType  actualResult = allDiv[k].at(it.getInd());
+
+         ValType diff = std::fabs(1-actualResult/correctResult);
+         if(diff > DEFAULT_VALUE_TOLERANCE)
+         {
+            std::cout << "Wrong result for div[" << k << "]\n";
+            return EXIT_FAILURE;
+         }
+
+      } // inner for loop
+
+   } // outer for loop
+
+   //***************************************************************************
    // Check that all results have correct domain.
    //***************************************************************************
    DiscreteFunction allResults[] =
-      {add1,add2,add3,add4,minus1,minus2,minus3,prod1,prod2};
+      {add1,add2,add3,add4,minus1,minus2,minus3,prod1,prod2,div1,div2,div3};
 
-   for(int k=0; k<9; ++k)
+   for(int k=0; k<12; ++k)
    {
       if(domainUnion.size()!=allResults[k].noVars())
       {
-         std::cout << "Wrong domain size for prod[" << k << "]\n";
+         std::cout << "Wrong domain size for result[" << k << "]\n";
          return EXIT_FAILURE;
       }
 
       if(!std::equal(domainUnion.begin(),domainUnion.end(),
                allResults[k].varBegin()))
       {
-         std::cout << "Wrong domain for prod[" << k << "]\n";
+         std::cout << "Wrong domain for result[" << k << "]\n";
          return EXIT_FAILURE;
       }
 

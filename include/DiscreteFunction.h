@@ -233,6 +233,11 @@ namespace maxsum
       DiscreteFunction& operator*=(ValType val);
 
       /**
+       * Divides this function by a scalar.
+       */
+      DiscreteFunction& operator/=(ValType val);
+
+      /**
        * Multiply function by -1
        */
       DiscreteFunction operator-()
@@ -265,6 +270,11 @@ namespace maxsum
       DiscreteFunction& operator*=(const DiscreteFunction& rhs);
 
       /**
+       * Divides this function by another, expanding domain if necessary.
+       */
+      DiscreteFunction& operator/=(const DiscreteFunction& rhs);
+
+      /**
        * Subtract function or scalar.
        */
       template<class T> DiscreteFunction operator-(T rhs) const
@@ -286,6 +296,14 @@ namespace maxsum
       template<class T> DiscreteFunction operator*(T rhs) const
       {
          return DiscreteFunction(*this) *= rhs;
+      }
+
+      /**
+       * Divide function by function or scalar.
+       */
+      template<class T> DiscreteFunction operator/(T rhs) const
+      {
+         return DiscreteFunction(*this) /= rhs;
       }
 
       /**
@@ -794,7 +812,7 @@ namespace maxsum
    /**
     * Return true if functions are equal.
     * Two functions are equal if they have the same value over the cartesian
-    * product of their domains. This
+    * product of their domains. 
     */
    inline bool operator==
    (
@@ -817,6 +835,54 @@ namespace maxsum
    )
    {
       return !equalWithinTolerance(f1,f2,0.0);
+   }
+
+   /**
+    * Peforms element-wise division of a scalar by a function.
+    */
+   inline DiscreteFunction operator/
+   (
+    const ValType f1, 
+    const DiscreteFunction& f2 
+   )
+   {
+      return DiscreteFunction(f1) / f2;
+   }
+
+   /**
+    * Peforms element-wise multiplication of a scalar by a function.
+    */
+   inline DiscreteFunction operator*
+   (
+    const ValType f1, 
+    const DiscreteFunction& f2 
+   )
+   {
+      return f2 * f1;
+   }
+
+   /**
+    * Peforms element-wise addition of a scalar by a function.
+    */
+   inline DiscreteFunction operator+
+   (
+    const ValType f1, 
+    const DiscreteFunction& f2 
+   )
+   {
+      return f2 + f1;
+   }
+
+   /**
+    * Peforms element-wise subtraction of a function from a scalar.
+    */
+   inline DiscreteFunction operator-
+   (
+    const ValType f1, 
+    const DiscreteFunction& f2 
+   )
+   {
+      return DiscreteFunction(f1) - f2;
    }
 
    /**
