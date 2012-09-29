@@ -1039,6 +1039,18 @@ namespace maxsum
 
 } // namespace maxsum
 
+namespace std
+{
+
+   /**
+    * Defines numeric limits for maxsum::DiscreteFunction class.
+    * The numeric limits for DiscreteFunctions are inherited from their
+    * underlying value type.
+    */
+   template<> class numeric_limits<maxsum::DiscreteFunction>
+      : public numeric_limits<maxsum::ValType> {};
+
+} // namespace std
 
 
 #endif // MAX_SUM_DISCRETE_FUNCTION_H

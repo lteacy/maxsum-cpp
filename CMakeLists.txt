@@ -75,6 +75,7 @@ ADD_EXECUTABLE(agg1Harness tests/agg1Harness.cpp)
 ADD_EXECUTABLE(agg2Harness tests/agg2Harness.cpp)
 ADD_EXECUTABLE(postHarness tests/postHarness.cpp)
 ADD_EXECUTABLE(maxsumHarness tests/maxsumHarness.cpp)
+ADD_EXECUTABLE(limitsHarness tests/limitsHarness.cpp)
 TARGET_LINK_LIBRARIES (utilHarness MaxSum)
 TARGET_LINK_LIBRARIES (funHarness MaxSum)
 TARGET_LINK_LIBRARIES (mathHarness MaxSum)
@@ -83,11 +84,13 @@ TARGET_LINK_LIBRARIES (agg1Harness MaxSum)
 TARGET_LINK_LIBRARIES (agg2Harness MaxSum)
 TARGET_LINK_LIBRARIES (postHarness MaxSum)
 TARGET_LINK_LIBRARIES (maxsumHarness MaxSum)
+TARGET_LINK_LIBRARIES (limitsHarness MaxSum)
 
 ###############################
 # enable testing              #
 ###############################
 ENABLE_TESTING()
+ADD_TEST(LIMITS_TEST ${CMAKE_SOURCE_DIR}/bin/limitsHarness)
 ADD_TEST(MATH_TEST ${CMAKE_SOURCE_DIR}/bin/mathHarness)
 ADD_TEST(UTIL_TEST ${CMAKE_SOURCE_DIR}/bin/utilHarness)
 ADD_TEST(FUNCTION_TEST ${CMAKE_SOURCE_DIR}/bin/funHarness)
