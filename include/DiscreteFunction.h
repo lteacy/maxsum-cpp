@@ -5,6 +5,7 @@
 #ifndef MAX_SUM_DISCRETE_FUNCTION_H
 #define MAX_SUM_DISCRETE_FUNCTION_H
 
+#include <cmath>
 #include <iostream>
 #include <cassert>
 #include <algorithm>
@@ -1037,6 +1038,70 @@ namespace maxsum
     */
    void meanMarginal(const DiscreteFunction& inFun, DiscreteFunction& outFun);
 
+   /**
+    * Function type for operations applied to function values.
+    */
+   typedef ValType(*UnaryScalarOp)(const ValType);
+
+   /**
+    * Function type for operations applied to two functions.
+    */
+   typedef ValType(*DualScalarOp)(const ValType, const ValType);
+
+   /**
+    * Template used to generate operations that apply some function to each
+    * of a DiscreteFunction's values.
+    */
+   template<UnaryScalarOp OP> DiscreteFunction elementWiseOp
+   (
+    const DiscreteFunction& inFcn
+   )
+   {
+      //************************************************************************
+      // Create a function to hold the result
+      //************************************************************************
+      DiscreteFunction result(inFcn.varBegin(),inFcn.varEnd());
+
+      //************************************************************************
+      // Apply the specified operation elementwise to the input function
+      //************************************************************************
+      for(int k=0; k<inFcn.domainSize(); ++k)
+      {
+         result(k) = OP(inFcn(k));
+      }
+
+      return result;
+
+   } // elementWiseOp
+
+   /**
+    * Template used to generate operations that apply some operation to a pair
+    * of DiscreteFunctions.
+    */
+   template<DualScalarOp OP> DiscreteFunction elementWiseOp
+   (
+    const DiscreteFunction& inFcn1,
+    const DiscreteFunction& inFcn2
+   )
+   {
+      //************************************************************************
+      // Create a function to hold the result
+      //************************************************************************
+      DiscreteFunction result(inFcn1.varBegin(),inFcn1.varEnd());
+      result.expand(inFcn2);
+
+      //************************************************************************
+      // Apply the specified operation elementwise to the input function
+      //************************************************************************
+      for(DomainIterator it(result); it.hasNext(); ++it)
+      {
+         result(it.getInd()) = OP(inFcn1(it),inFcn2(it));
+      }
+
+      return result;
+
+   } // elementWiseOp
+
 } // namespace maxsum
 
 namespace std
@@ -1049,6 +1114,27 @@ namespace std
     */
    template<> class numeric_limits<maxsum::DiscreteFunction>
       : public numeric_limits<maxsum::ValType> {};
+
+   /**
+    * Returns the elementwise log of a function.
+    */
+   inline maxsum::DiscreteFunction log(const maxsum::DiscreteFunction& fcn)
+   {
+      return maxsum::elementWiseOp<log>(fcn);
+   }
+
+   /**
+    * Takes one function to the power of another.
+    * The result is <code>base</code> raised to the power of <code>exp</code>.
+    */
+   inline maxsum::DiscreteFunction pow
+   (
+    const maxsum::DiscreteFunction& base,
+    const maxsum::DiscreteFunction& exp 
+   )
+   {
+      return maxsum::elementWiseOp<pow>(base,exp);
+   }
 
 } // namespace std
 
