@@ -169,8 +169,36 @@ int testMath()
          std::cout << "TESTING POW [" << k << "," << j << "]\n";
          errorCount += testDualFunctions(funcs[k],funcs[j]);
       }
+
+      std::cout << "TESTING ABS [" << k << "]\n";
+      errorCount += testUnaryFunction<std::abs,std::abs>(funcs[k]);
+
+      std::cout << "TESTING FABS [" << k << "]\n";
+      errorCount += testUnaryFunction<std::fabs,std::fabs>(funcs[k]);
+
+      std::cout << "TESTING CEIL [" << k << "]\n";
+      errorCount += testUnaryFunction<std::ceil,std::ceil>(funcs[k]);
+
+      std::cout << "TESTING FLOOR [" << k << "]\n";
+      errorCount += testUnaryFunction<std::floor,std::floor>(funcs[k]);
+
+      std::cout << "TESTING EXP [" << k << "]\n";
+      errorCount += testUnaryFunction<std::exp,std::exp>(funcs[k]);
+
+      std::cout << "TESTING SQRT [" << k << "]\n";
+      errorCount += testUnaryFunction<std::sqrt,std::sqrt>(funcs[k]);
+
       std::cout << "TESTING LOG [" << k << "]\n";
       errorCount += testUnaryFunction<std::log,std::log>(funcs[k]);
+
+      std::cout << "TESTING SIN [" << k << "]\n";
+      errorCount += testUnaryFunction<std::sin,std::sin>(funcs[k]);
+
+      std::cout << "TESTING COS [" << k << "]\n";
+      errorCount += testUnaryFunction<std::cos,std::cos>(funcs[k]);
+
+      std::cout << "TESTING TAN [" << k << "]\n";
+      errorCount += testUnaryFunction<std::tan,std::tan>(funcs[k]);
    }
    std::cout << "Number of failures: " << errorCount << std::endl;
    return errorCount;

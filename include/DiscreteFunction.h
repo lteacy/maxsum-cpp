@@ -1124,6 +1124,78 @@ namespace std
    }
 
    /**
+    * Returns the elementwise cosine value of a function.
+    */
+   inline maxsum::DiscreteFunction cos(const maxsum::DiscreteFunction& fcn)
+   {
+      return maxsum::elementWiseOp<cos>(fcn);
+   }
+
+   /**
+    * Returns the elementwise sine value of a function.
+    */
+   inline maxsum::DiscreteFunction sin(const maxsum::DiscreteFunction& fcn)
+   {
+      return maxsum::elementWiseOp<sin>(fcn);
+   }
+
+   /**
+    * Returns the elementwise tangent value of a function.
+    */
+   inline maxsum::DiscreteFunction tan(const maxsum::DiscreteFunction& fcn)
+   {
+      return maxsum::elementWiseOp<tan>(fcn);
+   }
+
+   /**
+    * Returns the elementwise absolute value of a function.
+    */
+   inline maxsum::DiscreteFunction fabs(const maxsum::DiscreteFunction& fcn)
+   {
+      return maxsum::elementWiseOp<fabs>(fcn);
+   }
+
+   /**
+    * Returns the elementwise absolute value of a function.
+    */
+   inline maxsum::DiscreteFunction abs(const maxsum::DiscreteFunction& fcn)
+   {
+      return maxsum::elementWiseOp<abs>(fcn);
+   }
+
+   /**
+    * Returns the elementwise exponent of a function.
+    */
+   inline maxsum::DiscreteFunction exp(const maxsum::DiscreteFunction& fcn)
+   {
+      return maxsum::elementWiseOp<exp>(fcn);
+   }
+
+   /**
+    * Returns the elementwise square root of a function.
+    */
+   inline maxsum::DiscreteFunction sqrt(const maxsum::DiscreteFunction& fcn)
+   {
+      return maxsum::elementWiseOp<sqrt>(fcn);
+   }
+
+   /**
+    * Returns the elementwise ceil value of a function.
+    */
+   inline maxsum::DiscreteFunction ceil(const maxsum::DiscreteFunction& fcn)
+   {
+      return maxsum::elementWiseOp<ceil>(fcn);
+   }
+
+   /**
+    * Returns the elementwise floor value of a function.
+    */
+   inline maxsum::DiscreteFunction floor(const maxsum::DiscreteFunction& fcn)
+   {
+      return maxsum::elementWiseOp<floor>(fcn);
+   }
+
+   /**
     * Takes one function to the power of another.
     * The result is <code>base</code> raised to the power of <code>exp</code>.
     */
