@@ -311,54 +311,6 @@ DiscreteFunction& DiscreteFunction::operator=(const DiscreteFunction& val)
 }
 
 /**
- * Adds a scalar value to this function.
- */
-DiscreteFunction& DiscreteFunction::operator+=(ValType val)
-{
-   for(int k=0; k<values_i.size(); ++k)
-   {
-      values_i[k] += val;
-   }
-   return *this;
-}
-
-/**
- * Subtracts a scalar value from this function.
- */
-DiscreteFunction& DiscreteFunction::operator-=(ValType val)
-{
-   for(int k=0; k<values_i.size(); ++k)
-   {
-      values_i[k] -= val;
-   }
-   return *this;
-}
-
-/**
- * Multiplies this function by a scalar.
- */
-DiscreteFunction& DiscreteFunction::operator*=(ValType val)
-{
-   for(int k=0; k<values_i.size(); ++k)
-   {
-      values_i[k] *= val;
-   }
-   return *this;
-}
-
-/**
- * Divides this function by a scalar.
- */
-DiscreteFunction& DiscreteFunction::operator/=(ValType val)
-{
-   for(int k=0; k<values_i.size(); ++k)
-   {
-      values_i[k] /= val;
-   }
-   return *this;
-}
-
-/**
  * Adds a function to this one, expanding the domain if necessary.
  */
 DiscreteFunction& DiscreteFunction::operator+=(const DiscreteFunction& rhs)

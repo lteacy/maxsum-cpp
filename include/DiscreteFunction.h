@@ -249,22 +249,38 @@ namespace maxsum
       /**
        * Adds a scalar value to this function.
        */
-      DiscreteFunction& operator+=(ValType val);
+      DiscreteFunction& operator+=(ValType val)
+      {
+         values_i += val;
+         return *this;
+      }
 
       /**
        * Subtracts a scalar value from this function.
        */
-      DiscreteFunction& operator-=(ValType val);
+      DiscreteFunction& operator-=(ValType val)
+      {
+         values_i -= val;
+         return *this;
+      }
 
       /**
        * Multiplies this function by a scalar.
        */
-      DiscreteFunction& operator*=(ValType val);
+      DiscreteFunction& operator*=(ValType val)
+      {
+         values_i *= val;
+         return *this;
+      }
 
       /**
        * Divides this function by a scalar.
        */
-      DiscreteFunction& operator/=(ValType val);
+      DiscreteFunction& operator/=(ValType val)
+      {
+         values_i /= val;
+         return *this;
+      }
 
       /**
        * Multiply function by -1
