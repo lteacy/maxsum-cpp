@@ -887,6 +887,79 @@ namespace maxsum
    }
 
    /**
+    * Condition function on specified variable values.
+    * Changes a function so that it does not depend on any of the
+    * variables in the list specified by varBegin and varEnd, by
+    * conditioning this variables on a corresponding list of values.
+    * @param[in] inFun the function to condition
+    * @param[out] outFun function in which to store result.
+    * @param[in] vBegin iterator to start of variable list.
+    * @param[in] vEnd iterator to end of variable list.
+    * @param[in] iBegin iterator to start of value list.
+    * @param[in] iEnd iterator to end of value list.
+    * @pre parameters must be iterators over \em sorted lists.
+    * @post Previous value of condition will be overwritten, and replaced
+    * with the conditioned values from inFun.
+    */
+   template<class VarIt, class IndIt> void condition
+   (
+    const DiscreteFunction& inFun,
+    DiscreteFunction& outFun,
+    VarIt vBegin,
+    VarIt vEnd,
+    IndIt iBegin,
+    IndIt iEnd
+   )
+   {
+      //*********************************************************************
+      // Construct an iterator over inFun's domain, and condition
+      // on the specified variables.
+      //*********************************************************************
+      DomainIterator it(inFun);
+      it.condition(vBegin,vEnd,iBegin,iEnd);
+
+      //*********************************************************************
+      // If there are no variables to condition on (i.e. the intersection
+      // of the input variables with this variables domain is empty) then
+      // there is nothing left to do.
+      //*********************************************************************
+      if(0==it.fixedCount())
+      {
+         return;
+      }
+
+      //*********************************************************************
+      // Otherwise construct the reduced domain of free variables.
+      //*********************************************************************
+      std::vector<VarID> freeVars;
+      freeVars.reserve(vars_i.size());
+      for(VarIterator varIt=varBegin(); varIt != varEnd(); ++varIt)
+      {
+         if(!it.isFixed(*varIt))
+         {
+            freeVars.push_back(*varIt);
+         }
+      }
+
+      //*********************************************************************
+      // Create a temporary function to hold the result, and copy in the
+      // conditioned values.
+      //*********************************************************************
+      DiscreteFunction result(freeVars.begin(),freeVars.end());
+      while(it.hasNext())
+      {
+         result(it.getVars(),it.getSubInd()) = this->at(it.getInd());
+         ++it;
+      }
+
+      //*********************************************************************
+      // Finally, swap the result values into this function
+      //*********************************************************************
+      result.swap(*this);
+
+   } // condition 
+
+   /**
     * Marginalise a maxsum::DiscreteFunction using a specified aggregation
     * function. This function reduces the domain of <code>inFun</code> to that
     * of <code>outFun</code> and stores the result in <code>outFun</code>.
