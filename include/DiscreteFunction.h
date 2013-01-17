@@ -75,7 +75,11 @@ namespace maxsum
        * @param[in] val the constant scalar value of this function.
        */
       DiscreteFunction(ValType val=0)
-         : vars_i(0), size_i(0), values_i(val) { }
+         : vars_i(0), size_i(0), values_i()
+      {
+         values_i.resize(1);
+         values_i(0) = val;
+      }
 
       /**
        * Constructs function depending on specified variables.
