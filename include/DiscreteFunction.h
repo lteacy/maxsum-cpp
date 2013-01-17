@@ -12,6 +12,7 @@
 #include "common.h"
 #include "register.h"
 #include "DomainIterator.h"
+#include <Eigen/Dense>
 
 namespace maxsum
 {
@@ -36,20 +37,35 @@ namespace maxsum
    private:
 
       /**
+       * Convenience typedef for type used to store variable ids
+       */
+      typedef std::vector<VarID> VarVec;
+
+      /**
+       * Convenience typedef for type used to store variable sizes
+       */
+      typedef std::vector<ValIndex> SizeVec;
+
+      /**
+       * Convenience typedef for type used to store function values.
+       */
+      typedef Eigen::Array<ValType, Eigen::Dynamic, 1> ValVec;
+
+      /**
        * Set of variables on which this function depends.
        */
-      std::vector<VarID> vars_i;
+      VarVec vars_i;
 
       /**
        * Cache specifying the domain size for each variable on which this
        * function depends.
        */
-      std::vector<ValIndex> size_i;
+      SizeVec size_i;
 
       /**
        * Array containing the values for this function.
        */
-      std::vector<ValType> values_i;
+      ValVec values_i;
 
    public:
 
@@ -59,7 +75,7 @@ namespace maxsum
        * @param[in] val the constant scalar value of this function.
        */
       DiscreteFunction(ValType val=0)
-         : vars_i(0), size_i(0), values_i(1,val) { }
+         : vars_i(0), size_i(0), values_i(val) { }
 
       /**
        * Constructs function depending on specified variables.
@@ -78,7 +94,7 @@ namespace maxsum
        VarIt end,
        ValType val=0
       )
-      : vars_i(begin,end), size_i(end-begin), values_i(0)
+      : vars_i(begin,end), size_i(end-begin), values_i()
       {
          //*********************************************************************
          // Ensure that the variable ids are sorted.
@@ -99,7 +115,10 @@ namespace maxsum
          //*********************************************************************
          // Initialise the data array
          //*********************************************************************
-         values_i.assign(totalSize,val);
+         values_i.resize(totalSize);
+         Eigen::Matrix<ValType,1,1> valWrapper;
+         valWrapper(0) = val;
+         values_i.matrix().rowwise() = valWrapper;
 
       } // DiscreteFunction constructor
 
@@ -111,8 +130,13 @@ namespace maxsum
        * @throws UnknownVariableException if \c var is not registered.
        */
       DiscreteFunction(VarID var, ValType val)
-         : vars_i(1,var), size_i(1,getDomainSize(var)),
-           values_i(getDomainSize(var),val) {}
+         : vars_i(1,var), size_i(1,getDomainSize(var)), values_i()
+      {
+         values_i.resize(getDomainSize(var));
+         Eigen::Matrix<ValType,1,1> valWrapper;
+         valWrapper(0) = val;
+         values_i.matrix().rowwise() = valWrapper;
+      }
 
       /**
        * Copy Constructor performs deep copy.

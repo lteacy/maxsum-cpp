@@ -19,6 +19,10 @@ SET(CMAKE_VERBOSE_MAKEFILE OFF)
 SET(BIN ${CMAKE_SOURCE_DIR}/bin)
 SET(LIB ${CMAKE_SOURCE_DIR}/lib)
 
+# find eigen linear algebra library
+set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR})
+find_package(Eigen3 3.1.0)
+
 ###########################################
 # Generate Documentation                  #
 ###########################################
@@ -42,7 +46,7 @@ SET(LIBRARY_OUTPUT_PATH ${LIB} CACHE PATH "Output directory for the libraries")
 SET(EXECUTABLE_OUTPUT_PATH ${BIN} CACHE PATH "Output directory for the executables")
 
 # allow linking to these directories
-INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include)
+INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include ${EIGEN3_INCLUDE_DIR})
 LINK_DIRECTORIES(${LIBRARY_OUTPUT_PATH})
 
 ############################

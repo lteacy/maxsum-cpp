@@ -293,7 +293,8 @@ DiscreteFunction& DiscreteFunction::operator=(ValType val)
 {
    vars_i.clear();
    size_i.clear();
-   values_i.assign(1,val);
+   values_i.resize(1);
+   values_i(0) = val; 
    return *this;
 }
 
@@ -450,7 +451,7 @@ DiscreteFunction& DiscreteFunction::operator/=(const DiscreteFunction& rhs)
  */
 ValType DiscreteFunction::max() const
 {
-   return *( std::max_element(values_i.begin(),values_i.end()) );
+   return values_i.maxCoeff();
 }
 
 /**
@@ -458,7 +459,7 @@ ValType DiscreteFunction::max() const
  */
 ValType DiscreteFunction::min() const
 {
-   return *( std::min_element(values_i.begin(),values_i.end()) );
+   return values_i.minCoeff();
 }
 
 /**
@@ -466,10 +467,9 @@ ValType DiscreteFunction::min() const
 */
 ValIndex DiscreteFunction::argmax() const
 {
-   std::vector<ValType>::const_iterator pos =
-      std::max_element(values_i.begin(),values_i.end());
-   ValIndex result = pos-values_i.begin();
-   return result;
+   ValIndex row;
+   values_i.maxCoeff(&row);
+   return row;
 }
 
 /**
