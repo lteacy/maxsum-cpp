@@ -890,7 +890,7 @@ namespace maxsum
     * Condition function on specified variable values.
     * Changes a function so that it does not depend on any of the
     * variables in the list specified by varBegin and varEnd, by
-    * conditioning this variables on a corresponding list of values.
+    * conditioning these variables on a corresponding list of values.
     * @param[in] inFun the function to condition
     * @param[out] outFun function in which to store result.
     * @param[in] vBegin iterator to start of variable list.
@@ -920,11 +920,12 @@ namespace maxsum
 
       //*********************************************************************
       // If there are no variables to condition on (i.e. the intersection
-      // of the input variables with this variables domain is empty) then
-      // there is nothing left to do.
+      // of the input variables with this function domain is empty) then
+      // simply copy the input function to the output
       //*********************************************************************
       if(0==it.fixedCount())
       {
+         outFun = inFun;
          return;
       }
 
@@ -932,8 +933,9 @@ namespace maxsum
       // Otherwise construct the reduced domain of free variables.
       //*********************************************************************
       std::vector<VarID> freeVars;
-      freeVars.reserve(vars_i.size());
-      for(VarIterator varIt=varBegin(); varIt != varEnd(); ++varIt)
+      freeVars.reserve(inFun.noVars());
+      for(DiscreteFunction::VarIterator varIt=inFun.varBegin();
+            varIt != inFun.varEnd(); ++varIt)
       {
          if(!it.isFixed(*varIt))
          {
@@ -948,14 +950,14 @@ namespace maxsum
       DiscreteFunction result(freeVars.begin(),freeVars.end());
       while(it.hasNext())
       {
-         result(it.getVars(),it.getSubInd()) = this->at(it.getInd());
+         result(it.getVars(),it.getSubInd()) = inFun(it.getInd());
          ++it;
       }
 
       //*********************************************************************
-      // Finally, swap the result values into this function
+      // Finally, swap the result values into the output function
       //*********************************************************************
-      result.swap(*this);
+      result.swap(outFun);
 
    } // condition 
 
