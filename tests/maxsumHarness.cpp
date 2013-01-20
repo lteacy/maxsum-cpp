@@ -269,7 +269,7 @@ int genTreeGraph_m
    //***************************************************************************
    for(int k=0; k<branchFactor; ++k)
    {
-      int nextChild = nextID+1;
+      //int nextChild = nextID+1;
       nextID = genTreeGraph_m(depth-1, branchFactor, factors, nextID+1, myID);
       //curFactor.expand(nextChild);
    }

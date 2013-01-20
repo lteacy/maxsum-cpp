@@ -565,7 +565,7 @@ int MaxSumController::optimise()
       //std::cout << "UPDATING FAC2VAR MESSAGES...\n";
       int numOfUpdates = updateFac2VarMsgs();
       //std::cout << *this << std::endl;
-      int tmp = numOfUpdates;
+      //int tmp = numOfUpdates;
       //std::cout << "NUMBER OF FAC2VAR UPDATES: " << numOfUpdates << "\n";
 
       //************************************************************************
