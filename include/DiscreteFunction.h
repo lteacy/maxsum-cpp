@@ -476,15 +476,12 @@ namespace maxsum
          } // while loop
 
          //*********************************************************************
-         // Throw an exception if the domain is not fully specified
+         // Ensure the domain is fully specified. We use to throw an exception
+         // here, but really this is a program error not a user error. Have to
+         // ask ourselves whether exception overhead is justified in this
+         // heavily called function.
          //*********************************************************************
-         if(vars_i.size() != indices.size())
-         {
-            const char* const where = "DiscreteFunction::operator"
-               "(VarIt,VarIt,IndIt,IndIt)";
-            const char* const msg = "Domain not subset of variable list";
-            throw BadDomainException(where,msg);
-         }
+         assert(vars_i.size() == indices.size());
 
          //*********************************************************************
          // Otherwise return the correct value
