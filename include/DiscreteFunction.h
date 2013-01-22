@@ -528,6 +528,78 @@ namespace maxsum
       }
 
       /**
+       * Access coefficient by subindices specified in variable map.
+       * Specified variables must be superset of variables on which this
+       * function depends. The specified map must be sorted.
+       * @param vals map of VarID (variables) to ValIndex (values)
+       * @pre iterators over vals must return pairs in ascending key order.
+       */
+      template<class VarMap> ValType& operator()(const VarMap& vals)
+      {
+         //*********************************************************************
+         // Create vector to hold indices on which this function actually
+         // depends
+         //*********************************************************************
+         std::vector<ValIndex> indices;
+         indices.reserve(vars_i.size());
+
+         assert(0==indices.size()); // sanity check for expected behaviour
+
+         //*********************************************************************
+         // Retrieve the indices that this function actually depends on.
+         // Notice this code assumes that all variable lists are sorted.
+         //*********************************************************************
+         std::vector<VarID>::const_iterator myV = vars_i.begin();
+         for(typename VarMap::const_iterator k=vals.begin(); k!=vals.end(); ++k)
+         {
+            //******************************************************************
+            // If input variable is in the domain for this function...
+            //******************************************************************
+            if( (k->first)==(*myV) )
+            {
+               //***************************************************************
+               // Store the specified subindex for this variable
+               //***************************************************************
+               indices.push_back(k->second);
+               
+               //***************************************************************
+               // Look for the next variable in this functions domain
+               //***************************************************************
+               ++myV;
+            }
+
+         } // for loop
+
+         //*********************************************************************
+         // Ensure the domain is fully specified. We use to throw an exception
+         // here, but really this is a program error not a user error. Have to
+         // ask ourselves whether exception overhead is justified in this
+         // heavily called function.
+         //*********************************************************************
+         assert(vars_i.size() == indices.size());
+
+         //*********************************************************************
+         // Otherwise return the correct value
+         //*********************************************************************
+         return (*this)(indices.begin(),indices.end());
+
+      } // operator()
+
+      /**
+       * Access coefficient by subindices specified in variable map.
+       * Specified variables must be superset of variables on which this
+       * function depends. The specified map must be sorted.
+       * @param vals map of VarID (variables) to ValIndex (values)
+       * @pre iterators over vals must return pairs in ascending key order.
+       */
+      template<class VarMap> const ValType& operator()(const VarMap& vals) const
+      {
+         // throw away const to use the non-const implementation
+         DiscreteFunction* me = const_cast<DiscreteFunction*>(this);
+         return (*me)(vals);
+      }
+
+      /**
        * Access coefficient by subindices specified by the current indices
        * specified by a maxsum::DomainIterator. Note: this works by accessing
        * maxsum::DomainIterator::getSubInd() array. If the domain of the
