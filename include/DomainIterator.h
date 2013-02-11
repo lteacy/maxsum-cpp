@@ -413,10 +413,9 @@ namespace maxsum
          {
             //******************************************************************
             // If the current variable is in our domain, condition its value
-            // as specified. Since we assume both lists are sorted, we only
-            // need to start looking from our last position.
+            // as specified.
             //******************************************************************
-            pMyVar = find(pMyVar,vars_i.end(),it->first);
+            pMyVar = find(vars_i.begin(),vars_i.end(),it->first);
 
             if(vars_i.end() != pMyVar)
             {
@@ -424,7 +423,7 @@ namespace maxsum
                 fixed_i[position] = true;
                subInd_i[position] = it->second;
             }
-
+            
          } // loop
 
          //*********************************************************************

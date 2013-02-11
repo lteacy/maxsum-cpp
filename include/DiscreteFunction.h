@@ -1033,15 +1033,11 @@ namespace maxsum
    /**
     * Condition function on specified variable values.
     * Changes a function so that it does not depend on any of the
-    * variables in the list specified by varBegin and varEnd, by
-    * conditioning these variables on a corresponding list of values.
+    * variables in the key set of the vars argument, by
+    * conditioning these variables on the values specified in vars.
     * @param[in] inFun the function to condition
     * @param[out] outFun function in which to store result.
-    * @param[in] vBegin iterator to start of variable list.
-    * @param[in] vEnd iterator to end of variable list.
-    * @param[in] iBegin iterator to start of value list.
-    * @param[in] iEnd iterator to end of value list.
-    * @pre parameters must be iterators over \em sorted lists.
+    * @param[in] vars maps conditioned vars to their assigned values.
     * @post Previous value of condition will be overwritten, and replaced
     * with the conditioned values from inFun.
     */
@@ -1057,7 +1053,7 @@ namespace maxsum
       // on the specified variables.
       //*********************************************************************
       DomainIterator it(inFun);
-      it.condition(vBegin,vEnd,iBegin,iEnd);
+      it.condition(vars);
 
       //*********************************************************************
       // If there are no variables to condition on (i.e. the intersection
