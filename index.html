@@ -387,7 +387,7 @@ The MaxSumController Class</h1>
 <li>Construct a new <a class="el" href="classmaxsum_1_1_max_sum_controller.html" title="This class maintains a factor graph and implements the max-sum algorithm.">MaxSumController</a> object, optionally specifying termination conditions.</li>
 <li>Use the <a class="el" href="classmaxsum_1_1_max_sum_controller.html#a4cff3513f4d480dfa6dcd77f72c51d4d" title="Accessor method for factor function.">MaxSumController::setFactor</a> member function to specify the set of factors from the previously created list of <a class="el" href="classmaxsum_1_1_discrete_function.html" title="Class representing functions of sets of variables with discrete domains.">DiscreteFunction</a> objects.</li>
 <li>Call <a class="el" href="classmaxsum_1_1_max_sum_controller.html#ace444371d6159fba0fc1548bf9a2aeb2" title="Runs the max-sum algorithm to optimise the values for each variable.">MaxSumController::optimise</a> to run the max-sum algorithm</li>
-<li>Use <a class="el" href="classmaxsum_1_1_max_sum_controller.html#a12c928d544373c3329c77fbff5522098" title="Returns a read only iterator to the beginning of the variable value map.">MaxSumController::valBegin</a> and <a class="el" href="classmaxsum_1_1_max_sum_controller.html#ab6ee62aefe2e6ece7999a3f5b9779a4d" title="Returns a read only iterator to the end of the variable value map.">MaxSumController::valEnd</a> to iterator through all variables in the factor graph, and retrieve there optimal values.</li>
+<li>Use <a class="el" href="classmaxsum_1_1_max_sum_controller.html#a12c928d544373c3329c77fbff5522098" title="Returns a read only iterator to the beginning of the variable value map.">MaxSumController::valBegin</a> and <a class="el" href="classmaxsum_1_1_max_sum_controller.html#ab6ee62aefe2e6ece7999a3f5b9779a4d" title="Returns a read only iterator to the end of the variable value map.">MaxSumController::valEnd</a> to iterate through all variables in the factor graph, and retrieve there optimal values.</li>
 </ol>
 <p>For example, the following code illustrates how these steps may be implemented in practice: </p>
 <pre>
@@ -419,7 +419,7 @@ Tips on Writing Efficient Code</h1>
 <li>The arithmetic operators, <code>+</code>, <code>-</code>, and <code>*</code> all create temporary objects to store their result </li>
 <li>The postfix increment operator, <code>++</code>, returns a copy of its operand, before incrementing the operands value.</li>
 </ul>
-<p>We have plans to implement lazy evaluation, which would minimise the use of temporary objects, and improve performance in many instances. For now though, if you find you need more speed you may wish to consider the following <em>destructive</em> alternatives, which replace an operands original value with the result: </p>
+<p>We have plans to implement lazy evaluation, which would minimise the use of temporary objects, and improve performance in many instances. For now though, if you find you need more speed you may wish to consider the following <em>destructive</em> alternatives, which replace an operand's original value with the result: </p>
 <table class="doxtable">
 <tr>
 <th>Operation</th><th>Efficient Alternative </th></tr>
@@ -448,12 +448,12 @@ f += h;
 </pre><h1><a class="anchor" id="futurework"></a>
 Future Work</h1>
 <p>Although the basic implementation of this library is now complete, this project is still under going its first phase of active development. Accurate results are thus not yet guarranteed, and in fact, bugs are very much still to be expected.</p>
-<p>For now, our main priority is thus continued testing and debugging. Beyond that, we also plan to look at various options for optimising the code and improving the interface. For example, one option is to link to the <a href="http://eigen.tuxfamily.org">eigen3</a> linear algebra library, to take advantage of its hardware vectorisation. We are also considering lazy evaluation as an option for optimising overloaded opertors for the <a class="el" href="classmaxsum_1_1_discrete_function.html" title="Class representing functions of sets of variables with discrete domains.">DiscreteFunction</a> class.</p>
+<p>For now, our main priority is thus continued testing and debugging. Beyond that, we also plan to look at various options for optimising the code and improving the interface. For example, one option is to link to the <a href="http://eigen.tuxfamily.org">eigen3</a> linear algebra library, to take advantage of its hardware vectorisation. We are also considering lazy evaluation as an option for optimising overloaded operators for the <a class="el" href="classmaxsum_1_1_discrete_function.html" title="Class representing functions of sets of variables with discrete domains.">DiscreteFunction</a> class.</p>
 <p>We will also continue to improve this documentation of the API. All comments and feedback welcome! </p>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Mar 2 2013 08:42:56 for Max-Sum by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sat Mar 2 2013 08:48:20 for Max-Sum by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.2
 </small></address>
