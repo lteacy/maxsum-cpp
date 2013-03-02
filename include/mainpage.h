@@ -464,7 +464,7 @@ namespace maxsum {
  *    DiscreteFunction objects.
  * -# Call MaxSumController::optimise to run the max-sum algorithm
  * -# Use MaxSumController::valBegin and MaxSumController::valEnd
- *    to iterator through all variables in the factor graph, and
+ *    to iterate through all variables in the factor graph, and
  *    retrieve there optimal values.
  *
  * For example, the following code illustrates how these steps may be
@@ -511,15 +511,17 @@ namespace maxsum {
  * key piece of advice is to, as far as possible, avoid creating temporary
  * objects in memory, when existing objects can be modified and reused.
  * 
- * One place where temporary objects are unavoidable is in the use of 
- * certain overloaded operators:
+ * One place where temporary objects are (currently) unavoidable is in the use
+ * of certain overloaded operators:
  * \li The arithmetic operators, \c +, \c -, and \c * all create
  * temporary objects to store their result
  * \li The postfix increment operator, \c ++, returns a copy of its
  * operand, before incrementing the operands value.
  *
- * Where possible, it is therefore better to avoid these operators, and
- * instead use \em destructive alternatives, which replace an operands
+ * We have plans to implement lazy evaluation, which would minimise the use
+ * of temporary objects, and improve performance in many instances. For now
+ * though, if you find you need more speed you may wish to consider the 
+ * following \em destructive alternatives, which replace an operand's
  * original value with the result:
  * <TABLE>
  * <TR><TH>Operation</TH><TH>Efficient Alternative</TH></TR>
@@ -557,11 +559,14 @@ namespace maxsum {
  *
  * For now, our main priority is thus continued testing and debugging.
  * Beyond that, we also plan to look at various options for optimising the
- * code. For example, one option is to link to the
+ * code and improving the interface. For example, one option is to link to the
  * <a href="http://eigen.tuxfamily.org">eigen3</a> linear algebra library,
- * to take advantage of its hardware vectorisation.
+ * to take advantage of its hardware vectorisation. We are also considering
+ * lazy evaluation as an option for optimising overloaded operators for the
+ * DiscreteFunction class.
  *
- * We will also continue to improve this documentation of the API.
+ * We will also continue to improve this documentation of the API. All comments
+ * and feedback welcome!
  * 
  */
 } // maxsum namespace
