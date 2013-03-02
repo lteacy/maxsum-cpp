@@ -9,6 +9,7 @@ var searchData=
   ['notify',['notify',['../classmaxsum_1_1util_1_1_post_office.html#af47d4990a916740e576ead17ca0635eb',1,'maxsum::util::PostOffice']]],
   ['notifyall',['notifyAll',['../classmaxsum_1_1util_1_1_post_office.html#afe132d828a59fb7da2818680173fc2e4',1,'maxsum::util::PostOffice']]],
   ['novars',['noVars',['../classmaxsum_1_1_discrete_function.html#a863f6c668486665117318c96e6e407d7',1,'maxsum::DiscreteFunction::noVars()'],['../classmaxsum_1_1_max_sum_controller.html#a6319a1727d1fe2af9bc8c171394ba6c0',1,'maxsum::MaxSumController::noVars()']]],
+  ['numeric_5flimits_3c_20maxsum_3a_3adiscretefunction_20_3e',['numeric_limits&lt; maxsum::DiscreteFunction &gt;',['../classstd_1_1numeric__limits_3_01maxsum_1_1_discrete_function_01_4.html',1,'std']]],
   ['numofedges',['numOfEdges',['../classmaxsum_1_1util_1_1_post_office.html#a6a776783f03da07d3f1dc55f34418940',1,'maxsum::util::PostOffice']]],
   ['numofreceivers',['numOfReceivers',['../classmaxsum_1_1util_1_1_post_office.html#a571b5376c22df85767100ee1af17c08b',1,'maxsum::util::PostOffice']]],
   ['numofsenders',['numOfSenders',['../classmaxsum_1_1util_1_1_post_office.html#a635030e637fdd3cf62139f4bc5f95768',1,'maxsum::util::PostOffice']]]

@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['elementwiseop',['elementWiseOp',['../namespacemaxsum.html#aab28265477df4caef01d55fe16fbe45b',1,'maxsum::elementWiseOp(const DiscreteFunction &amp;inFcn)'],['../namespacemaxsum.html#ab09c60060946ab80f6fe61e764baee64',1,'maxsum::elementWiseOp(const DiscreteFunction &amp;inFcn1, const DiscreteFunction &amp;inFcn2)']]],
   ['emptynoticeexception',['EmptyNoticeException',['../classmaxsum_1_1_empty_notice_exception.html',1,'maxsum']]],
   ['emptynoticeexception',['EmptyNoticeException',['../classmaxsum_1_1_empty_notice_exception.html#aa1919e8677ab1fa165a04322b9240f88',1,'maxsum::EmptyNoticeException']]],
   ['end',['end',['../classmaxsum_1_1util_1_1_key_set.html#a26062e0e3e9fa6ada876836460b30ce9',1,'maxsum::util::KeySet::end()'],['../classmaxsum_1_1util_1_1_ref_map.html#a707d1e07199efff5d831ce570fbbdaed',1,'maxsum::util::RefMap::end()']]],
