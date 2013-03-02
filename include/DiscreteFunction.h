@@ -476,15 +476,12 @@ namespace maxsum
          } // while loop
 
          //*********************************************************************
-         // Throw an exception if the domain is not fully specified
+         // Ensure the domain is fully specified. We use to throw an exception
+         // here, but really this is a program error not a user error. Have to
+         // ask ourselves whether exception overhead is justified in this
+         // heavily called function.
          //*********************************************************************
-         if(vars_i.size() != indices.size())
-         {
-            const char* const where = "DiscreteFunction::operator"
-               "(VarIt,VarIt,IndIt,IndIt)";
-            const char* const msg = "Domain not subset of variable list";
-            throw BadDomainException(where,msg);
-         }
+         assert(vars_i.size() == indices.size());
 
          //*********************************************************************
          // Otherwise return the correct value
@@ -528,6 +525,78 @@ namespace maxsum
          // throw away const to use the non-const implementation
          DiscreteFunction* me = const_cast<DiscreteFunction*>(this);
          return (*me)(var, ind);
+      }
+
+      /**
+       * Access coefficient by subindices specified in variable map.
+       * Specified variables must be superset of variables on which this
+       * function depends. The specified map must be sorted.
+       * @param vals map of VarID (variables) to ValIndex (values)
+       * @pre iterators over vals must return pairs in ascending key order.
+       */
+      template<class VarMap> ValType& operator()(const VarMap& vals)
+      {
+         //*********************************************************************
+         // Create vector to hold indices on which this function actually
+         // depends
+         //*********************************************************************
+         std::vector<ValIndex> indices;
+         indices.reserve(vars_i.size());
+
+         assert(0==indices.size()); // sanity check for expected behaviour
+
+         //*********************************************************************
+         // Retrieve the indices that this function actually depends on.
+         // Notice this code assumes that all variable lists are sorted.
+         //*********************************************************************
+         std::vector<VarID>::const_iterator myV = vars_i.begin();
+         for(typename VarMap::const_iterator k=vals.begin(); k!=vals.end(); ++k)
+         {
+            //******************************************************************
+            // If input variable is in the domain for this function...
+            //******************************************************************
+            if( (k->first)==(*myV) )
+            {
+               //***************************************************************
+               // Store the specified subindex for this variable
+               //***************************************************************
+               indices.push_back(k->second);
+               
+               //***************************************************************
+               // Look for the next variable in this functions domain
+               //***************************************************************
+               ++myV;
+            }
+
+         } // for loop
+
+         //*********************************************************************
+         // Ensure the domain is fully specified. We use to throw an exception
+         // here, but really this is a program error not a user error. Have to
+         // ask ourselves whether exception overhead is justified in this
+         // heavily called function.
+         //*********************************************************************
+         assert(vars_i.size() == indices.size());
+
+         //*********************************************************************
+         // Otherwise return the correct value
+         //*********************************************************************
+         return (*this)(indices.begin(),indices.end());
+
+      } // operator()
+
+      /**
+       * Access coefficient by subindices specified in variable map.
+       * Specified variables must be superset of variables on which this
+       * function depends. The specified map must be sorted.
+       * @param vals map of VarID (variables) to ValIndex (values)
+       * @pre iterators over vals must return pairs in ascending key order.
+       */
+      template<class VarMap> const ValType& operator()(const VarMap& vals) const
+      {
+         // throw away const to use the non-const implementation
+         DiscreteFunction* me = const_cast<DiscreteFunction*>(this);
+         return (*me)(vals);
       }
 
       /**
@@ -885,6 +954,149 @@ namespace maxsum
    {
       return DiscreteFunction(f1) - f2;
    }
+
+   /**
+    * Condition function on specified variable values.
+    * Changes a function so that it does not depend on any of the
+    * variables in the list specified by varBegin and varEnd, by
+    * conditioning these variables on a corresponding list of values.
+    * @param[in] inFun the function to condition
+    * @param[out] outFun function in which to store result.
+    * @param[in] vBegin iterator to start of variable list.
+    * @param[in] vEnd iterator to end of variable list.
+    * @param[in] iBegin iterator to start of value list.
+    * @param[in] iEnd iterator to end of value list.
+    * @pre parameters must be iterators over \em sorted lists.
+    * @post Previous value of condition will be overwritten, and replaced
+    * with the conditioned values from inFun.
+    */
+   template<class VarIt, class IndIt> void condition
+   (
+    const DiscreteFunction& inFun,
+    DiscreteFunction& outFun,
+    VarIt vBegin,
+    VarIt vEnd,
+    IndIt iBegin,
+    IndIt iEnd
+   )
+   {
+      //*********************************************************************
+      // Construct an iterator over inFun's domain, and condition
+      // on the specified variables.
+      //*********************************************************************
+      DomainIterator it(inFun);
+      it.condition(vBegin,vEnd,iBegin,iEnd);
+
+      //*********************************************************************
+      // If there are no variables to condition on (i.e. the intersection
+      // of the input variables with this function domain is empty) then
+      // simply copy the input function to the output
+      //*********************************************************************
+      if(0==it.fixedCount())
+      {
+         outFun = inFun;
+         return;
+      }
+
+      //*********************************************************************
+      // Otherwise construct the reduced domain of free variables.
+      //*********************************************************************
+      std::vector<VarID> freeVars;
+      freeVars.reserve(inFun.noVars());
+      for(DiscreteFunction::VarIterator varIt=inFun.varBegin();
+            varIt != inFun.varEnd(); ++varIt)
+      {
+         if(!it.isFixed(*varIt))
+         {
+            freeVars.push_back(*varIt);
+         }
+      }
+
+      //*********************************************************************
+      // Create a temporary function to hold the result, and copy in the
+      // conditioned values.
+      //*********************************************************************
+      DiscreteFunction result(freeVars.begin(),freeVars.end());
+      while(it.hasNext())
+      {
+         result(it.getVars(),it.getSubInd()) = inFun(it.getInd());
+         ++it;
+      }
+
+      //*********************************************************************
+      // Finally, swap the result values into the output function
+      //*********************************************************************
+      result.swap(outFun);
+
+   } // condition 
+
+   /**
+    * Condition function on specified variable values.
+    * Changes a function so that it does not depend on any of the
+    * variables in the key set of the vars argument, by
+    * conditioning these variables on the values specified in vars.
+    * @param[in] inFun the function to condition
+    * @param[out] outFun function in which to store result.
+    * @param[in] vars maps conditioned vars to their assigned values.
+    * @post Previous value of condition will be overwritten, and replaced
+    * with the conditioned values from inFun.
+    */
+   template<class VarMap> void condition
+   (
+    const DiscreteFunction& inFun,
+    DiscreteFunction& outFun,
+    VarMap vars
+   )
+   {
+      //*********************************************************************
+      // Construct an iterator over inFun's domain, and condition
+      // on the specified variables.
+      //*********************************************************************
+      DomainIterator it(inFun);
+      it.condition(vars);
+
+      //*********************************************************************
+      // If there are no variables to condition on (i.e. the intersection
+      // of the input variables with this function domain is empty) then
+      // simply copy the input function to the output
+      //*********************************************************************
+      if(0==it.fixedCount())
+      {
+         outFun = inFun;
+         return;
+      }
+
+      //*********************************************************************
+      // Otherwise construct the reduced domain of free variables.
+      //*********************************************************************
+      std::vector<VarID> freeVars;
+      freeVars.reserve(inFun.noVars());
+      for(DiscreteFunction::VarIterator varIt=inFun.varBegin();
+            varIt != inFun.varEnd(); ++varIt)
+      {
+         if(!it.isFixed(*varIt))
+         {
+            freeVars.push_back(*varIt);
+         }
+      }
+
+      //*********************************************************************
+      // Create a temporary function to hold the result, and copy in the
+      // conditioned values.
+      //*********************************************************************
+      DiscreteFunction result(freeVars.begin(),freeVars.end());
+      while(it.hasNext())
+      {
+         result(it.getVars(),it.getSubInd()) = inFun(it.getInd());
+         ++it;
+      }
+
+      //*********************************************************************
+      // Finally, swap the result values into the output function
+      //*********************************************************************
+      result.swap(outFun);
+
+   } // condition 
 
    /**
     * Marginalise a maxsum::DiscreteFunction using a specified aggregation
