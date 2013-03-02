@@ -206,6 +206,14 @@ Functions</h2></td></tr>
 <a class="el" href="classmaxsum_1_1_discrete_function.html">DiscreteFunction</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacemaxsum.html#a10561c1b019a893b1e7c6db923298d4e">operator-</a> (const <a class="el" href="namespacemaxsum.html#add02fc7a161c705a735b15646b2b6733">ValType</a> f1, const <a class="el" href="classmaxsum_1_1_discrete_function.html">DiscreteFunction</a> &amp;f2)</td></tr>
 <tr class="memdesc:a10561c1b019a893b1e7c6db923298d4e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Peforms element-wise subtraction of a function from a scalar. <br/></td></tr>
 <tr class="separator:a10561c1b019a893b1e7c6db923298d4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a762a4083e8a13c88707a523ef1d1b169"><td class="memTemplParams" colspan="2">template&lt;class VarIt , class IndIt &gt; </td></tr>
+<tr class="memitem:a762a4083e8a13c88707a523ef1d1b169"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacemaxsum.html#a762a4083e8a13c88707a523ef1d1b169">condition</a> (const <a class="el" href="classmaxsum_1_1_discrete_function.html">DiscreteFunction</a> &amp;inFun, <a class="el" href="classmaxsum_1_1_discrete_function.html">DiscreteFunction</a> &amp;outFun, VarIt vBegin, VarIt vEnd, IndIt iBegin, IndIt iEnd)</td></tr>
+<tr class="memdesc:a762a4083e8a13c88707a523ef1d1b169"><td class="mdescLeft">&#160;</td><td class="mdescRight">Condition function on specified variable values.  <a href="#a762a4083e8a13c88707a523ef1d1b169"></a><br/></td></tr>
+<tr class="separator:a762a4083e8a13c88707a523ef1d1b169"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a76d85e8032b1821a6fc03d1c8cb4051a"><td class="memTemplParams" colspan="2">template&lt;class VarMap &gt; </td></tr>
+<tr class="memitem:a76d85e8032b1821a6fc03d1c8cb4051a"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacemaxsum.html#a76d85e8032b1821a6fc03d1c8cb4051a">condition</a> (const <a class="el" href="classmaxsum_1_1_discrete_function.html">DiscreteFunction</a> &amp;inFun, <a class="el" href="classmaxsum_1_1_discrete_function.html">DiscreteFunction</a> &amp;outFun, VarMap vars)</td></tr>
+<tr class="memdesc:a76d85e8032b1821a6fc03d1c8cb4051a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Condition function on specified variable values.  <a href="#a76d85e8032b1821a6fc03d1c8cb4051a"></a><br/></td></tr>
+<tr class="separator:a76d85e8032b1821a6fc03d1c8cb4051a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae48b4828eefae581abf6b475b8d8f60c"><td class="memTemplParams" colspan="2">template&lt;typename F &gt; </td></tr>
 <tr class="memitem:ae48b4828eefae581abf6b475b8d8f60c"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacemaxsum.html#ae48b4828eefae581abf6b475b8d8f60c">marginal</a> (const <a class="el" href="classmaxsum_1_1_discrete_function.html">DiscreteFunction</a> &amp;inFun, F aggregate, <a class="el" href="classmaxsum_1_1_discrete_function.html">DiscreteFunction</a> &amp;outFun)</td></tr>
 <tr class="memdesc:ae48b4828eefae581abf6b475b8d8f60c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Marginalise a <a class="el" href="classmaxsum_1_1_discrete_function.html" title="Class representing functions of sets of variables with discrete domains.">maxsum::DiscreteFunction</a> using a specified aggregation function.  <a href="#ae48b4828eefae581abf6b475b8d8f60c"></a><br/></td></tr>
@@ -363,6 +371,120 @@ template&lt;class VarIt &gt; </div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>true if all registered, false otherwise. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a762a4083e8a13c88707a523ef1d1b169"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class VarIt , class IndIt &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void maxsum::condition </td>
+          <td>(</td>
+          <td class="paramtype">const DiscreteFunction &amp;&#160;</td>
+          <td class="paramname"><em>inFun</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">DiscreteFunction &amp;&#160;</td>
+          <td class="paramname"><em>outFun</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">VarIt&#160;</td>
+          <td class="paramname"><em>vBegin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">VarIt&#160;</td>
+          <td class="paramname"><em>vEnd</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">IndIt&#160;</td>
+          <td class="paramname"><em>iBegin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">IndIt&#160;</td>
+          <td class="paramname"><em>iEnd</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Condition function on specified variable values. </p>
+<p>Changes a function so that it does not depend on any of the variables in the list specified by varBegin and varEnd, by conditioning these variables on a corresponding list of values. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">inFun</td><td>the function to condition </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">outFun</td><td>function in which to store result. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">vBegin</td><td>iterator to start of variable list. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">vEnd</td><td>iterator to end of variable list. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">iBegin</td><td>iterator to start of value list. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">iEnd</td><td>iterator to end of value list. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section pre"><dt>Precondition</dt><dd>parameters must be iterators over <em>sorted</em> lists. </dd></dl>
+<dl class="section post"><dt>Postcondition</dt><dd>Previous value of condition will be overwritten, and replaced with the conditioned values from inFun. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a76d85e8032b1821a6fc03d1c8cb4051a"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class VarMap &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void maxsum::condition </td>
+          <td>(</td>
+          <td class="paramtype">const DiscreteFunction &amp;&#160;</td>
+          <td class="paramname"><em>inFun</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">DiscreteFunction &amp;&#160;</td>
+          <td class="paramname"><em>outFun</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">VarMap&#160;</td>
+          <td class="paramname"><em>vars</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Condition function on specified variable values. </p>
+<p>Changes a function so that it does not depend on any of the variables in the key set of the vars argument, by conditioning these variables on the values specified in vars. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">inFun</td><td>the function to condition </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">outFun</td><td>function in which to store result. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">vars</td><td>maps conditioned vars to their assigned values. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section post"><dt>Postcondition</dt><dd>Previous value of condition will be overwritten, and replaced with the conditioned values from inFun. </dd></dl>
 
 </div>
 </div>
@@ -1214,7 +1336,7 @@ template&lt;class VecType &gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Mar 2 2013 08:48:19 for Max-Sum by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sat Mar 2 2013 09:09:44 for Max-Sum by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.2
 </small></address>

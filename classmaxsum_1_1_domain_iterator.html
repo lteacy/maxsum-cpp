@@ -168,6 +168,10 @@ int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class
 <tr class="memitem:a7ee2872702dc7a0c7ce06930f8d80fc7"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classmaxsum_1_1_domain_iterator.html#a7ee2872702dc7a0c7ce06930f8d80fc7">condition</a> (const VarIt varBegin, const VarIt varEnd, const IndIt indBegin, const IndIt indEnd)</td></tr>
 <tr class="memdesc:a7ee2872702dc7a0c7ce06930f8d80fc7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Condition domain on specified variable values.  <a href="#a7ee2872702dc7a0c7ce06930f8d80fc7"></a><br/></td></tr>
 <tr class="separator:a7ee2872702dc7a0c7ce06930f8d80fc7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a73283d81aef94699817bcfe84f80b84b"><td class="memTemplParams" colspan="2">template&lt;class VarMap &gt; </td></tr>
+<tr class="memitem:a73283d81aef94699817bcfe84f80b84b"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classmaxsum_1_1_domain_iterator.html#a73283d81aef94699817bcfe84f80b84b">condition</a> (const VarMap &amp;vars)</td></tr>
+<tr class="memdesc:a73283d81aef94699817bcfe84f80b84b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Condition domain on specified variable values.  <a href="#a73283d81aef94699817bcfe84f80b84b"></a><br/></td></tr>
+<tr class="separator:a73283d81aef94699817bcfe84f80b84b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6e8678449a902dff120a8bfec772e6e8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmaxsum_1_1_domain_iterator.html#a6e8678449a902dff120a8bfec772e6e8">condition</a> (const <a class="el" href="classmaxsum_1_1_domain_iterator.html">DomainIterator</a> &amp;it)</td></tr>
 <tr class="memdesc:a6e8678449a902dff120a8bfec772e6e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convenience function for conditioning one iterator on the current value of another.  <a href="#a6e8678449a902dff120a8bfec772e6e8"></a><br/></td></tr>
 <tr class="separator:a6e8678449a902dff120a8bfec772e6e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -385,6 +389,54 @@ template&lt;class VarIt , class IndIt &gt; </div>
 <dl class="section pre"><dt>Precondition</dt><dd>varBegin and varEnd are iterators to a <em>sorted</em> list of <a class="el" href="namespacemaxsum.html#a572e59b0c017dac30927fc445aa28216" title="Type used for uniquely identifying variables.">maxsum::VarID</a>. </dd>
 <dd>
 Values in list specified by indBegin and indEnd must be between 0, and their respective variable domain size. </dd></dl>
+<dl class="section post"><dt>Postcondition</dt><dd>All free indices are set back to 0, and <a class="el" href="classmaxsum_1_1_domain_iterator.html#a166e3728bd0dd62a6d7e747baa2f16d9" title="Returns true if next call to DomainIterator::operator++() will not throw an exception.">DomainIterator::hasNext()</a> returns true. </dd>
+<dd>
+Previously conditioned variables have their values perserved. </dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classmaxsum_1_1_out_of_range_exception.html" title="Exception thrown when indices are out of range.">OutOfRangeException</a></td><td>is specified condition values are out of range. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">varBegin</td><td>iterator to start of variable list. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">varEnd</td><td>iterator to end of variable list. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">indBegin</td><td>iterator to start of value list. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">indEnd</td><td>iterator to end of value list. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="a73283d81aef94699817bcfe84f80b84b"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class VarMap &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void maxsum::DomainIterator::condition </td>
+          <td>(</td>
+          <td class="paramtype">const VarMap &amp;&#160;</td>
+          <td class="paramname"><em>vars</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Condition domain on specified variable values. </p>
+<p>Changes this iterator so that the specified set of variables have fixed values, and are not incremented. </p>
+<dl class="section pre"><dt>Precondition</dt><dd>Values in vars map must be between 0, and their respective variable domain size. </dd></dl>
 <dl class="section post"><dt>Postcondition</dt><dd>All free indices are set back to 0, and <a class="el" href="classmaxsum_1_1_domain_iterator.html#a166e3728bd0dd62a6d7e747baa2f16d9" title="Returns true if next call to DomainIterator::operator++() will not throw an exception.">DomainIterator::hasNext()</a> returns true. </dd>
 <dd>
 Previously conditioned variables have their values perserved. </dd></dl>
@@ -627,7 +679,7 @@ it2.condition(vars.begin(),vars.end(),inds.begin(), inds.end());
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Mar 2 2013 08:48:19 for Max-Sum by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sat Mar 2 2013 09:09:44 for Max-Sum by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.2
 </small></address>

@@ -273,6 +273,14 @@ template&lt;class IndIt &gt; </td></tr>
 <tr class="memitem:ad735be8bd33570cf48625f683af630cb"><td class="memTemplItemLeft" align="right" valign="top">const <a class="el" href="namespacemaxsum.html#add02fc7a161c705a735b15646b2b6733">ValType</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classmaxsum_1_1_discrete_function.html#ad735be8bd33570cf48625f683af630cb">operator()</a> (VarVec var, IndVec ind) const </td></tr>
 <tr class="memdesc:ad735be8bd33570cf48625f683af630cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Access coefficient by subindices for specified variables.  <a href="#ad735be8bd33570cf48625f683af630cb"></a><br/></td></tr>
 <tr class="separator:ad735be8bd33570cf48625f683af630cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a20f0312975359484d7a0bdc60a5771ad"><td class="memTemplParams" colspan="2">template&lt;class VarMap &gt; </td></tr>
+<tr class="memitem:a20f0312975359484d7a0bdc60a5771ad"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespacemaxsum.html#add02fc7a161c705a735b15646b2b6733">ValType</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classmaxsum_1_1_discrete_function.html#a20f0312975359484d7a0bdc60a5771ad">operator()</a> (const VarMap &amp;vals)</td></tr>
+<tr class="memdesc:a20f0312975359484d7a0bdc60a5771ad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Access coefficient by subindices specified in variable map.  <a href="#a20f0312975359484d7a0bdc60a5771ad"></a><br/></td></tr>
+<tr class="separator:a20f0312975359484d7a0bdc60a5771ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab91829e0a37d96fcd865b4c1fa7e7f19"><td class="memTemplParams" colspan="2">template&lt;class VarMap &gt; </td></tr>
+<tr class="memitem:ab91829e0a37d96fcd865b4c1fa7e7f19"><td class="memTemplItemLeft" align="right" valign="top">const <a class="el" href="namespacemaxsum.html#add02fc7a161c705a735b15646b2b6733">ValType</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classmaxsum_1_1_discrete_function.html#ab91829e0a37d96fcd865b4c1fa7e7f19">operator()</a> (const VarMap &amp;vals) const </td></tr>
+<tr class="memdesc:ab91829e0a37d96fcd865b4c1fa7e7f19"><td class="mdescLeft">&#160;</td><td class="mdescRight">Access coefficient by subindices specified in variable map.  <a href="#ab91829e0a37d96fcd865b4c1fa7e7f19"></a><br/></td></tr>
+<tr class="separator:ab91829e0a37d96fcd865b4c1fa7e7f19"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7bf734cc8f46eb57d84ad7ff1d9174d6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacemaxsum.html#add02fc7a161c705a735b15646b2b6733">ValType</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmaxsum_1_1_discrete_function.html#a7bf734cc8f46eb57d84ad7ff1d9174d6">operator()</a> (const <a class="el" href="classmaxsum_1_1_domain_iterator.html">DomainIterator</a> &amp;it)</td></tr>
 <tr class="memdesc:a7bf734cc8f46eb57d84ad7ff1d9174d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Access coefficient by subindices specified by the current indices specified by a <a class="el" href="classmaxsum_1_1_domain_iterator.html" title="This class provides methods for iterating over the Cartesian product for a set of variable domains...">maxsum::DomainIterator</a>.  <a href="#a7bf734cc8f46eb57d84ad7ff1d9174d6"></a><br/></td></tr>
 <tr class="separator:a7bf734cc8f46eb57d84ad7ff1d9174d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1134,6 +1142,78 @@ template&lt;class VarVec , class IndVec &gt; </div>
 
 </div>
 </div>
+<a class="anchor" id="a20f0312975359484d7a0bdc60a5771ad"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class VarMap &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespacemaxsum.html#add02fc7a161c705a735b15646b2b6733">ValType</a>&amp; maxsum::DiscreteFunction::operator() </td>
+          <td>(</td>
+          <td class="paramtype">const VarMap &amp;&#160;</td>
+          <td class="paramname"><em>vals</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Access coefficient by subindices specified in variable map. </p>
+<p>Specified variables must be superset of variables on which this function depends. The specified map must be sorted. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">vals</td><td>map of VarID (variables) to ValIndex (values) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section pre"><dt>Precondition</dt><dd>iterators over vals must return pairs in ascending key order. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ab91829e0a37d96fcd865b4c1fa7e7f19"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class VarMap &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="namespacemaxsum.html#add02fc7a161c705a735b15646b2b6733">ValType</a>&amp; maxsum::DiscreteFunction::operator() </td>
+          <td>(</td>
+          <td class="paramtype">const VarMap &amp;&#160;</td>
+          <td class="paramname"><em>vals</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Access coefficient by subindices specified in variable map. </p>
+<p>Specified variables must be superset of variables on which this function depends. The specified map must be sorted. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">vals</td><td>map of VarID (variables) to ValIndex (values) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section pre"><dt>Precondition</dt><dd>iterators over vals must return pairs in ascending key order. </dd></dl>
+
+</div>
+</div>
 <a class="anchor" id="a7bf734cc8f46eb57d84ad7ff1d9174d6"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1476,7 +1556,7 @@ template&lt;class VarVec , class IndVec &gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Mar 2 2013 08:48:19 for Max-Sum by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sat Mar 2 2013 09:09:44 for Max-Sum by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.2
 </small></address>

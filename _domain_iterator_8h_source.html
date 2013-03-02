@@ -337,18 +337,72 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00385"></a><span class="lineno">  385</span>&#160;</div>
 <div class="line"><a name="l00386"></a><span class="lineno">  386</span>&#160;      } <span class="comment">// function condition</span></div>
 <div class="line"><a name="l00387"></a><span class="lineno">  387</span>&#160;</div>
-<div class="line"><a name="l00399"></a><span class="lineno">  399</span>&#160;      <span class="keywordtype">void</span> <a class="code" href="classmaxsum_1_1_domain_iterator.html#a7ee2872702dc7a0c7ce06930f8d80fc7" title="Condition domain on specified variable values.">condition</a>(<span class="keyword">const</span> <a class="code" href="classmaxsum_1_1_domain_iterator.html" title="This class provides methods for iterating over the Cartesian product for a set of variable domains...">DomainIterator</a>&amp; it);</div>
-<div class="line"><a name="l00400"></a><span class="lineno">  400</span>&#160;</div>
-<div class="line"><a name="l00401"></a><span class="lineno">  401</span>&#160;   }; <span class="comment">// class DomainIterator</span></div>
-<div class="line"><a name="l00402"></a><span class="lineno">  402</span>&#160;</div>
-<div class="line"><a name="l00403"></a><span class="lineno">  403</span>&#160;} <span class="comment">// namespace maxsum</span></div>
-<div class="line"><a name="l00404"></a><span class="lineno">  404</span>&#160;</div>
-<div class="line"><a name="l00405"></a><span class="lineno">  405</span>&#160;</div>
-<div class="line"><a name="l00406"></a><span class="lineno">  406</span>&#160;<span class="preprocessor">#endif // MAXSUM_DOMAIN_ITERATOR_H</span></div>
+<div class="line"><a name="l00404"></a><span class="lineno"><a class="code" href="classmaxsum_1_1_domain_iterator.html#a73283d81aef94699817bcfe84f80b84b">  404</a></span>&#160;      <span class="keyword">template</span>&lt;<span class="keyword">class</span> VarMap&gt; <span class="keywordtype">void</span> <a class="code" href="classmaxsum_1_1_domain_iterator.html#a7ee2872702dc7a0c7ce06930f8d80fc7" title="Condition domain on specified variable values.">condition</a>(<span class="keyword">const</span> VarMap&amp; vars)</div>
+<div class="line"><a name="l00405"></a><span class="lineno">  405</span>&#160;      {</div>
+<div class="line"><a name="l00406"></a><span class="lineno">  406</span>&#160;         <span class="comment">//*********************************************************************</span></div>
+<div class="line"><a name="l00407"></a><span class="lineno">  407</span>&#160;         <span class="comment">// Set the specified conditions for any variables that are in</span></div>
+<div class="line"><a name="l00408"></a><span class="lineno">  408</span>&#160;         <span class="comment">// this domain.</span></div>
+<div class="line"><a name="l00409"></a><span class="lineno">  409</span>&#160;         <span class="comment">//*********************************************************************</span></div>
+<div class="line"><a name="l00410"></a><span class="lineno">  410</span>&#160;         std::vector&lt;VarID&gt;::const_iterator pMyVar = vars_i.begin();</div>
+<div class="line"><a name="l00411"></a><span class="lineno">  411</span>&#160;         <span class="keywordflow">for</span>(<span class="keyword">typename</span> VarMap::const_iterator it=vars.begin();</div>
+<div class="line"><a name="l00412"></a><span class="lineno">  412</span>&#160;               it!=vars.end(); ++it)</div>
+<div class="line"><a name="l00413"></a><span class="lineno">  413</span>&#160;         {</div>
+<div class="line"><a name="l00414"></a><span class="lineno">  414</span>&#160;            <span class="comment">//******************************************************************</span></div>
+<div class="line"><a name="l00415"></a><span class="lineno">  415</span>&#160;            <span class="comment">// If the current variable is in our domain, condition its value</span></div>
+<div class="line"><a name="l00416"></a><span class="lineno">  416</span>&#160;            <span class="comment">// as specified.</span></div>
+<div class="line"><a name="l00417"></a><span class="lineno">  417</span>&#160;            <span class="comment">//******************************************************************</span></div>
+<div class="line"><a name="l00418"></a><span class="lineno">  418</span>&#160;            pMyVar = find(vars_i.begin(),vars_i.end(),it-&gt;first);</div>
+<div class="line"><a name="l00419"></a><span class="lineno">  419</span>&#160;</div>
+<div class="line"><a name="l00420"></a><span class="lineno">  420</span>&#160;            <span class="keywordflow">if</span>(vars_i.end() != pMyVar)</div>
+<div class="line"><a name="l00421"></a><span class="lineno">  421</span>&#160;            {</div>
+<div class="line"><a name="l00422"></a><span class="lineno">  422</span>&#160;               <span class="keywordtype">int</span> position = pMyVar - vars_i.begin();</div>
+<div class="line"><a name="l00423"></a><span class="lineno">  423</span>&#160;                fixed_i[position] = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00424"></a><span class="lineno">  424</span>&#160;               subInd_i[position] = it-&gt;second;</div>
+<div class="line"><a name="l00425"></a><span class="lineno">  425</span>&#160;            }</div>
+<div class="line"><a name="l00426"></a><span class="lineno">  426</span>&#160;            </div>
+<div class="line"><a name="l00427"></a><span class="lineno">  427</span>&#160;         } <span class="comment">// loop</span></div>
+<div class="line"><a name="l00428"></a><span class="lineno">  428</span>&#160;</div>
+<div class="line"><a name="l00429"></a><span class="lineno">  429</span>&#160;         <span class="comment">//*********************************************************************</span></div>
+<div class="line"><a name="l00430"></a><span class="lineno">  430</span>&#160;         <span class="comment">// Set free indices back to zero. (This is a much easier policy to </span></div>
+<div class="line"><a name="l00431"></a><span class="lineno">  431</span>&#160;         <span class="comment">// implement that trying to pick up were we left off.)</span></div>
+<div class="line"><a name="l00432"></a><span class="lineno">  432</span>&#160;         <span class="comment">//*********************************************************************</span></div>
+<div class="line"><a name="l00433"></a><span class="lineno">  433</span>&#160;         <span class="keywordflow">for</span>(<span class="keywordtype">int</span> k=0; k&lt;subInd_i.size(); ++k)</div>
+<div class="line"><a name="l00434"></a><span class="lineno">  434</span>&#160;         {</div>
+<div class="line"><a name="l00435"></a><span class="lineno">  435</span>&#160;            <span class="keywordflow">if</span>(!fixed_i[k])</div>
+<div class="line"><a name="l00436"></a><span class="lineno">  436</span>&#160;            {</div>
+<div class="line"><a name="l00437"></a><span class="lineno">  437</span>&#160;               subInd_i[k]=0;</div>
+<div class="line"><a name="l00438"></a><span class="lineno">  438</span>&#160;            }</div>
+<div class="line"><a name="l00439"></a><span class="lineno">  439</span>&#160;         }</div>
+<div class="line"><a name="l00440"></a><span class="lineno">  440</span>&#160;</div>
+<div class="line"><a name="l00441"></a><span class="lineno">  441</span>&#160;         <span class="comment">//*********************************************************************</span></div>
+<div class="line"><a name="l00442"></a><span class="lineno">  442</span>&#160;         <span class="comment">// Since the free variables have been reset, the iterator is not</span></div>
+<div class="line"><a name="l00443"></a><span class="lineno">  443</span>&#160;         <span class="comment">// finished. Notice, even if there are now free variables, we</span></div>
+<div class="line"><a name="l00444"></a><span class="lineno">  444</span>&#160;         <span class="comment">// still intend to return the conditioned values at least once before</span></div>
+<div class="line"><a name="l00445"></a><span class="lineno">  445</span>&#160;         <span class="comment">// finishing.</span></div>
+<div class="line"><a name="l00446"></a><span class="lineno">  446</span>&#160;         <span class="comment">//*********************************************************************</span></div>
+<div class="line"><a name="l00447"></a><span class="lineno">  447</span>&#160;         finished_i = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00448"></a><span class="lineno">  448</span>&#160;</div>
+<div class="line"><a name="l00449"></a><span class="lineno">  449</span>&#160;         <span class="comment">//*********************************************************************</span></div>
+<div class="line"><a name="l00450"></a><span class="lineno">  450</span>&#160;         <span class="comment">// Set the linear index to its apropriate value, based on the</span></div>
+<div class="line"><a name="l00451"></a><span class="lineno">  451</span>&#160;         <span class="comment">// conditioned variables.</span></div>
+<div class="line"><a name="l00452"></a><span class="lineno">  452</span>&#160;         <span class="comment">//*********************************************************************</span></div>
+<div class="line"><a name="l00453"></a><span class="lineno">  453</span>&#160;         ind_i = <a class="code" href="namespacemaxsum.html#ada4fbdd98787e23c4f84437ac180ba57" title="C++ Implementation of Matlab sub2ind function.">sub2ind</a>( sizes_i.begin(),  sizes_i.end(),</div>
+<div class="line"><a name="l00454"></a><span class="lineno">  454</span>&#160;                         subInd_i.begin(), subInd_i.end() );</div>
+<div class="line"><a name="l00455"></a><span class="lineno">  455</span>&#160;</div>
+<div class="line"><a name="l00456"></a><span class="lineno">  456</span>&#160;      } <span class="comment">// function condition</span></div>
+<div class="line"><a name="l00457"></a><span class="lineno">  457</span>&#160;</div>
+<div class="line"><a name="l00469"></a><span class="lineno">  469</span>&#160;      <span class="keywordtype">void</span> <a class="code" href="classmaxsum_1_1_domain_iterator.html#a7ee2872702dc7a0c7ce06930f8d80fc7" title="Condition domain on specified variable values.">condition</a>(<span class="keyword">const</span> <a class="code" href="classmaxsum_1_1_domain_iterator.html" title="This class provides methods for iterating over the Cartesian product for a set of variable domains...">DomainIterator</a>&amp; it);</div>
+<div class="line"><a name="l00470"></a><span class="lineno">  470</span>&#160;</div>
+<div class="line"><a name="l00471"></a><span class="lineno">  471</span>&#160;   }; <span class="comment">// class DomainIterator</span></div>
+<div class="line"><a name="l00472"></a><span class="lineno">  472</span>&#160;</div>
+<div class="line"><a name="l00473"></a><span class="lineno">  473</span>&#160;} <span class="comment">// namespace maxsum</span></div>
+<div class="line"><a name="l00474"></a><span class="lineno">  474</span>&#160;</div>
+<div class="line"><a name="l00475"></a><span class="lineno">  475</span>&#160;</div>
+<div class="line"><a name="l00476"></a><span class="lineno">  476</span>&#160;<span class="preprocessor">#endif // MAXSUM_DOMAIN_ITERATOR_H</span></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Mar 2 2013 08:48:19 for Max-Sum by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sat Mar 2 2013 09:09:44 for Max-Sum by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.2
 </small></address>
