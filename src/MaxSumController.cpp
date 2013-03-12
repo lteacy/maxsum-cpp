@@ -390,7 +390,8 @@ int MaxSumController::updateFac2VarMsgs()
       //************************************************************************
       // Calculate the total sum of this factor and all its input messages
       //************************************************************************
-      DiscreteFunction msgSum(factors_i[fac]);
+      DiscreteFunction& msgSum = factorTotalValue_i[fac];
+      msgSum = factors_i[fac];
       V2FPostOffice::InMsgMap curInMsgs = var2facMsgs_i.curInMsgs(fac);
       typedef V2FPostOffice::InMsgIt InMsgIt;
       for(InMsgIt it=curInMsgs.begin(); it!=curInMsgs.end(); ++it)

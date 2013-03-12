@@ -49,6 +49,14 @@ namespace maxsum
       FactorMap factors_i;
 
       /**
+       * Map storing the total value for each factor (the factor + the sum of
+       * all its input messages. This is used if we need to calculate
+       * additional things, such as the second best joint action for each
+       * factor (for VPI).
+       */
+      FactorMap factorTotalValue_i;
+
+      /**
        * Type of container used to map (action) variables to their currently
        * assigned values.
        */
@@ -144,6 +152,24 @@ namespace maxsum
       )
       : maxIterations_i(maxIterations),
         maxNormThreshold_i(maxnorm) {}
+
+      /**
+       * Returns the total value for a specified factor.
+       * The total value is the factor plus the sum of all its received messages.
+       * @pre the optimise method must be called first to properly initialise
+       * this value.
+       * @returns the total value for this factor.
+       */
+      const DiscreteFunction& getTotalValue(FactorID fac) const
+      {
+         FactorMap::const_iterator pos = factorTotalValue_i.find(fac);
+         if(factors_i.end()==pos)
+         {
+            throw new NoSuchElementException("MaxSumController::getFactor()",
+                  "No such factor in factor graph.");
+         }
+         return pos->second;
+      }
 
       /**
        * Accessor method for factor function.

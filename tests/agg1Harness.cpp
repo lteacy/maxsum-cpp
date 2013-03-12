@@ -174,6 +174,55 @@ int main()
       registerVariables(vars,vars+7,sizes,sizes+7);
 
       //************************************************************************
+      // Quick test for argmax and argmax2
+      //************************************************************************
+      std::cout << "******************************************\n";
+      std::cout << " Testing argmax and argmax 2\n";
+      std::cout << "******************************************\n";
+      DiscreteFunction test(2,0.0);
+      test(0) = 32.0;
+      test(1) = 62.0;
+      test(2) = 42.0;
+      test(3) = 61.0;
+      test(4) = 32.0;
+
+      ValIndex mx1 = test.argmax();
+      ValIndex mx2 = test.argmax2(mx1);
+      
+      if(1!=mx1)
+      {
+         std::cout << "wrong argmax" << std::endl;
+         return EXIT_FAILURE;
+      }
+      
+      if(3!=mx2)
+      {
+         std::cout << "wrong argmax2" << std::endl;
+         return EXIT_FAILURE;
+      }
+      
+      //************************************************************************
+      // Repeat test with different values
+      //************************************************************************
+      test(3) = 62.1;
+      mx1 = test.argmax();
+      mx2 = test.argmax2(mx1);
+
+      if(3!=mx1)
+      {
+         std::cout << "wrong argmax" << std::endl;
+         return EXIT_FAILURE;
+      }
+      
+      if(1!=mx2)
+      {
+         std::cout << "wrong argmax2" << std::endl;
+         return EXIT_FAILURE;
+      }
+
+      std::cout << "argmax appears OK" << std::endl;
+
+      //************************************************************************
       // Test arithmetic operators
       //************************************************************************
       std::cout << "******************************************\n";

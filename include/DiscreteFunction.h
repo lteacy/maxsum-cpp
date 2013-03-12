@@ -209,8 +209,28 @@ namespace maxsum
       /**
        * Sets this function to a constant scalar value.
        * @param[in] val the value to assign to this function.
+       * @post this function will no longer depend on any variables.
        */
       DiscreteFunction& operator=(ValType val);
+
+      /**
+       * Sets this function to a constant scalar value, but preserves
+       * domain.
+       * @param[in] val the value to assign to this function.
+       * @post the domain of this function will be unchanged, but all values
+       * will be set to the specified constant value.
+       */
+      DiscreteFunction& assignKeepDomain(ValType val)
+      {
+         for(std::vector<ValType>::iterator it=values_i.begin();
+               it!=values_i.end(); ++it)
+         {
+            (*it) = val;
+         }
+         
+         return *this;
+
+      } // assignKeepDomain
 
       /**
        * Sets this function to be equal to another.
@@ -800,9 +820,24 @@ namespace maxsum
       ValType max() const; 
 
       /**
-       * Returns the linear index of the maximum value accross entire domain.
+       * Returns the linear index of the maximum value across entire domain.
        */
       ValIndex argmax() const;
+
+      /**
+       * Returns the linear index of the 2nd largest value.
+       * Example usage:
+       * <p>
+       * <code>
+       * ValIndex mx1 = fun.argmax();
+       * ValIndex mx2 = fun.argmax2(mx1);
+       * </code>
+       * </p>
+       * @param mxInd the value returned by DiscreteFunction::argmax()
+       * This is the maximum of the set of values, excluding the largest one,
+       * returned by DiscreteFunction::argmax
+       */
+      ValIndex argmax2(ValIndex mxInd) const;
 
       /**
        * Returns the maxnorm for this function.

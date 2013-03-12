@@ -462,8 +462,8 @@ ValType DiscreteFunction::min() const
 }
 
 /**
-* Returns the linear index of the maximum value accross entire domain.
-*/
+ * Returns the linear index of the maximum value accross entire domain.
+ */
 ValIndex DiscreteFunction::argmax() const
 {
    std::vector<ValType>::const_iterator pos =
@@ -471,6 +471,44 @@ ValIndex DiscreteFunction::argmax() const
    ValIndex result = pos-values_i.begin();
    return result;
 }
+
+/**
+ * Returns the linear index of the 2nd largest value.
+ * Example usage:
+ * <p>
+ * <code>
+ * ValIndex mx1 = fun.argmax();
+ * ValIndex mx2 = fun.argmax2(mx1);
+ * </code>
+ * </p>
+ * @param mxInd the value returned by DiscreteFunction::argmax()
+ * This is the maximum of the set of values, excluding the largest one,
+ * returned by DiscreteFunction::argmax
+ */
+ValIndex DiscreteFunction::argmax2(const ValIndex mxInd) const
+{
+   ValType mx2Val = -std::numeric_limits<ValType>::max();
+   ValIndex mx2Ind = 0;
+
+   for(ValIndex it=0; it<domainSize(); ++it)
+   {
+      if(mxInd==it) // skip max to find largest of rest.
+      {
+         continue;
+      }
+
+      ValType curVal = at(it);
+      if(curVal>mx2Val)
+      {
+         mx2Val = curVal;
+         mx2Ind = it;
+      }
+      
+   } // for loop
+
+   return mx2Ind;
+
+} // argmax2
 
 /**
 * Returns the maxnorm for this function.
