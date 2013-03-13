@@ -223,12 +223,10 @@ void MaxSumController::setFactor(FactorID id, const DiscreteFunction& factor)
    factors_i[id] = factor;
 
    //***************************************************************************
-   // Tell the factor to recheck its mail. This will force it to recalculate
-   // its output messages, and so cause any required changes to propogate
-   // through the factor graph.
+   // Tell everyone to recheck their mail. Telling everyone to recheck is the
+   // safest option, because the factor graph may have changed.
    //***************************************************************************
-   //var2facMsgs_i.notifyAll();
-   var2facMsgs_i.notify(id);
+   var2facMsgs_i.notifyAll();
 
 } // function setFactor
 
