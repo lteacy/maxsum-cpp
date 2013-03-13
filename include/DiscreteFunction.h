@@ -261,7 +261,7 @@ namespace maxsum
       /**
        * Multiply function by -1
        */
-      DiscreteFunction operator-()
+      DiscreteFunction operator-() const
       {
          return DiscreteFunction(*this) *= -1;
       }
@@ -270,7 +270,16 @@ namespace maxsum
        * Identity function.
        * @returns a reference to this function.
        */
-      DiscreteFunction& operator+()
+      const DiscreteFunction& operator+() const
+      {
+         return *this;
+      }
+
+      /**
+       * Identity function.
+       * @returns a reference to this function.
+       */
+      DiscreteFunction& operator+() 
       {
          return *this;
       }
