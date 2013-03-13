@@ -311,6 +311,58 @@ namespace maxsum
       }
 
       /**
+       * Accessor method for (writable) reference to factor function.
+       * This version returns a writable reference to a function to allow
+       * efficient updates to the function values. Note this is an UNSAFE
+       * procedure, because the MaxSumController will not be notified if
+       * any change is made to function's domain through this handle, which
+       * in turn will change the factor graph. 
+       * 
+       * In future, we may modify this function to unsure that no unexpected
+       * domain changes are made, but for now, this allows us to bypass all
+       * the redundant copying and checking that is done by
+       * MaxSumController::setFactor. If you need a safe procedure use that
+       * function instead.
+       *
+       * Also, if the factor is modified in anyway through the returned
+       * reference, the MaxSumController must be notified by calling
+       * MaxSumController::notifyFactorChange.
+       *
+       * @param[in] id the unique identifier of the desired factor.
+       * @returns a reference to the function associated with the factor with
+       * unique identifier <code>id</code>.
+       * @throws maxsum::NoSuchElementException if the specified factor is not
+       * known to this maxsum::MaxSumController.
+       * @pre a factor with this id must already be in the factor graph.
+       * @post the caller must ensure that the domain of the returned function
+       * is not changed, and so promise only to modify its values. Any change
+       * in value must be flagged to the MaxSumController by calling 
+       * MaxSumController::notifyFactorChange.
+       */
+      DiscreteFunction& getUnSafeWritableFactorHandle(FactorID id) 
+      {
+         FactorMap::iterator pos = factors_i.find(id);
+         if(factors_i.end()==pos)
+         {
+            throw new NoSuchElementException("MaxSumController::getFactor()",
+                  "No such factor in factor graph.");
+         }
+         return pos->second;
+      }
+
+      /**
+       * Function used to notify this MaxSumController of any changes made
+       * to a factor without its knowledge.
+       * This function should be called after any change to a factor
+       * made using MaxSumController::getUnSafeWritableFactorHandle
+       * @param id the id of the changed factor
+       */
+      void notifyFactor(FactorID id)
+      {
+         var2facMsgs_i.notify(id);
+      }
+
+      /**
        * Returns true if and only if the specified variable is in the domain
        * of at least one of the factors managed by this maxsum::MaxSumController.
        * @returns true if and only if the specified variable is in the domain
