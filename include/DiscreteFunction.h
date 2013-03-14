@@ -950,6 +950,106 @@ namespace maxsum
    {
       return !equalWithinTolerance(f1,f2,0.0);
    }
+   
+   /**
+    * Returns true iff function is less than specified value
+    * across its entire domain.
+    */
+   inline bool operator<(const DiscreteFunction& f, const ValType v)
+   {
+      for(int k=0; k<f.domainSize(); ++k)
+      {
+         if(f(k)>=v)
+         {
+            return false;
+         }
+      }
+      return true;
+   }
+   
+   /**
+    * Returns true iff function is less than specified value
+    * across its entire domain.
+    */
+   inline bool operator>=(const ValType v, const DiscreteFunction& f)
+   {
+      return f < v;
+   }
+   
+   /**
+    * Returns true iff function is less than or equal to specified value
+    * across its entire domain.
+    */
+   inline bool operator<=(const DiscreteFunction& f, const ValType v)
+   {
+      for(int k=0; k<f.domainSize(); ++k)
+      {
+         if(f(k)>v)
+         {
+            return false;
+         }
+      }
+      return true;
+   }
+   
+   /**
+    * Returns true iff function is less than or equal to specified value
+    * across its entire domain.
+    */
+   inline bool operator>(const ValType v, const DiscreteFunction& f)
+   {
+      return f <= v;
+   }
+   
+   /**
+    * Returns true iff function is greater than specified value
+    * across its entire domain.
+    */
+   inline bool operator>(const DiscreteFunction& f, const ValType v)
+   {
+      for(int k=0; k<f.domainSize(); ++k)
+      {
+         if(f(k)<=v)
+         {
+            return false;
+         }
+      }
+      return true;
+   }
+   
+   /**
+    * Returns true iff function is greater than specified value
+    * across its entire domain.
+    */
+   inline bool operator<=(const ValType v, const DiscreteFunction& f)
+   {
+      return f > v;
+   }
+   
+   /**
+    * Returns true iff function is greater than or equal to specified value
+    * across its entire domain.
+    */
+   inline bool operator>=(const DiscreteFunction& f, const ValType v)
+   {
+      for(int k=0; k<f.domainSize(); ++k)
+      {
+         if(f(k)<v)
+         {
+            return false;
+         }
+      }
+      return true;
+   }
+   
+   /**
+    * Returns true iff function is greater than or equal to specified value
+    * across its entire domain.
+    */
+   inline bool operator<(const ValType v, const DiscreteFunction& f)
+   {
+      return f >= v;
+   }
 
    /**
     * Peforms element-wise division of a scalar by a function.
