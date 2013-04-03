@@ -223,10 +223,8 @@ void MaxSumController::setFactor(FactorID id, const DiscreteFunction& factor)
    factors_i[id] = factor;
 
    //***************************************************************************
-   // Tell all factors and variables to recheck their mail.
-   // Only need to do this for factors, because once the factor 2 variable
-   // messages have been updated, the variables will in turn be notified of
-   // any change.
+   // Tell everyone to recheck their mail. Telling everyone to recheck is the
+   // safest option, because the factor graph may have changed.
    //***************************************************************************
    var2facMsgs_i.notifyAll();
 
@@ -390,7 +388,8 @@ int MaxSumController::updateFac2VarMsgs()
       //************************************************************************
       // Calculate the total sum of this factor and all its input messages
       //************************************************************************
-      DiscreteFunction msgSum(factors_i[fac]);
+      DiscreteFunction& msgSum = factorTotalValue_i[fac];
+      msgSum = factors_i[fac];
       V2FPostOffice::InMsgMap curInMsgs = var2facMsgs_i.curInMsgs(fac);
       typedef V2FPostOffice::InMsgIt InMsgIt;
       for(InMsgIt it=curInMsgs.begin(); it!=curInMsgs.end(); ++it)
