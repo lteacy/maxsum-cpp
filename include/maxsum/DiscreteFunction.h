@@ -5,6 +5,9 @@
 #ifndef MAX_SUM_DISCRETE_FUNCTION_H
 #define MAX_SUM_DISCRETE_FUNCTION_H
 
+
+#define EIGEN_MATRIXBASE_PLUGIN "maxsum/MatrixBaseAddons.h"
+#include <Eigen/Dense>
 #include <cmath>
 #include <iostream>
 #include <cassert>
