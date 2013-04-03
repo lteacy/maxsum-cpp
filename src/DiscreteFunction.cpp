@@ -7,8 +7,8 @@
 #include <cstdarg>
 #include <algorithm>
 #include <iostream>
-#include "DiscreteFunction.h"
-#include "DomainIterator.h"
+#include <maxsum/DiscreteFunction.h>
+#include <maxsum/DomainIterator.h>
 
 using namespace maxsum;
 

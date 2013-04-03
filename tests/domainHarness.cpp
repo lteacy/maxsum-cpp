@@ -9,9 +9,9 @@
 #include <iomanip>
 #include <iostream>
 #include <vector>
-#include "DomainIterator.h"
-#include "common.h"
-#include "register.h"
+#include "maxsum/DomainIterator.h"
+#include "maxsum/common.h"
+#include "maxsum/register.h"
 
 using namespace maxsum;
 

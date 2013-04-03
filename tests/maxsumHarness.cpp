@@ -4,8 +4,8 @@
  * Tests MaxSumController on a few simple graph colouring problems.
  */
 
-#include "common.h"
-#include "MaxSumController.h"
+#include "maxsum/common.h"
+#include "maxsum/MaxSumController.h"
 #include<iostream>
 #include <ctime>
 #include <iomanip>

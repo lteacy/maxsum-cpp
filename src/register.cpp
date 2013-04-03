@@ -8,7 +8,7 @@
 #include <map>
 #include <string>
 #include <sstream>
-#include "register.h"
+#include <maxsum/register.h>
 
 /**
  * Private Module Namespace.

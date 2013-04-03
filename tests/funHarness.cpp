@@ -1,7 +1,7 @@
 
 #include <vector>
 #include <iostream>
-#include "DiscreteFunction.h"
+#include "maxsum/DiscreteFunction.h"
 
 int comparisionTestOne()
 {
