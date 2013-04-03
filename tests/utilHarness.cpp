@@ -6,9 +6,9 @@
 #include <vector>
 #include <list>
 #include <queue>
-#include "register.h"
-#include "common.h"
-#include "DiscreteFunction.h"
+#include "maxsum/register.h"
+#include "maxsum/common.h"
+#include "maxsum/DiscreteFunction.h"
 
 namespace
 {

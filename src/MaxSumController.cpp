@@ -5,7 +5,7 @@
  * @author W. T. Luke Teacy - University of Southampton
  */
 
-#include "MaxSumController.h"
+#include <maxsum/MaxSumController.h>
 #include <iostream>
 
 using namespace maxsum;

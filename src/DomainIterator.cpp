@@ -4,9 +4,9 @@
  * The maxsum::DomainIterator class provides methods for iterating over the
  * Cartesian product for a set of variable domains.
  */
-#include "register.h"
-#include "DomainIterator.h"
-#include "DiscreteFunction.h"
+#include <maxsum/register.h>
+#include <maxsum/DomainIterator.h>
+#include <maxsum/DiscreteFunction.h>
 
 using namespace maxsum;
 
