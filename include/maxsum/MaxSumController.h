@@ -49,6 +49,14 @@ namespace maxsum
       FactorMap factors_i;
 
       /**
+       * Map storing the total value for each factor (the factor + the sum of
+       * all its input messages. This is used if we need to calculate
+       * additional things, such as the second best joint action for each
+       * factor (for VPI).
+       */
+      FactorMap factorTotalValue_i;
+
+      /**
        * Type of container used to map (action) variables to their currently
        * assigned values.
        */
@@ -144,6 +152,24 @@ namespace maxsum
       )
       : maxIterations_i(maxIterations),
         maxNormThreshold_i(maxnorm) {}
+
+      /**
+       * Returns the total value for a specified factor.
+       * The total value is the factor plus the sum of all its received messages.
+       * @pre the optimise method must be called first to properly initialise
+       * this value.
+       * @returns the total value for this factor.
+       */
+      const DiscreteFunction& getTotalValue(FactorID fac) const
+      {
+         FactorMap::const_iterator pos = factorTotalValue_i.find(fac);
+         if(factors_i.end()==pos)
+         {
+            throw new NoSuchElementException("MaxSumController::getFactor()",
+                  "No such factor in factor graph.");
+         }
+         return pos->second;
+      }
 
       /**
        * Accessor method for factor function.
@@ -282,6 +308,58 @@ namespace maxsum
                   "No such factor in factor graph.");
          }
          return pos->second;
+      }
+
+      /**
+       * Accessor method for (writable) reference to factor function.
+       * This version returns a writable reference to a function to allow
+       * efficient updates to the function values. Note this is an UNSAFE
+       * procedure, because the MaxSumController will not be notified if
+       * any change is made to function's domain through this handle, which
+       * in turn will change the factor graph. 
+       * 
+       * In future, we may modify this function to unsure that no unexpected
+       * domain changes are made, but for now, this allows us to bypass all
+       * the redundant copying and checking that is done by
+       * MaxSumController::setFactor. If you need a safe procedure use that
+       * function instead.
+       *
+       * Also, if the factor is modified in anyway through the returned
+       * reference, the MaxSumController must be notified by calling
+       * MaxSumController::notifyFactorChange.
+       *
+       * @param[in] id the unique identifier of the desired factor.
+       * @returns a reference to the function associated with the factor with
+       * unique identifier <code>id</code>.
+       * @throws maxsum::NoSuchElementException if the specified factor is not
+       * known to this maxsum::MaxSumController.
+       * @pre a factor with this id must already be in the factor graph.
+       * @post the caller must ensure that the domain of the returned function
+       * is not changed, and so promise only to modify its values. Any change
+       * in value must be flagged to the MaxSumController by calling 
+       * MaxSumController::notifyFactorChange.
+       */
+      DiscreteFunction& getUnSafeWritableFactorHandle(FactorID id) 
+      {
+         FactorMap::iterator pos = factors_i.find(id);
+         if(factors_i.end()==pos)
+         {
+            throw new NoSuchElementException("MaxSumController::getFactor()",
+                  "No such factor in factor graph.");
+         }
+         return pos->second;
+      }
+
+      /**
+       * Function used to notify this MaxSumController of any changes made
+       * to a factor without its knowledge.
+       * This function should be called after any change to a factor
+       * made using MaxSumController::getUnSafeWritableFactorHandle
+       * @param id the id of the changed factor
+       */
+      void notifyFactor(FactorID id)
+      {
+         var2facMsgs_i.notify(id);
       }
 
       /**

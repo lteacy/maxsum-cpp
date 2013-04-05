@@ -2,7 +2,7 @@
  * @file postHarness.cpp
  * Test harness for the maxsum::PostOffice class.
  */
-#include "PostOffice.h"
+#include "maxsum/PostOffice.h"
 #include <string>
 #include <vector>
 #include <iostream>

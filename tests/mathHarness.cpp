@@ -5,7 +5,7 @@
 #include <algorithm>
 #include <vector>
 #include <iostream>
-#include "DiscreteFunction.h"
+#include "maxsum/DiscreteFunction.h"
 
 using namespace maxsum;
 

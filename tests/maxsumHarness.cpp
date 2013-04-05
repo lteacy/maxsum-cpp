@@ -4,8 +4,8 @@
  * Tests MaxSumController on a few simple graph colouring problems.
  */
 
-#include "common.h"
-#include "MaxSumController.h"
+#include "maxsum/common.h"
+#include "maxsum/MaxSumController.h"
 #include<iostream>
 #include <ctime>
 #include <iomanip>
@@ -269,7 +269,7 @@ int genTreeGraph_m
    //***************************************************************************
    for(int k=0; k<branchFactor; ++k)
    {
-      int nextChild = nextID+1;
+      //int nextChild = nextID+1;
       nextID = genTreeGraph_m(depth-1, branchFactor, factors, nextID+1, myID);
       //curFactor.expand(nextChild);
    }

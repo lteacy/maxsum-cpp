@@ -386,6 +386,76 @@ namespace maxsum
       } // function condition
 
       /**
+       * Condition domain on specified variable values.
+       * Changes this iterator so that the specified set of variables have fixed
+       * values, and are not incremented. 
+       * @pre Values in vars map must be between 0, and their respective
+       * variable domain size.
+       * @post All free indices are set back to 0, and
+       * DomainIterator::hasNext() returns true.
+       * @post Previously conditioned variables have their values perserved.
+       * @throws OutOfRangeException is specified condition values are out
+       * of range.
+       * @param[in] varBegin iterator to start of variable list.
+       * @param[in] varEnd iterator to end of variable list.
+       * @param[in] indBegin iterator to start of value list.
+       * @param[in] indEnd iterator to end of value list.
+       */
+      template<class VarMap> void condition(const VarMap& vars)
+      {
+         //*********************************************************************
+         // Set the specified conditions for any variables that are in
+         // this domain.
+         //*********************************************************************
+         std::vector<VarID>::const_iterator pMyVar = vars_i.begin();
+         for(typename VarMap::const_iterator it=vars.begin();
+               it!=vars.end(); ++it)
+         {
+            //******************************************************************
+            // If the current variable is in our domain, condition its value
+            // as specified.
+            //******************************************************************
+            pMyVar = find(vars_i.begin(),vars_i.end(),it->first);
+
+            if(vars_i.end() != pMyVar)
+            {
+               int position = pMyVar - vars_i.begin();
+                fixed_i[position] = true;
+               subInd_i[position] = it->second;
+            }
+            
+         } // loop
+
+         //*********************************************************************
+         // Set free indices back to zero. (This is a much easier policy to 
+         // implement that trying to pick up were we left off.)
+         //*********************************************************************
+         for(int k=0; k<subInd_i.size(); ++k)
+         {
+            if(!fixed_i[k])
+            {
+               subInd_i[k]=0;
+            }
+         }
+
+         //*********************************************************************
+         // Since the free variables have been reset, the iterator is not
+         // finished. Notice, even if there are now free variables, we
+         // still intend to return the conditioned values at least once before
+         // finishing.
+         //*********************************************************************
+         finished_i = false;
+
+         //*********************************************************************
+         // Set the linear index to its apropriate value, based on the
+         // conditioned variables.
+         //*********************************************************************
+         ind_i = sub2ind( sizes_i.begin(),  sizes_i.end(),
+                         subInd_i.begin(), subInd_i.end() );
+
+      } // function condition
+
+      /**
        * Convenience function for conditioning one iterator on the current
        * value of another. This equalivalent to the following code
        * <pre>
