@@ -566,6 +566,15 @@ namespace maxsum
       template<class VarMap> ValType& operator()(const VarMap& vals)
       {
          //*********************************************************************
+         // Deal with the special case that this function is just a constant
+         // with a single value - not depending on any variables
+         //*********************************************************************
+         if(0==noVars())
+         {
+             return this->at(0);
+         }
+          
+         //*********************************************************************
          // Create vector to hold indices on which this function actually
          // depends
          //*********************************************************************
