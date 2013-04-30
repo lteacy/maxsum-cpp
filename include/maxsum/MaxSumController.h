@@ -163,10 +163,11 @@ namespace maxsum
       const DiscreteFunction& getTotalValue(FactorID fac) const
       {
          FactorMap::const_iterator pos = factorTotalValue_i.find(fac);
-         if(factors_i.end()==pos)
+         if(factorTotalValue_i.end()==pos)
          {
-            throw new NoSuchElementException("MaxSumController::getFactor()",
-                  "No such factor in factor graph.");
+            throw new NoSuchElementException
+               ("MaxSumController::getTotalValue()",
+                "No such factor in factor graph.");
          }
          return pos->second;
       }
