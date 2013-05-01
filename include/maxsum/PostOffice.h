@@ -13,6 +13,7 @@
 #include <queue>
 #include "DiscreteFunction.h"
 #include "util_containers.h"
+#include <boost/container/flat_map.hpp>
 
 namespace maxsum
 {
@@ -57,7 +58,7 @@ namespace util
       /**
        * Map of Receivers to Messages for a specific Sender.
        */
-      typedef std::map<Receiver,Message*> PrivOutMsgMap;
+      typedef boost::container::flat_map<Receiver,Message*> PrivOutMsgMap;
 
       /**
        * Iterator type for PostOffice::OutMsgMap.
@@ -67,7 +68,7 @@ namespace util
       /**
        * Map of Senders to Messages for a specific Receivers.
        */
-      typedef std::map<Sender,Message*> PrivInMsgMap;
+      typedef boost::container::flat_map<Sender,Message*> PrivInMsgMap;
 
       /**
        * Iterator type for PostOffice::InMsgMap.
@@ -78,12 +79,12 @@ namespace util
       /**
        * Convenience typedef for outboxes_i map type.
        */
-      typedef std::map<Sender,PrivOutMsgMap> OutboxMap;
+      typedef boost::container::flat_map<Sender,PrivOutMsgMap> OutboxMap;
 
       /**
        * Convenience typedef for inboxes_i map type.
        */
-      typedef std::map<Receiver,PrivInMsgMap> InboxMap;
+      typedef boost::container::flat_map<Receiver,PrivInMsgMap> InboxMap;
 
    public:
 
@@ -444,6 +445,8 @@ namespace util
        * @param[in] r the receiver's id
        * @post Messages can now be sent from <code>s</code> to <code>s</code>
        * via this maxsum::PostOffice.
+       * @post Maps and references previously returned by this PostOffice may
+       * be invalidated.
        */
       void addEdge(Sender s, Receiver r)
       {
@@ -457,6 +460,8 @@ namespace util
        * @param[in] msgVal initial value for newly constructed messages.
        * @post Messages can now be sent from <code>s</code> to <code>s</code>
        * via this maxsum::PostOffice.
+       * @post Maps and references previously returned by this PostOffice may
+       * be invalidated.
        */
       void addEdge(Sender s, Receiver r, const Message& msgVal)
       {
@@ -507,6 +512,8 @@ namespace util
        * @param[in] r the receiver's id
        * @post Messages will no longer be sent from <code>s</code> to
        * <code>s</code> via this maxsum::PostOffice.
+       * @post Maps and references previously returned by this PostOffice may
+       * be invalidated.
        */
       void removeEdge(Sender s, Receiver r)
       {
