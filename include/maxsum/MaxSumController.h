@@ -154,6 +154,31 @@ namespace maxsum
         maxNormThreshold_i(maxnorm) {}
 
       /**
+       * Copy constructor.
+       */
+      MaxSumController(const MaxSumController& rhs)
+      : factors_i(rhs.factors_i), factorTotalValue_i(rhs.factorTotalValue_i),
+        values_i(rhs.values_i), fac2varMsgs_i(rhs.fac2varMsgs_i),
+        var2facMsgs_i(rhs.var2facMsgs_i), maxIterations_i(rhs.maxIterations_i),
+        maxNormThreshold_i(rhs.maxNormThreshold_i)
+      {}
+
+      /**
+       * Copy assignment.
+       */
+      MaxSumController& operator=(const MaxSumController& rhs)
+      {
+         factors_i = rhs.factors_i;
+         factorTotalValue_i = rhs.factorTotalValue_i;
+         values_i = rhs.values_i;
+         fac2varMsgs_i = rhs.fac2varMsgs_i;
+         var2facMsgs_i = rhs.var2facMsgs_i;
+         maxIterations_i = rhs.maxIterations_i;
+         maxNormThreshold_i = rhs.maxNormThreshold_i;
+         return *this;
+      }
+
+      /**
        * Returns the total value for a specified factor.
        * The total value is the factor plus the sum of all its received messages.
        * @pre the optimise method must be called first to properly initialise
