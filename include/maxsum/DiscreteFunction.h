@@ -5,9 +5,7 @@
 #ifndef MAX_SUM_DISCRETE_FUNCTION_H
 #define MAX_SUM_DISCRETE_FUNCTION_H
 
-
-#define EIGEN_MATRIXBASE_PLUGIN "maxsum/MatrixBaseAddons.h"
-#include <Eigen/Dense>
+#include "maxsum/EigenWithPlugin.h"
 #include <cmath>
 #include <iostream>
 #include <cassert>
@@ -15,7 +13,6 @@
 #include "common.h"
 #include "register.h"
 #include "DomainIterator.h"
-#include <Eigen/Dense>
 
 namespace maxsum
 {
@@ -253,12 +250,7 @@ namespace maxsum
        */
       DiscreteFunction& assignKeepDomain(ValType val)
       {
-         for(std::vector<ValType>::iterator it=values_i.begin();
-               it!=values_i.end(); ++it)
-         {
-            (*it) = val;
-         }
-         
+         values_i.setConstant(val);
          return *this;
 
       } // assignKeepDomain
