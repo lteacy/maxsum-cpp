@@ -11,6 +11,7 @@
 
 #include <cassert>
 #include <map>
+#include <boost/container/flat_map.hpp>
 
 namespace maxsum
 {
@@ -168,17 +169,14 @@ namespace util
     * purposes.
     * @tparam Key Type of key used by this map.
     * @tparam Val Type of value referenced by this map. Internally, the map
+    * @tparam PtrMap Type of map used to store value pointers
     * stores pointers to Val objects, rather than the Val objects themselves,
     * but presents the same interface as a std::map that does store them.
     */
-   template<class Key, class Val> class RefMap
+   template<class Key, class Val,
+      class PtrMap=boost::container::flat_map<Key,Val> > class RefMap
    {
    public:
-
-      /**
-       * Type of map used to store value pointers.
-       */
-      typedef std::map<Key,Val> PtrMap;
 
       /**
        * Iterator type returned by this map.

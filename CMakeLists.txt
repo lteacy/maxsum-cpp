@@ -9,8 +9,8 @@ PROJECT(MAXSUM-CPP)
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 
 # add or remove debugging info
-SET(CMAKE_BUILD_TYPE Debug)
-#SET(CMAKE_BUILD_TYPE Release)
+#SET(CMAKE_BUILD_TYPE Debug)
+SET(CMAKE_BUILD_TYPE Release)
 
 # verbose makefile
 SET(CMAKE_VERBOSE_MAKEFILE OFF)
@@ -24,6 +24,12 @@ SET(LIB ${CMAKE_SOURCE_DIR}/lib)
 # find eigen linear algebra library
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR})
 find_package(Eigen3 3.1.0)
+
+# find boost
+set(Boost_USE_STATIC_LIBS        ON)
+set(Boost_USE_MULTITHREADED      ON)
+set(Boost_USE_STATIC_RUNTIME    OFF)
+find_package(Boost 1.40.0)
 
 ###########################################
 # Generate Documentation                  #
@@ -49,7 +55,7 @@ SET(EXECUTABLE_OUTPUT_PATH ${BIN} CACHE PATH "Output directory for the executabl
 
 find_package(Eigen3 3.1.0)
 # allow linking to these directories
-INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include ${EIGEN3_INCLUDE_DIR})
+INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include ${EIGEN3_INCLUDE_DIR} ${Boost_INCLUDE_DIRS})
 LINK_DIRECTORIES(${LIBRARY_OUTPUT_PATH})
 
 ############################
