@@ -69,6 +69,10 @@ namespace maxsum
 
    public:
 
+      // Eigen new operator (only required if we use fixed size eigen types.
+      // Current we only use dynamic sizes.
+      // EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+
       /**
        * Default Constructor creates constant function that depends on no
        * variables.
