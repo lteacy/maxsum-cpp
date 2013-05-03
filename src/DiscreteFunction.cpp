@@ -378,6 +378,15 @@ DiscreteFunction& DiscreteFunction::operator-=(const DiscreteFunction& rhs)
 DiscreteFunction& DiscreteFunction::operator*=(const DiscreteFunction& rhs)
 {
    //***************************************************************************
+   // Vectorise if operands have the same domain
+   //***************************************************************************
+   if(sameDomain(*this,rhs))
+   {
+      values_i *= rhs.values_i;
+      return *this;
+   }
+
+   //***************************************************************************
    // If necessary, expand the domain of this function to include the domain
    // of the input function
    //***************************************************************************
@@ -399,6 +408,15 @@ DiscreteFunction& DiscreteFunction::operator*=(const DiscreteFunction& rhs)
  */
 DiscreteFunction& DiscreteFunction::operator/=(const DiscreteFunction& rhs)
 {
+   //***************************************************************************
+   // Vectorise if operands have the same domain
+   //***************************************************************************
+   if(sameDomain(*this,rhs))
+   {
+      values_i /= rhs.values_i;
+      return *this;
+   }
+
    //***************************************************************************
    // If necessary, expand the domain of this function to include the domain
    // of the input function
