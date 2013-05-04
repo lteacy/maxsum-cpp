@@ -563,7 +563,7 @@ namespace maxsum
             //******************************************************************
             // Ensure that index is in range
             //******************************************************************
-            assert((0>*sub) || (*siz<=*sub));
+            assert((0<=*sub) && (*siz>*sub));
 
             //******************************************************************
             // Increment the result by the amount required by the current
@@ -647,53 +647,88 @@ namespace maxsum
          {
              return this->at(0);
          }
-          
+         
          //*********************************************************************
-         // Create vector to hold indices on which this function actually
-         // depends
+         // This function turns out to be crucial for efficiency, and therefore
+         // has to be optimised as much as possible. The original implementation
+         // first buffered required indices in a dynamically allocated vector,
+         // and then called sub2ind. To avoid the substantial overhead of
+         // this memory allocation, we now instead perform the sub2ind
+         // operations inline, except that we now need to ignore any indices
+         // that this function does not actually depend on.
+         //
+         // To begin, we start by setting up the result variable, and the
+         // skipSize - which is the amount we need to increment by given the
+         // size and position of the current subindex.
          //*********************************************************************
-         std::vector<ValIndex> indices;
-         indices.reserve(vars_i.size());
-
-         assert(0==indices.size()); // sanity check for expected behaviour
-
+         ValIndex skipSize = 1;
+         ValIndex index = 0;
+         
          //*********************************************************************
-         // Retrieve the indices that this function actually depends on.
-         // Notice this code assumes that all variable lists are sorted.
+         // Validate list sizes as far as possible
          //*********************************************************************
-         std::vector<VarID>::const_iterator myV = vars_i.begin();
-         for(typename VarMap::const_iterator k=vals.begin(); k!=vals.end(); ++k)
+         assert( vars_i.size() == size_i.size() );
+         assert( vals.size() >= vars_i.size() );
+         
+         //*********************************************************************
+         // Now we need iterators for the input variables and indices,
+         // and this variables own variables and their domain sizes.
+         //*********************************************************************
+         typename VarMap::const_iterator inV = vals.begin();
+         VarVec::const_iterator myV = vars_i.begin();
+         SizeVec::const_iterator siz = size_i.begin();
+         
+         //*********************************************************************
+         // Now we iterate through the input variables and indices and perform
+         // exactly the same operations as the sub2ind function. The difference
+         // here is that we need to ignore any variables that our not in this
+         // function's domain.
+         //
+         // Notice this code assumes that all lists are sorted, allowing us to
+         // to check for variable equality by iterating through each list in
+         // strict order
+         //*********************************************************************
+         while( (myV!=vars_i.end()) && (inV!=vals.end()) )
          {
             //******************************************************************
-            // If input variable is in the domain for this function...
+            // Skip indices for variables that are not in the domain of this
+            // function.
             //******************************************************************
-            if( (k->first)==(*myV) )
+            if(*myV!=inV->first)
             {
-               //***************************************************************
-               // Store the specified subindex for this variable
-               //***************************************************************
-               indices.push_back(k->second);
-               
-               //***************************************************************
-               // Look for the next variable in this functions domain
-               //***************************************************************
-               ++myV;
+               ++inV;
+               continue;
             }
-
-         } // for loop
-
+            
+            //******************************************************************
+            // Ensure that index is in range
+            //******************************************************************
+            assert((0<=inV->second) && (*siz>inV->second));
+            
+            //******************************************************************
+            // Increment the result by the amount required by the current
+            // subindex
+            //******************************************************************
+            index += (inV->second) * skipSize;
+            skipSize *= *siz;
+            
+            //******************************************************************
+            // Move iterators on to the next variable in the list
+            //******************************************************************
+            ++siz;
+            ++inV;
+            ++myV;
+            
+         } // while loop
+         
          //*********************************************************************
-         // Ensure the domain is fully specified. We use to throw an exception
-         // here, but really this is a program error not a user error. Have to
-         // ask ourselves whether exception overhead is justified in this
-         // heavily called function.
+         // Sanity check that we found all the variables in this functions
+         // domain, and return the resulting linear index.
          //*********************************************************************
-         assert(vars_i.size() == indices.size());
-
-         //*********************************************************************
-         // Otherwise return the correct value
-         //*********************************************************************
-         return (*this)(indices.begin(),indices.end());
+         assert(myV==vars_i.end());
+         assert(siz==size_i.end());
+         assert(index<values_i.size());
+         return values_i[index];
 
       } // operator()
 
