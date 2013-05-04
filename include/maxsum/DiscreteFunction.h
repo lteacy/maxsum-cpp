@@ -612,7 +612,7 @@ namespace maxsum
        * function depends.
        */
       template<class VarVec, class IndVec> ValType& operator()
-         (VarVec var, IndVec ind)
+         (const VarVec& var, const IndVec& ind)
       {
          return (*this)(var.begin(),var.end(),ind.begin(),ind.end());
       }
@@ -623,7 +623,7 @@ namespace maxsum
        * function depends.
        */
       template<class VarVec, class IndVec> const ValType& operator()
-         (VarVec var, IndVec ind) const
+         (const VarVec& var, const IndVec& ind) const
       {
          // throw away const to use the non-const implementation
          DiscreteFunction* me = const_cast<DiscreteFunction*>(this);
