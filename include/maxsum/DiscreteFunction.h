@@ -631,13 +631,13 @@ namespace maxsum
       }
 
       /**
-       * Access coefficient by subindices specified in variable map.
+       * Get corresponding linear index for subindices specified in map.
        * Specified variables must be superset of variables on which this
        * function depends. The specified map must be sorted.
        * @param vals map of VarID (variables) to ValIndex (values)
        * @pre iterators over vals must return pairs in ascending key order.
        */
-      template<class VarMap> ValType& operator()(const VarMap& vals)
+      template<class VarMap> ValIndex getIndex(const VarMap& vals) const
       {
          //*********************************************************************
          // Deal with the special case that this function is just a constant
@@ -728,9 +728,21 @@ namespace maxsum
          assert(myV==vars_i.end());
          assert(siz==size_i.end());
          assert(index<values_i.size());
-         return values_i[index];
+         return index;
 
-      } // operator()
+      } // getIndex()
+      
+      /**
+       * Access coefficient by subindices specified in variable map.
+       * Specified variables must be superset of variables on which this
+       * function depends. The specified map must be sorted.
+       * @param vals map of VarID (variables) to ValIndex (values)
+       * @pre iterators over vals must return pairs in ascending key order.
+       */
+      template<class VarMap> ValType& operator()(const VarMap& vals)
+      {
+         return values_i[getIndex(vals)];
+      }
 
       /**
        * Access coefficient by subindices specified in variable map.
