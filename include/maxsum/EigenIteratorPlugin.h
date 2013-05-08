@@ -8,7 +8,7 @@
 
 typedef Scalar value_type;
 
-typedef dec_brl::ConstEigenIterator<DenseBase<Derived> > const_iterator;
+typedef max_sum::ConstEigenIterator<DenseBase<Derived> > const_iterator;
 
 const_iterator begin() const
 {
@@ -18,6 +18,13 @@ const_iterator begin() const
 const_iterator end() const
 {
     return const_iterator(size(),*this);
+}
+
+const_iterator find(int index) const
+{
+    index = (0>index) ? 0 : index;
+    index = (size()<index) ? size() : index;
+    return const_iterator(index,*this);
 }
 
 #endif // EIGEN_ITERATOR_PLUGIN_H

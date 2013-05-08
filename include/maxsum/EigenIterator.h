@@ -7,7 +7,7 @@
 #ifndef DEC_BRL_EIGEN_ITERATOR_H
 #define DEC_BRL_EIGEN_ITERATOR_H
 
-namespace dec_brl {
+namespace max_sum {
     
     /**
      * Class for Iterating over the data contained in an eigen3 matrix or array.
