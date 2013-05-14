@@ -29,7 +29,7 @@ find_package(Eigen3 3.1.0)
 set(Boost_USE_STATIC_LIBS        ON)
 set(Boost_USE_MULTITHREADED      ON)
 set(Boost_USE_STATIC_RUNTIME    OFF)
-find_package(Boost 1.40.0)
+find_package(Boost 1.48.0)
 
 ###########################################
 # Generate Documentation                  #
