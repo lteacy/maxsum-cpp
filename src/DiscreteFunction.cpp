@@ -9,6 +9,7 @@
 #include <iostream>
 #include <maxsum/DiscreteFunction.h>
 #include <maxsum/DomainIterator.h>
+#include <maxsum/common.h>
 
 using namespace maxsum;
 
@@ -700,7 +701,8 @@ void maxsum::maxMarginal
  DiscreteFunction& outFun
 )
 {
-   marginal(inFun,std::max<ValType>,outFun);
+   const ValType& (*pMax)(const ValType&, const ValType&) = std::max<ValType>;
+   marginal(inFun,pMax,outFun);
 }
 
 /**
@@ -725,7 +727,8 @@ void maxsum::minMarginal
  DiscreteFunction& outFun
 )
 {
-   marginal(inFun,std::min<ValType>,outFun);
+   const ValType& (*pMin)(const ValType&, const ValType&) = std::min<ValType>;
+   marginal(inFun,pMin,outFun);
 }
 
 /**
