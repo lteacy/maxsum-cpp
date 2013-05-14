@@ -33,12 +33,16 @@ namespace util
     */
    template<class Map> class ConstKeyIterator : public Map::const_iterator
    {
-   public:
+   private:
 
       /**
        * The base iterator type, which this is derived from.
        */
       typedef typename Map::const_iterator Base;
+
+      Base base_i;
+
+   public:
 
       /**
        * The value type returned by this iterator, which is the key type
@@ -49,8 +53,40 @@ namespace util
       /**
        * Constructs a new KeySet iterator from a map iterator.
        */
-      ConstKeyIterator(const Base& it)
-         : Map::const_iterator(it) {}
+      ConstKeyIterator(const Base& it) : base_i(it) {}
+
+      ConstKeyIterator(const ConstKeyIterator& it) : base_i(it.base_i) {}
+
+      ConstKeyIterator& operator=(const Base& it)
+      {
+         base_i = it;
+      }
+
+      ConstKeyIterator& operator=(const ConstKeyIterator& it)
+      {
+         base_i = it.base_i;
+      }
+
+      ConstKeyIterator& operator++()
+      {
+         ++base_i;
+         return *this;
+      }
+
+      ConstKeyIterator operator++(int) const
+      {
+         return ConstKeyIterator(base_i++);
+      }
+
+      bool operator!=(const ConstKeyIterator& rhs) const
+      {
+         return base_i!=rhs.base_i;
+      }
+
+      bool operator==(const ConstKeyIterator& rhs) const
+      {
+         return base_i==rhs.base_i;
+      }
 
       /**
        * Overrides dereference operator so that a direct reference to the 
@@ -58,7 +94,7 @@ namespace util
        */
       const value_type& operator*() const
       {
-         return (Base::operator*()).first;
+         return base_i->first;
       }
 
    }; // ConstKeyIterator
