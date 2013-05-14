@@ -24,6 +24,45 @@ namespace maxsum
  */
 namespace util
 {
+
+   /**
+    * Iterator type that allows read-only access to the keys of the
+    * underlying map. This is achieved by overriding the map iterator's
+    * own dereferencing operator, so that only a constant reference to the
+    * key is returned.
+    */
+   template<class Map> class ConstKeyIterator : public Map::const_iterator
+   {
+   public:
+
+      /**
+       * The base iterator type, which this is derived from.
+       */
+      typedef typename Map::const_iterator Base;
+
+      /**
+       * The value type returned by this iterator, which is the key type
+       * of the underlying map.
+       */
+      typedef typename Map::key_type value_type;
+         
+      /**
+       * Constructs a new KeySet iterator from a map iterator.
+       */
+      ConstKeyIterator(const Base& it)
+         : Map::const_iterator(it) {}
+
+      /**
+       * Overrides dereference operator so that a direct reference to the 
+       * Map key is returned.
+       */
+      const value_type& operator*() const
+      {
+         return (Base::operator*()).first;
+      }
+
+   }; // ConstKeyIterator
+
    /**
     * Utility class for presenting the keys of a map in a read-only container.
     * Provides methods for iterating over this set that adhere to standard
@@ -45,32 +84,7 @@ namespace util
        */
       typedef typename Map::key_type value_type;
 
-      /**
-       * Iterator type that allows read-only access to the keys of the
-       * underlying map. This is achieved by overriding the map iterator's
-       * own dereferencing operator, so that only a constant reference to the
-       * key is returned.
-       */
-      class const_iterator : public Map::const_iterator
-      {
-      public:
-         
-         /**
-          * Constructs a new KeySet iterator from a map iterator.
-          */
-         const_iterator(typename Map::const_iterator it)
-            : Map::const_iterator(it) {}
-
-         /**
-          * Overrides dereference operator so that a direct reference to the 
-          * Map key is returned.
-          */
-         const KeySet::value_type& operator*() const
-         {
-            return (Map::const_iterator::operator*()).first;
-         }
-
-      }; // KeySet::const_iterator
+      typedef ConstKeyIterator<Map> const_iterator;
 
    private:
 
