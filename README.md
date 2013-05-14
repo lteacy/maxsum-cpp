@@ -41,7 +41,7 @@ This library is not complete yet!! The initial phase of development is still und
 
 License
 =======
-Copyright © 2012 Luke Teacy. All Rights Reserved.
+Copyright © 2013 Luke Teacy. All Rights Reserved.
 
 Redistribution and use of this software in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
