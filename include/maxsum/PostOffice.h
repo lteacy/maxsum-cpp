@@ -8,12 +8,9 @@
 #ifndef MAXSUM_UTIL_POSTOFFICE_H
 #define MAXSUM_UTIL_POSTOFFICE_H
 
-#include <map>
-#include <set>
 #include <queue>
 #include "DiscreteFunction.h"
 #include "util_containers.h"
-#include <boost/container/flat_map.hpp>
 
 namespace maxsum
 {
@@ -58,8 +55,7 @@ namespace util
       /**
        * Map of Receivers to Messages for a specific Sender.
        */
-      //typedef boost::container::flat_map<Receiver,Message*> PrivOutMsgMap;
-      typedef std::map<Receiver,Message*> PrivOutMsgMap;
+      typedef MAXSUM_DEFAULT_MAP<Receiver,Message*> PrivOutMsgMap;
 
       /**
        * Iterator type for PostOffice::OutMsgMap.
@@ -69,8 +65,7 @@ namespace util
       /**
        * Map of Senders to Messages for a specific Receivers.
        */
-      //typedef boost::container::flat_map<Sender,Message*> PrivInMsgMap;
-      typedef std::map<Sender,Message*> PrivInMsgMap;
+      typedef MAXSUM_DEFAULT_MAP<Sender,Message*> PrivInMsgMap;
 
       /**
        * Iterator type for PostOffice::InMsgMap.
@@ -80,14 +75,12 @@ namespace util
       /**
        * Convenience typedef for outboxes_i map type.
        */
-      //typedef boost::container::flat_map<Sender,PrivOutMsgMap> OutboxMap;
-      typedef std::map<Sender,PrivOutMsgMap> OutboxMap;
+      typedef MAXSUM_DEFAULT_MAP<Sender,PrivOutMsgMap> OutboxMap;
 
       /**
        * Convenience typedef for inboxes_i map type.
        */
-      //typedef boost::container::flat_map<Receiver,PrivInMsgMap> InboxMap;
-      typedef std::map<Receiver,PrivInMsgMap> InboxMap;
+      typedef MAXSUM_DEFAULT_MAP<Receiver,PrivInMsgMap> InboxMap;
 
    public:
 

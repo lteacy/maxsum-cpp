@@ -11,7 +11,9 @@
 
 #include <cassert>
 #include <map>
-//#include <boost/container/flat_map.hpp>
+#include <boost/container/flat_map.hpp>
+
+#define MAXSUM_DEFAULT_MAP boost::container::flat_map
 
 namespace maxsum
 {
@@ -24,7 +26,6 @@ namespace maxsum
  */
 namespace util
 {
-
    /**
     * Iterator type that allows read-only access to the keys of the
     * underlying map. The set of valid operations on this iterator
@@ -357,8 +358,7 @@ namespace util
     * but presents the same interface as a std::map that does store them.
     */
    template<class Key, class Val,
-   //   class PtrMap=boost::container::flat_map<Key,Val> > class RefMap
-      class PtrMap=std::map<Key,Val> > class RefMap
+      class PtrMap=MAXSUM_DEFAULT_MAP<Key,Val> > class RefMap
    {
    public:
 
