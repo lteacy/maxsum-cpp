@@ -456,14 +456,69 @@ bool testSwap(PostOffice_m& office)
 bool testNotification(PostOffice_m& office)
 {
    //***************************************************************************
+   //	Check number of receivers
+   //***************************************************************************
+   std::cout << "\nIn testNotification..." << std::endl;
+   bool noReceivers = office.receiverBegin()==office.receiverEnd();
+   bool someReceivers = office.receiverBegin()!=office.receiverEnd();
+   if(noReceivers)
+   {
+      std::cout << "Office claims to have no receivers" << std::endl;
+   }
+
+   if(someReceivers)
+   {
+      std::cout << "Office claims to have some receivers" << std::endl;
+   }
+
+   if(noReceivers==someReceivers)
+   {
+      std::cout << "INCONSISTENT RECEIVER STATE!" << std::endl;
+      return false;
+   }
+
+   if(noReceivers!=(office.receiverBegin()==office.receiverEnd()))
+   {
+      std::cout << "Post office changed its mind about empty receiver list"
+                << std::endl;
+      return false;
+   }
+
+   if(someReceivers!=(office.receiverBegin()!=office.receiverEnd()))
+   {
+      std::cout << "Post office changed its mind about non-empty receiver list"
+                << std::endl;
+      return false;
+   }
+
+   //***************************************************************************
    // Retrieve the list of all receivers, and make sure there are no duplicates
    //***************************************************************************
    std::vector<long> receivers(office.receiverBegin(),office.receiverEnd());
+   std::cout << "Number of reported receivers: " << office.numOfReceivers()
+             << std::endl;
+   std::cout << "Number of receivers: " << receivers.size() << std::endl;
 
    std::sort(receivers.begin(),receivers.end()); // required by std::unique()
+   std::cout << "Number of sorted receivers: " << receivers.size() << std::endl;
    if(receivers.end()!=std::unique(receivers.begin(),receivers.end()))
    {
       std::cout << "\nDuplicated detected in receivers list.\n";
+      return false;
+   }
+   std::cout << "Number of unique receivers: " << receivers.size() << std::endl;
+
+   if(someReceivers && receivers.empty())
+   {
+      std::cout << "Failed to get receivers from non-empty postoffice!\n"
+                << "Internal test harness error?" << std::endl;
+      return false;
+   }
+
+   if(office.numOfReceivers()!=receivers.size())
+   {
+      std::cout << "Number of receivers not as reported\n"
+                << "Internal test harness error?" << std::endl;
       return false;
    }
 
@@ -696,6 +751,8 @@ bool isConsistent(const std::vector<Edge_m>& edges, PostOffice_m& office)
    if(edges.size() != office.numOfEdges())
    {
       std::cout << "\nIncorrect number of edges\n";
+      std::cout << "Edges: " << edges.size() << " office: "
+                << office.numOfEdges() << std::endl;
       return false;
    }
 
@@ -714,7 +771,8 @@ bool isConsistent(const std::vector<Edge_m>& edges, PostOffice_m& office)
       //************************************************************************
       if(!office.hasEdge(it->sender,it->receiver))
       {
-         std::cout << "\nMissing edges in post office\n";
+         std::cout << "\nMissing edges in post office: " << it->sender << '-'
+                   << it->receiver << std::endl;
          return false;
       }
 
@@ -745,7 +803,8 @@ bool isConsistent(const std::vector<Edge_m>& edges, PostOffice_m& office)
          {
             if(office.hasEdge(curSender,curReceiver))
             {
-               std::cout << "\nNon-existant edge between existant parties\n";
+               std::cout << "\nNon-existant edge between existant parties: "
+                         << curSender << '-' << curReceiver << std::endl;
                return false;
             }
          }
