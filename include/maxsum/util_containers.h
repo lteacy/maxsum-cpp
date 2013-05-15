@@ -10,7 +10,6 @@
 #define MAXSUM_UTIL_CONTAINERS_H
 
 #include <cassert>
-#include <map>
 #include <boost/container/flat_map.hpp>
 
 namespace maxsum
@@ -27,11 +26,11 @@ namespace util
 
    /**
     * Iterator type that allows read-only access to the keys of the
-    * underlying map. This is achieved by overriding the map iterator's
-    * own dereferencing operator, so that only a constant reference to the
-    * key is returned.
+    * underlying map. The set of valid operations on this iterator
+    * is the same as for the underlying map const_iterator,
+    * except that dereferencing returns only the key and not a pair.
     */
-   template<class Map> class ConstKeyIterator : public Map::const_iterator
+   template<class Map> class ConstKeyIterator
    {
    private:
 
@@ -44,60 +43,170 @@ namespace util
 
    public:
 
-      /**
-       * The value type returned by this iterator, which is the key type
-       * of the underlying map.
-       */
-      typedef typename Map::key_type value_type;
-         
+      typedef typename Base::difference_type difference_type;
+      typedef const typename Map::key_type value_type;
+      typedef value_type* pointer;
+      typedef value_type& reference;
+      typedef typename Base::iterator_category iterator_category;
+
       /**
        * Constructs a new KeySet iterator from a map iterator.
        */
-      ConstKeyIterator(const Base& it) : base_i(it) {}
+      ConstKeyIterator(const Base& it=Base()) : base_i(it) {}
 
+      /**
+       * Copy constructor
+       */
       ConstKeyIterator(const ConstKeyIterator& it) : base_i(it.base_i) {}
 
+      /**
+       * Copy assignment from underlying map iterator type. 
+       */
       ConstKeyIterator& operator=(const Base& it)
       {
          base_i = it;
       }
 
+      /**
+       * Copy assignment. 
+       */
       ConstKeyIterator& operator=(const ConstKeyIterator& it)
       {
          base_i = it.base_i;
       }
 
+      /**
+       * Prefix decrement operator.
+       * Only defined if map iterator is bidirectional.
+       */
+      ConstKeyIterator& operator--()
+      {
+         --base_i;
+         return *this;
+      }
+
+      /**
+       * Postfix decrement operator.
+       * Only defined if map iterator is bidirectional.
+       */
+      ConstKeyIterator operator--(int) const
+      {
+         return ConstKeyIterator(base_i--);
+      }
+
+      /**
+       * Prefix increment operator.
+       */
       ConstKeyIterator& operator++()
       {
          ++base_i;
          return *this;
       }
 
+      /**
+       * Postfix increment operator.
+       */
       ConstKeyIterator operator++(int) const
       {
          return ConstKeyIterator(base_i++);
       }
 
+      /**
+       * True iff this iterator is not equal to another.
+       */
       bool operator!=(const ConstKeyIterator& rhs) const
       {
          return base_i!=rhs.base_i;
       }
 
+      /**
+       * True iff this iterator is equal to another.
+       */
       bool operator==(const ConstKeyIterator& rhs) const
       {
          return base_i==rhs.base_i;
       }
 
       /**
-       * Overrides dereference operator so that a direct reference to the 
-       * Map key is returned.
+       * Increments this iterator by specified amount.
+       * Only valid if map iterator is a random access iterator.
+       */
+      ConstKeyIterator& operator+=(int n)
+      {
+         base_i+=n;
+         return *this;
+      }
+
+      /**
+       * Decrements this iterator by specified amount.
+       * Only valid if map iterator is a random access iterator.
+       */
+      ConstKeyIterator& operator-=(int n)
+      {
+         base_i-=n;
+         return *this;
+      }
+
+      /**
+       * Returns a copy of this iterator incremented by a specified amount.
+       * Only valid if map iterator is a random access iterator.
+       */
+      ConstKeyIterator operator+(int n)
+      {
+         return ConstKeyIterator(base_i+n);
+      }
+
+      /**
+       * Returns a copy of this iterator decremented by a specified amount.
+       * Only valid if map iterator is a random access iterator.
+       */
+      ConstKeyIterator operator-(int n)
+      {
+         return ConstKeyIterator(base_i-n);
+      }
+
+      /**
+       * Returns the difference between this iterator and another.
+       * Only valid if map iterator is a random access iterator.
+       * @pre both operands must be iterators to the SAME map.
+       */
+      difference_type operator-(const ConstKeyIterator& rhs)
+      {
+         return base_i-rhs.base_i;
+      }
+
+      /**
+       * Returns a reference to the Map Key pointed to by this iterator.
        */
       const value_type& operator*() const
       {
          return base_i->first;
       }
 
+      /**
+       * Returns a reference to the Map Key pointed to by the iterator
+       * <code>n</code> places above this one.
+       * Only valid if map iterator is a random access iterator.
+       */
+      const value_type& operator[](int n) const
+      {
+         return (base_i[n])->first;
+      }
+
    }; // ConstKeyIterator
+
+   /**
+    * Returns a copy of this iterator incremented by a specified amount.
+    * Only valid if map iterator is a random access iterator.
+    */
+   template<class Map> ConstKeyIterator<Map> operator+
+   (
+    int n,
+    const ConstKeyIterator<Map>& it
+   )
+   {
+      return it+n;
+   }
 
    /**
     * Utility class for presenting the keys of a map in a read-only container.
