@@ -43,16 +43,39 @@ namespace util
 
    public:
 
+      /**
+       * integer type returned by iterator-iterator
+       */
       typedef typename Base::difference_type difference_type;
+     
+      /**
+       * Value type returned by this iterator.
+       */
       typedef const typename Map::key_type value_type;
+    
+      /**
+       * Pointer to value type returned by this iterator.
+       */
       typedef value_type* pointer;
+
+      /**
+       * Reference to value type returned by this iterator.
+       */
       typedef value_type& reference;
+
+      /**
+       * This iterator's category.
+       * May be <code>std::forward_iterator_tag</code>,
+       * <code>std::bidirectional_iterator_tag</code>,
+       * or <code>std::random_access_iterator_tag</code>,
+       * depending on type of underlying map iterator.
+       */
       typedef typename Base::iterator_category iterator_category;
 
       /**
        * Constructs a new KeySet iterator from a map iterator.
        */
-      ConstKeyIterator(const Base& it=Base()) : base_i(it) {}
+      explicit ConstKeyIterator(const Base& it=Base()) : base_i(it) {}
 
       /**
        * Copy constructor
