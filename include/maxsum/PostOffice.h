@@ -58,7 +58,8 @@ namespace util
       /**
        * Map of Receivers to Messages for a specific Sender.
        */
-      typedef boost::container::flat_map<Receiver,Message*> PrivOutMsgMap;
+      //typedef boost::container::flat_map<Receiver,Message*> PrivOutMsgMap;
+      typedef std::map<Receiver,Message*> PrivOutMsgMap;
 
       /**
        * Iterator type for PostOffice::OutMsgMap.
@@ -68,23 +69,25 @@ namespace util
       /**
        * Map of Senders to Messages for a specific Receivers.
        */
-      typedef boost::container::flat_map<Sender,Message*> PrivInMsgMap;
+      //typedef boost::container::flat_map<Sender,Message*> PrivInMsgMap;
+      typedef std::map<Sender,Message*> PrivInMsgMap;
 
       /**
        * Iterator type for PostOffice::InMsgMap.
        */
       typedef typename PrivInMsgMap::iterator PrivInMsgIt;
 
-
       /**
        * Convenience typedef for outboxes_i map type.
        */
-      typedef boost::container::flat_map<Sender,PrivOutMsgMap> OutboxMap;
+      //typedef boost::container::flat_map<Sender,PrivOutMsgMap> OutboxMap;
+      typedef std::map<Sender,PrivOutMsgMap> OutboxMap;
 
       /**
        * Convenience typedef for inboxes_i map type.
        */
-      typedef boost::container::flat_map<Receiver,PrivInMsgMap> InboxMap;
+      //typedef boost::container::flat_map<Receiver,PrivInMsgMap> InboxMap;
+      typedef std::map<Receiver,PrivInMsgMap> InboxMap;
 
    public:
 

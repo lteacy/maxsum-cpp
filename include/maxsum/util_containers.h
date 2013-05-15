@@ -10,7 +10,8 @@
 #define MAXSUM_UTIL_CONTAINERS_H
 
 #include <cassert>
-#include <boost/container/flat_map.hpp>
+#include <map>
+//#include <boost/container/flat_map.hpp>
 
 namespace maxsum
 {
@@ -356,7 +357,8 @@ namespace util
     * but presents the same interface as a std::map that does store them.
     */
    template<class Key, class Val,
-      class PtrMap=boost::container::flat_map<Key,Val> > class RefMap
+   //   class PtrMap=boost::container::flat_map<Key,Val> > class RefMap
+      class PtrMap=std::map<Key,Val> > class RefMap
    {
    public:
 
