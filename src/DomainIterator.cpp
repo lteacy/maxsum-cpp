@@ -34,8 +34,8 @@ void DomainIterator::condition(const DomainIterator& it)
  */
 bool DomainIterator::isFixed(VarID var) const
 {
-   std::vector<VarID>::const_iterator pos = 
-   find(vars_i.begin(),vars_i.end(),var);
+   VarList::const_iterator pos = 
+   std::find(vars_i.begin(),vars_i.end(),var);
    if(vars_i.end()==pos)
    {
       return false;

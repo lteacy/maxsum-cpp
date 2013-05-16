@@ -8,7 +8,7 @@
 #define MAXSUM_DOMAIN_ITERATOR_H
 
 #include <algorithm>
-#include <vector>
+#include "StaticVector.h"
 #include "common.h"
 #include "register.h"
 
@@ -29,12 +29,12 @@ namespace maxsum
       /**
        * Type of list returned by DomainIterator::getVars()
        */
-      typedef std::vector<VarID> VarList;
+      typedef StaticVector<VarID> VarList;
 
       /**
        * Type of list returned by DomainIterator::getSubInd()
        */
-      typedef std::vector<ValIndex> IndList;
+      typedef StaticVector<ValIndex> IndList;
 
       /**
        * Utility method that throws an exception if we try to access beyond the
@@ -73,7 +73,7 @@ namespace maxsum
        * If fixed_i[k] is true, then DomainIterator::operator++ will not change
        * the value of subInd_i[k]
        */
-      std::vector<bool> fixed_i;
+      StaticVector<bool> fixed_i;
 
       /**
        * Cache of domain sizes for each variable.
@@ -208,13 +208,13 @@ namespace maxsum
          // Construct the new variable list, ensuring that it is sorted and
          // does not contain duplicates.
          //*********************************************************************
-         std::vector<VarID> newVars = vars_i;
+         StaticVector<VarID> newVars = vars_i;
          int maxSize = (end - begin) + vars_i.size();
          newVars.reserve(maxSize);
          newVars.insert(newVars.end(),begin,end);
          std::sort(newVars.begin(),newVars.end());
 
-         std::vector<VarID>::iterator newEnd =
+         StaticVector<VarID>::iterator newEnd =
             std::unique(newVars.begin(),newVars.end());
 
          newVars.resize(newEnd-newVars.begin());
@@ -224,9 +224,9 @@ namespace maxsum
          // all new variables.
          //*********************************************************************
          int pos = 0; // position in old variable list
-         std::vector<ValIndex> newSizes(newVars.size());
-         std::vector<ValIndex> newSubInd(newVars.size());
-         std::vector<bool> newFixed(newVars.size());
+         StaticVector<ValIndex> newSizes(newVars.size());
+         StaticVector<ValIndex> newSubInd(newVars.size());
+         StaticVector<bool> newFixed(newVars.size());
 
          for(int k=0; k<newVars.size(); k++)
          {
@@ -338,8 +338,8 @@ namespace maxsum
             // If the current variable is in our domain, condition its value
             // as specified.
             //******************************************************************
-            std::vector<VarID>::const_iterator pMyVar =
-               find(vars_i.begin(),vars_i.end(),*pInVar);
+            StaticVector<VarID>::const_iterator pMyVar =
+               std::find(vars_i.begin(),vars_i.end(),*pInVar);
 
             if(vars_i.end() != pMyVar)
             {
@@ -407,7 +407,7 @@ namespace maxsum
          // Set the specified conditions for any variables that are in
          // this domain.
          //*********************************************************************
-         std::vector<VarID>::const_iterator pMyVar = vars_i.begin();
+         StaticVector<VarID>::const_iterator pMyVar = vars_i.begin();
          for(typename VarMap::const_iterator it=vars.begin();
                it!=vars.end(); ++it)
          {
