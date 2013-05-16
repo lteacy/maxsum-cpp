@@ -415,7 +415,7 @@ namespace maxsum
             // If the current variable is in our domain, condition its value
             // as specified.
             //******************************************************************
-            pMyVar = find(vars_i.begin(),vars_i.end(),it->first);
+            pMyVar = std::find(vars_i.begin(),vars_i.end(),it->first);
 
             if(vars_i.end() != pMyVar)
             {

@@ -247,7 +247,7 @@ namespace maxsum
          {
             *pPos = *cur;
             ++pPos;
-            assert(pPos < vData_i+maxSize);
+            assert(pPos <= vData_i+maxSize);
          }
 
          //*********************************************************************
@@ -257,7 +257,7 @@ namespace maxsum
          {
             *pPos = *it;
             ++pPos;
-            assert(pPos < vData_i+maxSize);
+            assert(pPos <= vData_i+maxSize);
          }
 
          //*********************************************************************
