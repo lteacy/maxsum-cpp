@@ -9,6 +9,7 @@
 #include <iostream>
 #include <maxsum/DiscreteFunction.h>
 #include <maxsum/DomainIterator.h>
+#include <maxsum/common.h>
 
 using namespace maxsum;
 
@@ -293,7 +294,8 @@ DiscreteFunction& DiscreteFunction::operator=(ValType val)
 {
    vars_i.clear();
    size_i.clear();
-   values_i.assign(1,val);
+   values_i.resize(1);
+   values_i(0) = val; 
    return *this;
 }
 
@@ -310,58 +312,19 @@ DiscreteFunction& DiscreteFunction::operator=(const DiscreteFunction& val)
 }
 
 /**
- * Adds a scalar value to this function.
- */
-DiscreteFunction& DiscreteFunction::operator+=(ValType val)
-{
-   for(int k=0; k<values_i.size(); ++k)
-   {
-      values_i[k] += val;
-   }
-   return *this;
-}
-
-/**
- * Subtracts a scalar value from this function.
- */
-DiscreteFunction& DiscreteFunction::operator-=(ValType val)
-{
-   for(int k=0; k<values_i.size(); ++k)
-   {
-      values_i[k] -= val;
-   }
-   return *this;
-}
-
-/**
- * Multiplies this function by a scalar.
- */
-DiscreteFunction& DiscreteFunction::operator*=(ValType val)
-{
-   for(int k=0; k<values_i.size(); ++k)
-   {
-      values_i[k] *= val;
-   }
-   return *this;
-}
-
-/**
- * Divides this function by a scalar.
- */
-DiscreteFunction& DiscreteFunction::operator/=(ValType val)
-{
-   for(int k=0; k<values_i.size(); ++k)
-   {
-      values_i[k] /= val;
-   }
-   return *this;
-}
-
-/**
  * Adds a function to this one, expanding the domain if necessary.
  */
 DiscreteFunction& DiscreteFunction::operator+=(const DiscreteFunction& rhs)
 {
+   //***************************************************************************
+   // Vectorise if operands have the same domain
+   //***************************************************************************
+   if(sameDomain(*this,rhs))
+   {
+      values_i += rhs.values_i;
+      return *this;
+   }
+
    //***************************************************************************
    // If necessary, expand the domain of this function to include the domain
    // of the input function
@@ -385,6 +348,15 @@ DiscreteFunction& DiscreteFunction::operator+=(const DiscreteFunction& rhs)
 DiscreteFunction& DiscreteFunction::operator-=(const DiscreteFunction& rhs)
 {
    //***************************************************************************
+   // Vectorise if operands have the same domain
+   //***************************************************************************
+   if(sameDomain(*this,rhs))
+   {
+      values_i -= rhs.values_i;
+      return *this;
+   }
+
+   //***************************************************************************
    // If necessary, expand the domain of this function to include the domain
    // of the input function
    //***************************************************************************
@@ -406,6 +378,15 @@ DiscreteFunction& DiscreteFunction::operator-=(const DiscreteFunction& rhs)
  */
 DiscreteFunction& DiscreteFunction::operator*=(const DiscreteFunction& rhs)
 {
+   //***************************************************************************
+   // Vectorise if operands have the same domain
+   //***************************************************************************
+   if(sameDomain(*this,rhs))
+   {
+      values_i *= rhs.values_i;
+      return *this;
+   }
+
    //***************************************************************************
    // If necessary, expand the domain of this function to include the domain
    // of the input function
@@ -429,6 +410,15 @@ DiscreteFunction& DiscreteFunction::operator*=(const DiscreteFunction& rhs)
 DiscreteFunction& DiscreteFunction::operator/=(const DiscreteFunction& rhs)
 {
    //***************************************************************************
+   // Vectorise if operands have the same domain
+   //***************************************************************************
+   if(sameDomain(*this,rhs))
+   {
+      values_i /= rhs.values_i;
+      return *this;
+   }
+
+   //***************************************************************************
    // If necessary, expand the domain of this function to include the domain
    // of the input function
    //***************************************************************************
@@ -450,7 +440,7 @@ DiscreteFunction& DiscreteFunction::operator/=(const DiscreteFunction& rhs)
  */
 ValType DiscreteFunction::max() const
 {
-   return *( std::max_element(values_i.begin(),values_i.end()) );
+   return values_i.maxCoeff();
 }
 
 /**
@@ -458,7 +448,7 @@ ValType DiscreteFunction::max() const
  */
 ValType DiscreteFunction::min() const
 {
-   return *( std::min_element(values_i.begin(),values_i.end()) );
+   return values_i.minCoeff();
 }
 
 /**
@@ -466,10 +456,9 @@ ValType DiscreteFunction::min() const
  */
 ValIndex DiscreteFunction::argmax() const
 {
-   std::vector<ValType>::const_iterator pos =
-      std::max_element(values_i.begin(),values_i.end());
-   ValIndex result = pos-values_i.begin();
-   return result;
+   ValIndex row;
+   values_i.maxCoeff(&row);
+   return row;
 }
 
 /**
@@ -712,7 +701,8 @@ void maxsum::maxMarginal
  DiscreteFunction& outFun
 )
 {
-   marginal(inFun,std::max<ValType>,outFun);
+   const ValType& (*pMax)(const ValType&, const ValType&) = std::max<ValType>;
+   marginal(inFun,pMax,outFun);
 }
 
 /**
@@ -737,7 +727,8 @@ void maxsum::minMarginal
  DiscreteFunction& outFun
 )
 {
-   marginal(inFun,std::min<ValType>,outFun);
+   const ValType& (*pMin)(const ValType&, const ValType&) = std::min<ValType>;
+   marginal(inFun,pMin,outFun);
 }
 
 /**

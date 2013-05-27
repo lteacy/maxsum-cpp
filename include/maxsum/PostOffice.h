@@ -8,8 +8,6 @@
 #ifndef MAXSUM_UTIL_POSTOFFICE_H
 #define MAXSUM_UTIL_POSTOFFICE_H
 
-#include <map>
-#include <set>
 #include <queue>
 #include "DiscreteFunction.h"
 #include "util_containers.h"
@@ -57,7 +55,7 @@ namespace util
       /**
        * Map of Receivers to Messages for a specific Sender.
        */
-      typedef std::map<Receiver,Message*> PrivOutMsgMap;
+      typedef MAXSUM_DEFAULT_MAP<Receiver,Message*> PrivOutMsgMap;
 
       /**
        * Iterator type for PostOffice::OutMsgMap.
@@ -67,23 +65,22 @@ namespace util
       /**
        * Map of Senders to Messages for a specific Receivers.
        */
-      typedef std::map<Sender,Message*> PrivInMsgMap;
+      typedef MAXSUM_DEFAULT_MAP<Sender,Message*> PrivInMsgMap;
 
       /**
        * Iterator type for PostOffice::InMsgMap.
        */
       typedef typename PrivInMsgMap::iterator PrivInMsgIt;
 
-
       /**
        * Convenience typedef for outboxes_i map type.
        */
-      typedef std::map<Sender,PrivOutMsgMap> OutboxMap;
+      typedef MAXSUM_DEFAULT_MAP<Sender,PrivOutMsgMap> OutboxMap;
 
       /**
        * Convenience typedef for inboxes_i map type.
        */
-      typedef std::map<Receiver,PrivInMsgMap> InboxMap;
+      typedef MAXSUM_DEFAULT_MAP<Receiver,PrivInMsgMap> InboxMap;
 
    public:
 
@@ -143,6 +140,77 @@ namespace util
        * Queue of receivers who currently have new mail.
        */
       std::queue<Receiver> notices_i;
+      
+      /**
+       * Utility function used for deep copy construction and assignment.
+       * Makes sure that all pointers point internally and that nothing is
+       * shared. This function should only be called for copy functions, and
+       * for no other reason.
+       */
+      void deepCopyMembers()
+      {
+         //*********************************************************************
+         // Deep copy current messages and update both inbox and outbox
+         // references.
+         //*********************************************************************
+         for(typename OutboxMap::iterator boxIt=curOutboxes_i.begin();
+             boxIt!=curOutboxes_i.end(); ++boxIt)
+         {
+            Sender s = boxIt->first;
+            
+            for(PrivOutMsgIt msgIt=boxIt->second.begin();
+                msgIt!=boxIt->second.end(); ++msgIt)
+            {
+               //***************************************************************
+               // Copy outbox message
+               //***************************************************************
+               Receiver r = msgIt->first;
+               Message* pMsgCopy = new Message(*(msgIt->second));
+               msgIt->second = pMsgCopy;
+               
+               //***************************************************************
+               // Update corresponding inbox message to point to the same thing
+               //***************************************************************
+               curInboxes_i[r][s] = pMsgCopy;
+               
+            }
+            
+         } // outer for loop
+         
+         //*********************************************************************
+         // Deep copy previous messages and update both inbox and outbox
+         // references
+         //*********************************************************************
+         for(typename OutboxMap::iterator boxIt=prevOutboxes_i.begin();
+             boxIt!=prevOutboxes_i.end(); ++boxIt)
+         {
+            Sender s = boxIt->first;
+            
+            for(PrivOutMsgIt msgIt=boxIt->second.begin();
+                msgIt!=boxIt->second.end(); ++msgIt)
+            {
+               //***************************************************************
+               // Copy outbox message
+               //***************************************************************
+               Receiver r = msgIt->first;
+               Message* pMsgCopy = new Message(*(msgIt->second));
+               msgIt->second = pMsgCopy;
+               
+               //***************************************************************
+               // Update corresponding inbox message to point to the same thing
+               //***************************************************************
+               prevInboxes_i[r][s] = pMsgCopy;
+            }
+            
+         } // outer for loop
+         
+         //*********************************************************************
+         // Make sure key sets point to our own updated maps
+         //*********************************************************************
+         senders_i.setMap(&curOutboxes_i);
+         receivers_i.setMap(&curInboxes_i);
+         
+      } // function deepCopyMembers()
 
    public:
 
@@ -155,6 +223,37 @@ namespace util
            senders_i(&curOutboxes_i), receivers_i(&curInboxes_i),
            notices_i()
       {}
+      
+      /**
+       * Deep copy constructor
+       */
+      PostOffice(const PostOffice& rhs)
+      :  curOutboxes_i(rhs.curOutboxes_i),
+         prevOutboxes_i(rhs.prevOutboxes_i),
+         curInboxes_i(rhs.curInboxes_i),
+         prevInboxes_i(rhs.prevInboxes_i),
+         senders_i(&curOutboxes_i),
+         receivers_i(&curInboxes_i),
+         notices_i(rhs.notices_i)
+      {
+         deepCopyMembers();
+      }
+      
+      /**
+       * Deep copy assignment.
+       */
+      PostOffice& operator=(const PostOffice& rhs)
+      {
+         curOutboxes_i = rhs.curOutboxes_i;
+         prevOutboxes_i = rhs.prevOutboxes_i;
+         curInboxes_i = rhs.curInboxes_i;
+         prevInboxes_i = rhs.prevInboxes_i;
+         senders_i.setMap(&curOutboxes_i);
+         receivers_i.setMap(&curInboxes_i);
+         notices_i = rhs.notices_i;
+         deepCopyMembers();
+         return *this;
+      }
 
       /**
        * Removes all messages and edges from this postoffice.
@@ -342,6 +441,8 @@ namespace util
        * @param[in] r the receiver's id
        * @post Messages can now be sent from <code>s</code> to <code>s</code>
        * via this maxsum::PostOffice.
+       * @post Maps and references previously returned by this PostOffice may
+       * be invalidated.
        */
       void addEdge(Sender s, Receiver r)
       {
@@ -355,6 +456,8 @@ namespace util
        * @param[in] msgVal initial value for newly constructed messages.
        * @post Messages can now be sent from <code>s</code> to <code>s</code>
        * via this maxsum::PostOffice.
+       * @post Maps and references previously returned by this PostOffice may
+       * be invalidated.
        */
       void addEdge(Sender s, Receiver r, const Message& msgVal)
       {
@@ -405,6 +508,8 @@ namespace util
        * @param[in] r the receiver's id
        * @post Messages will no longer be sent from <code>s</code> to
        * <code>s</code> via this maxsum::PostOffice.
+       * @post Maps and references previously returned by this PostOffice may
+       * be invalidated.
        */
       void removeEdge(Sender s, Receiver r)
       {

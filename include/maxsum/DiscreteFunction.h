@@ -5,6 +5,7 @@
 #ifndef MAX_SUM_DISCRETE_FUNCTION_H
 #define MAX_SUM_DISCRETE_FUNCTION_H
 
+#include "maxsum/EigenWithPlugin.h"
 #include <cmath>
 #include <iostream>
 #include <cassert>
@@ -36,22 +37,41 @@ namespace maxsum
    private:
 
       /**
+       * Convenience typedef for type used to store variable ids
+       */
+      typedef std::vector<VarID> VarVec;
+
+      /**
+       * Convenience typedef for type used to store variable sizes
+       */
+      typedef std::vector<ValIndex> SizeVec;
+
+      /**
+       * Convenience typedef for type used to store function values.
+       */
+      typedef Eigen::Array<ValType, Eigen::Dynamic, 1> ValVec;
+
+      /**
        * Set of variables on which this function depends.
        */
-      std::vector<VarID> vars_i;
+      VarVec vars_i;
 
       /**
        * Cache specifying the domain size for each variable on which this
        * function depends.
        */
-      std::vector<ValIndex> size_i;
+      SizeVec size_i;
 
       /**
        * Array containing the values for this function.
        */
-      std::vector<ValType> values_i;
+      ValVec values_i;
 
    public:
+
+      // Eigen new operator (only required if we use fixed size eigen types.
+      // Current we only use dynamic sizes.
+      // EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
       /**
        * Default Constructor creates constant function that depends on no
@@ -59,7 +79,11 @@ namespace maxsum
        * @param[in] val the constant scalar value of this function.
        */
       DiscreteFunction(ValType val=0)
-         : vars_i(0), size_i(0), values_i(1,val) { }
+         : vars_i(0), size_i(0), values_i()
+      {
+         values_i.resize(1);
+         values_i(0) = val;
+      }
 
       /**
        * Constructs function depending on specified variables.
@@ -78,7 +102,7 @@ namespace maxsum
        VarIt end,
        ValType val=0
       )
-      : vars_i(begin,end), size_i(end-begin), values_i(0)
+      : vars_i(begin,end), size_i(end-begin), values_i()
       {
          //*********************************************************************
          // Ensure that the variable ids are sorted.
@@ -99,7 +123,10 @@ namespace maxsum
          //*********************************************************************
          // Initialise the data array
          //*********************************************************************
-         values_i.assign(totalSize,val);
+         values_i.resize(totalSize);
+         Eigen::Matrix<ValType,1,1> valWrapper;
+         valWrapper(0) = val;
+         values_i.matrix().rowwise() = valWrapper;
 
       } // DiscreteFunction constructor
 
@@ -111,8 +138,13 @@ namespace maxsum
        * @throws UnknownVariableException if \c var is not registered.
        */
       DiscreteFunction(VarID var, ValType val)
-         : vars_i(1,var), size_i(1,getDomainSize(var)),
-           values_i(getDomainSize(var),val) {}
+         : vars_i(1,var), size_i(1,getDomainSize(var)), values_i()
+      {
+         values_i.resize(getDomainSize(var));
+         Eigen::Matrix<ValType,1,1> valWrapper;
+         valWrapper(0) = val;
+         values_i.matrix().rowwise() = valWrapper;
+      }
 
       /**
        * Copy Constructor performs deep copy.
@@ -222,12 +254,7 @@ namespace maxsum
        */
       DiscreteFunction& assignKeepDomain(ValType val)
       {
-         for(std::vector<ValType>::iterator it=values_i.begin();
-               it!=values_i.end(); ++it)
-         {
-            (*it) = val;
-         }
-         
+         values_i.setConstant(val);
          return *this;
 
       } // assignKeepDomain
@@ -241,22 +268,38 @@ namespace maxsum
       /**
        * Adds a scalar value to this function.
        */
-      DiscreteFunction& operator+=(ValType val);
+      DiscreteFunction& operator+=(ValType val)
+      {
+         values_i += val;
+         return *this;
+      }
 
       /**
        * Subtracts a scalar value from this function.
        */
-      DiscreteFunction& operator-=(ValType val);
+      DiscreteFunction& operator-=(ValType val)
+      {
+         values_i -= val;
+         return *this;
+      }
 
       /**
        * Multiplies this function by a scalar.
        */
-      DiscreteFunction& operator*=(ValType val);
+      DiscreteFunction& operator*=(ValType val)
+      {
+         values_i *= val;
+         return *this;
+      }
 
       /**
        * Divides this function by a scalar.
        */
-      DiscreteFunction& operator/=(ValType val);
+      DiscreteFunction& operator/=(ValType val)
+      {
+         values_i /= val;
+         return *this;
+      }
 
       /**
        * Multiply function by -1
@@ -453,70 +496,101 @@ namespace maxsum
          DiscreteFunction* me = const_cast<DiscreteFunction*>(this);
          return (*me)(begin,end);
       }
-
+      
       /**
        * Access coefficient by subindices for specified variables.
        * Specified variables must be superset of variables on which this
        * function depends.
        */
       template<class VarIt, class IndIt> ValType& operator()
-         (VarIt varBegin, VarIt varEnd, IndIt indBegin, IndIt indEnd)
+         (VarIt varBegin, VarIt varEnd, IndIt subBegin, IndIt subEnd)
       {
          //*********************************************************************
-         // Create vector to hold indices on which this function actually
-         // depends
+         // This function turns out to be crucial for efficiency, and therefore
+         // has to be optimised as much as possible. The original implementation
+         // first buffered required indices in a dynamically allocated vector,
+         // and then called sub2ind. To avoid the substantial overhead of
+         // this memory allocation, we now instead perform the sub2ind
+         // operations inline, except that we now need to ignore any indices
+         // that this function does not actually depend on.
+         //
+         // To begin, we start by setting up the result variable, and the
+         // skipSize - which is the amount we need to increment by given the
+         // size and position of the current subindex.
          //*********************************************************************
-         std::vector<ValIndex> indices;
-         indices.reserve(vars_i.size());
-
-         assert(0==indices.size()); // sanity check for expected behaviour
-
+         ValIndex skipSize = 1;
+         ValIndex index = 0;
+         
          //*********************************************************************
-         // Retrieve the indices that this function actually depends on.
-         // Notice this code assumes that all variable lists are sorted.
+         // Validate list sizes as far as possible
          //*********************************************************************
-         VarIt v = varBegin;
-         IndIt i = indBegin;
-         std::vector<VarID>::const_iterator myV = vars_i.begin();
-         while( (i != indEnd) && (v != varEnd) && (myV != vars_i.end()) )
+         assert( (varEnd-varBegin) == (subEnd-subBegin) );
+         assert( vars_i.size() == size_i.size() );
+         assert( (varEnd-varBegin) >= vars_i.size() );
+         
+         //*********************************************************************
+         // Now we need iterators for the input variables and indices,
+         // and this variables own variables and their domain sizes.
+         //*********************************************************************
+         VarIt inV = varBegin;
+         IndIt sub = subBegin;
+         VarVec::const_iterator myV = vars_i.begin();
+         SizeVec::const_iterator siz = size_i.begin();
+         
+         //*********************************************************************
+         // Now we iterate through the input variables and indices and perform
+         // exactly the same operations as the sub2ind function. The difference
+         // here is that we need to ignore any variables that our not in this
+         // function's domain.
+         //
+         // Notice this code assumes that all lists are sorted, allowing us to
+         // to check for variable equality by iterating through each list in
+         // strict order
+         //*********************************************************************         
+         while( (myV!=vars_i.end()) && (inV!=varEnd) )
          {
             //******************************************************************
-            // If input variable is in the domain for this function...
+            // Skip indices for variables that are not in the domain of this
+            // function.
             //******************************************************************
-            if(*v==*myV)
+            if(*myV!=*inV)
             {
-               //***************************************************************
-               // Store the specified subindex for this variable
-               //***************************************************************
-               indices.push_back(*i);
-               
-               //***************************************************************
-               // Look for the next variable in this functions domain
-               //***************************************************************
-               ++myV;
+               ++sub;
+               ++inV;
+               continue;
             }
+            
+            //******************************************************************
+            // Ensure that index is in range
+            //******************************************************************
+            assert((0<=*sub) && (*siz>*sub));
 
             //******************************************************************
-            // Move to next variable in the parameter list
+            // Increment the result by the amount required by the current
+            // subindex
             //******************************************************************
-            ++v;
-            ++i;
-
+            index += (*sub) * skipSize;
+            skipSize *= *siz;
+            
+            //******************************************************************
+            // Move iterators on to the next variable in the list
+            //******************************************************************
+            ++siz;
+            ++sub;
+            ++inV;
+            ++myV;
+            
          } // while loop
-
+         
          //*********************************************************************
-         // Ensure the domain is fully specified. We use to throw an exception
-         // here, but really this is a program error not a user error. Have to
-         // ask ourselves whether exception overhead is justified in this
-         // heavily called function.
+         // Sanity check that we found all the variables in this functions
+         // domain, and return the resulting linear index.
          //*********************************************************************
-         assert(vars_i.size() == indices.size());
-
-         //*********************************************************************
-         // Otherwise return the correct value
-         //*********************************************************************
-         return (*this)(indices.begin(),indices.end());
-
+         assert(myV==vars_i.end());
+         assert(siz==size_i.end());
+         assert(index<values_i.size());
+         return values_i[index];
+         
       } // operator()
 
       /**
@@ -538,7 +612,7 @@ namespace maxsum
        * function depends.
        */
       template<class VarVec, class IndVec> ValType& operator()
-         (VarVec var, IndVec ind)
+         (const VarVec& var, const IndVec& ind)
       {
          return (*this)(var.begin(),var.end(),ind.begin(),ind.end());
       }
@@ -549,13 +623,115 @@ namespace maxsum
        * function depends.
        */
       template<class VarVec, class IndVec> const ValType& operator()
-         (VarVec var, IndVec ind) const
+         (const VarVec& var, const IndVec& ind) const
       {
          // throw away const to use the non-const implementation
          DiscreteFunction* me = const_cast<DiscreteFunction*>(this);
          return (*me)(var, ind);
       }
 
+      /**
+       * Get corresponding linear index for subindices specified in map.
+       * Specified variables must be superset of variables on which this
+       * function depends. The specified map must be sorted.
+       * @param vals map of VarID (variables) to ValIndex (values)
+       * @pre iterators over vals must return pairs in ascending key order.
+       */
+      template<class VarMap> ValIndex getIndex(const VarMap& vals) const
+      {
+         //*********************************************************************
+         // Deal with the special case that this function is just a constant
+         // with a single value - not depending on any variables
+         //*********************************************************************
+         if(0==noVars())
+         {
+             return 0;
+         }
+         
+         //*********************************************************************
+         // This function turns out to be crucial for efficiency, and therefore
+         // has to be optimised as much as possible. The original implementation
+         // first buffered required indices in a dynamically allocated vector,
+         // and then called sub2ind. To avoid the substantial overhead of
+         // this memory allocation, we now instead perform the sub2ind
+         // operations inline, except that we now need to ignore any indices
+         // that this function does not actually depend on.
+         //
+         // To begin, we start by setting up the result variable, and the
+         // skipSize - which is the amount we need to increment by given the
+         // size and position of the current subindex.
+         //*********************************************************************
+         ValIndex skipSize = 1;
+         ValIndex index = 0;
+         
+         //*********************************************************************
+         // Validate list sizes as far as possible
+         //*********************************************************************
+         assert( vars_i.size() == size_i.size() );
+         assert( vals.size() >= vars_i.size() );
+         
+         //*********************************************************************
+         // Now we need iterators for the input variables and indices,
+         // and this variables own variables and their domain sizes.
+         //*********************************************************************
+         typename VarMap::const_iterator inV = vals.begin();
+         VarVec::const_iterator myV = vars_i.begin();
+         SizeVec::const_iterator siz = size_i.begin();
+         
+         //*********************************************************************
+         // Now we iterate through the input variables and indices and perform
+         // exactly the same operations as the sub2ind function. The difference
+         // here is that we need to ignore any variables that our not in this
+         // function's domain.
+         //
+         // Notice this code assumes that all lists are sorted, allowing us to
+         // to check for variable equality by iterating through each list in
+         // strict order
+         //*********************************************************************
+         while( (myV!=vars_i.end()) && (inV!=vals.end()) )
+         {
+            //******************************************************************
+            // Skip indices for variables that are not in the domain of this
+            // function.
+            //******************************************************************
+            if(*myV!=inV->first)
+            {
+               ++inV;
+               continue;
+            }
+            
+            //******************************************************************
+            // Ensure that index is in range
+            //******************************************************************
+            assert((0<=inV->second) && (*siz>inV->second));
+            
+            //******************************************************************
+            // Increment the result by the amount required by the current
+            // subindex
+            //******************************************************************
+            index += (inV->second) * skipSize;
+            skipSize *= *siz;
+            
+            //******************************************************************
+            // Move iterators on to the next variable in the list
+            //******************************************************************
+            ++siz;
+            ++inV;
+            ++myV;
+            
+         } // while loop
+         
+         //*********************************************************************
+         // Sanity check that we found all the variables in this functions
+         // domain, and return the resulting linear index.
+         //*********************************************************************
+         assert(myV==vars_i.end());
+         assert(siz==size_i.end());
+         assert(index<values_i.size());
+         return index;
+
+      } // getIndex()
+      
       /**
        * Access coefficient by subindices specified in variable map.
        * Specified variables must be superset of variables on which this
@@ -565,63 +741,8 @@ namespace maxsum
        */
       template<class VarMap> ValType& operator()(const VarMap& vals)
       {
-         //*********************************************************************
-         // Deal with the special case that this function is just a constant
-         // with a single value - not depending on any variables
-         //*********************************************************************
-         if(0==noVars())
-         {
-             return this->at(0);
-         }
-          
-         //*********************************************************************
-         // Create vector to hold indices on which this function actually
-         // depends
-         //*********************************************************************
-         std::vector<ValIndex> indices;
-         indices.reserve(vars_i.size());
-
-         assert(0==indices.size()); // sanity check for expected behaviour
-
-         //*********************************************************************
-         // Retrieve the indices that this function actually depends on.
-         // Notice this code assumes that all variable lists are sorted.
-         //*********************************************************************
-         std::vector<VarID>::const_iterator myV = vars_i.begin();
-         for(typename VarMap::const_iterator k=vals.begin(); k!=vals.end(); ++k)
-         {
-            //******************************************************************
-            // If input variable is in the domain for this function...
-            //******************************************************************
-            if( (k->first)==(*myV) )
-            {
-               //***************************************************************
-               // Store the specified subindex for this variable
-               //***************************************************************
-               indices.push_back(k->second);
-               
-               //***************************************************************
-               // Look for the next variable in this functions domain
-               //***************************************************************
-               ++myV;
-            }
-
-         } // for loop
-
-         //*********************************************************************
-         // Ensure the domain is fully specified. We use to throw an exception
-         // here, but really this is a program error not a user error. Have to
-         // ask ourselves whether exception overhead is justified in this
-         // heavily called function.
-         //*********************************************************************
-         assert(vars_i.size() == indices.size());
-
-         //*********************************************************************
-         // Otherwise return the correct value
-         //*********************************************************************
-         return (*this)(indices.begin(),indices.end());
-
-      } // operator()
+         return values_i[getIndex(vals)];
+      }
 
       /**
        * Access coefficient by subindices specified in variable map.
