@@ -123,10 +123,7 @@ namespace maxsum
          //*********************************************************************
          // Initialise the data array
          //*********************************************************************
-         values_i.resize(totalSize);
-         Eigen::Matrix<ValType,1,1> valWrapper;
-         valWrapper(0) = val;
-         values_i.matrix().rowwise() = valWrapper;
+         values_i.setConstant(totalSize, val);
 
       } // DiscreteFunction constructor
 
