@@ -28,6 +28,13 @@ namespace maxsum
     */
    class MaxSumController
    {
+   public:
+      
+      /**
+       * Type of container used to map factor's to their defining functions.
+       */
+      typedef std::map<FactorID,DiscreteFunction> FactorMap;
+      
    private:
 
       /**
@@ -36,11 +43,6 @@ namespace maxsum
        */
       friend std::ostream& operator<<(std::ostream& out,
             MaxSumController& controller);
-
-      /**
-       * Type of container used to map factor's to their defining functions.
-       */
-      typedef std::map<FactorID,DiscreteFunction> FactorMap;
 
       /**
        * Map storing the functions associated with each factor under the
@@ -196,6 +198,25 @@ namespace maxsum
          }
          return pos->second;
       }
+      
+      /**
+       * Populates a map with the total value for each factor in the factor
+       * graph. The total value of each factor is its own value, plus the sum
+       * of all messages received.
+       * @tparam Map maps FactorIDs to DiscreteFunctions
+       * @param[out] factorMap factor map to populate with total values.
+       * @post any previous contents of factorMap will be destroyed.
+       */
+      template<class Map> void getTotalValues(Map& factorMap) const
+      {         
+         factorMap.clear();
+         for(FactorMap::const_iterator it = factorTotalValue_i.begin();
+             it != factorTotalValue_i.end(); ++it)
+         {
+            factorMap[it->first] = it->second;
+         }
+         
+      } // getTotalValues
 
       /**
        * Accessor method for factor function.
