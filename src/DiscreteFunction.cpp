@@ -436,6 +436,18 @@ DiscreteFunction& DiscreteFunction::operator/=(const DiscreteFunction& rhs)
 }
 
 /**
+ * Returns the element-wise maximum of this function and a specified
+ * scalar. That is, if M = N.max(s) then M(k)=max(N(k),s).
+ * @param[in] s the scalar value to compare
+ * @param[out] result the result of the operation.
+ */
+void DiscreteFunction::max(const ValType s, DiscreteFunction& result)
+{
+   result.values_i = this->values_i.max(s);
+}
+
+
+/**
  * Returns the maximum scalar value for function across entire domain.
  */
 ValType DiscreteFunction::max() const
