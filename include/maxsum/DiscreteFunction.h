@@ -944,6 +944,14 @@ namespace maxsum
          result.swap(*this);
 
       } // condition method
+      
+      /**
+       * Returns the element-wise maximum of this function and a specified
+       * scalar. That is, if M = N.max(s) then M(k)=max(N(k),s).
+       * @param[in] s the scalar value to compare
+       * @param[out] result the result of the operation.
+       */
+      void max(const ValType s, DiscreteFunction& result);
 
       /**
        * Returns the minimum scalar value of the function across entire domain.
