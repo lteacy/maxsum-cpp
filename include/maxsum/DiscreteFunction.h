@@ -254,7 +254,7 @@ namespace maxsum
        */
       DiscreteFunction& assignKeepDomain(ValType val)
       {
-         values_i.setConstant(val);
+         values_i.setConstant(values_i.size(), val);
          return *this;
 
       } // assignKeepDomain
