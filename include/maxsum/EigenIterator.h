@@ -7,6 +7,8 @@
 #ifndef DEC_BRL_EIGEN_ITERATOR_H
 #define DEC_BRL_EIGEN_ITERATOR_H
 
+#include<iterator>
+
 namespace max_sum {
     
     /**
@@ -14,6 +16,19 @@ namespace max_sum {
      */
     template<class ArrayType> class ConstEigenIterator
     {
+    public:
+       
+       /**
+        * The value type returned by this iterator, which is the key type
+        * of the underlying map.
+        */
+       typedef const typename ArrayType::Scalar value_type;
+       
+       typedef int difference_type;
+       typedef value_type* pointer;
+       typedef value_type& reference;
+       typedef std::random_access_iterator_tag iterator_category;
+       
     private:
         
         /**
