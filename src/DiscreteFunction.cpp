@@ -446,6 +446,16 @@ void DiscreteFunction::max(const ValType s, DiscreteFunction& result)
    result.values_i = this->values_i.max(s);
 }
 
+/**
+ * Returns the element-wise minimum of this function and a specified
+ * scalar. That is, if M = N.min(s) then M(k)=min(N(k),s).
+ * @param[in] s the scalar value to compare
+ * @param[out] result the result of the operation.
+ */
+void DiscreteFunction::min(const ValType s, DiscreteFunction& result)
+{
+   result.values_i = this->values_i.min(s);
+}
 
 /**
  * Returns the maximum scalar value for function across entire domain.

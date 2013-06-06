@@ -261,6 +261,21 @@ namespace maxsum
        * @param[in] val the value to assign to this function.
        */
       DiscreteFunction& operator=(const DiscreteFunction& val);
+      
+      /**
+       * Sets the values of this function to a given Eigen library vector.
+       * @pre rhs must be column vector of length this->domainSize()
+       */
+      template<class Derived> DiscreteFunction& operator=
+      (
+       const Eigen::DenseBase<Derived>& rhs
+      )
+      {
+         assert(values_i.size()==rhs.size());
+         assert(1==rhs.cols());
+         values_i = rhs;
+         return *this;
+      }
 
       /**
        * Adds a scalar value to this function.
@@ -390,6 +405,15 @@ namespace maxsum
             (*this) += *it;
          }
          return *this;
+      }
+      
+      /**
+       * Provides read-only access to this function's values as an
+       * Eigen library array.
+       */
+      const ValVec& array() const
+      {
+         return values_i;
       }
 
       /**
@@ -952,6 +976,14 @@ namespace maxsum
        * @param[out] result the result of the operation.
        */
       void max(const ValType s, DiscreteFunction& result);
+      
+      /**
+       * Returns the element-wise minimum of this function and a specified
+       * scalar. That is, if M = N.min(s) then M(k)=min(N(k),s).
+       * @param[in] s the scalar value to compare
+       * @param[out] result the result of the operation.
+       */
+      void min(const ValType s, DiscreteFunction& result);
 
       /**
        * Returns the minimum scalar value of the function across entire domain.
