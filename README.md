@@ -7,8 +7,11 @@ The API documentation for this library can be viewed online <a href="http://ltea
 
 Dependencies
 ============
-Currently this project has no platform specific or third-party dependencies, other than the C++ Standard Library.
-However, this may change as development proceeds.
+This project currently has two third party library dependencies:
+
+1. Eigen3: <a href="http://eigen.tuxfamily.org">http://eigen.tuxfamily.org</a>; and
+
+2. Boost 1.48 or later: <a href="http://www.boost.org">http://www.boost.org</a>.
 
 doxygen is required to compile documentation in html. In addition, LaTeX is required to generate forumla's included in the html, and to generate a pdf version of the documentation.
 
