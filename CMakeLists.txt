@@ -74,7 +74,7 @@ LINK_DIRECTORIES(${LIBRARY_OUTPUT_PATH})
 #############################
 # compile project library   #
 #############################
-FILE(GLOB MAX_SUM_SRC src/*.cpp)
+FILE(GLOB MAX_SUM_SRC src/*.c*)
 ADD_LIBRARY(MaxSum SHARED ${MAX_SUM_SRC})
 
 ###############################
@@ -90,6 +90,7 @@ ADD_EXECUTABLE(agg2Harness tests/agg2Harness.cpp)
 ADD_EXECUTABLE(postHarness tests/postHarness.cpp)
 ADD_EXECUTABLE(maxsumHarness tests/maxsumHarness.cpp)
 ADD_EXECUTABLE(limitsHarness tests/limitsHarness.cpp)
+ADD_EXECUTABLE(cHarness tests/cHarness.c)
 TARGET_LINK_LIBRARIES (utilHarness MaxSum)
 TARGET_LINK_LIBRARIES (funHarness MaxSum)
 TARGET_LINK_LIBRARIES (stdHarness MaxSum)
@@ -100,11 +101,13 @@ TARGET_LINK_LIBRARIES (agg2Harness MaxSum)
 TARGET_LINK_LIBRARIES (postHarness MaxSum)
 TARGET_LINK_LIBRARIES (maxsumHarness MaxSum)
 TARGET_LINK_LIBRARIES (limitsHarness MaxSum)
+TARGET_LINK_LIBRARIES (cHarness MaxSum)
 
 ###############################
 # enable testing              #
 ###############################
 ENABLE_TESTING()
+ADD_TEST(C_TEST ${CMAKE_SOURCE_DIR}/bin/cHarness)
 ADD_TEST(LIMITS_TEST ${CMAKE_SOURCE_DIR}/bin/limitsHarness)
 ADD_TEST(STDLIB_TEST ${CMAKE_SOURCE_DIR}/bin/stdHarness)
 ADD_TEST(MATH_TEST ${CMAKE_SOURCE_DIR}/bin/mathHarness)
