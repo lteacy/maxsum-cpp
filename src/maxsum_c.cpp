@@ -7,9 +7,8 @@
 #include <iostream>
 #include <algorithm>
 #include <vector>
+#include "maxsum.h"
 #include "maxsum_c.h"
-#include "maxsum/common.h"
-#include "maxsum/register.h"
 
 /**
  * Returns true if the specified variable is registered.
@@ -147,5 +146,28 @@ int sub2ind_ms(const int nDims, const int* const pSiz, int* const pSub)
       std::cerr << e.what() << std::endl;
       return -1;
    }
+}
+
+/**
+ * Create a new maxsum controller.
+ */
+void* newMaxSumController_ms
+(
+  int maxIterations,
+  ValType maxnorm
+)
+{
+   return new maxsum::MaxSumController(maxIterations,maxnorm);
+}
+
+/**
+ * Delete maxsum controller.
+ */
+void deleteMaxSumController_ms
+(
+  void* pController
+)
+{
+   delete static_cast<MaxSumController*>(pController);
 }
 

@@ -1,6 +1,6 @@
-#include <maxsum/DiscreteFunction>
-#include <maxsum/DomainIterator>
-#include <maxsum/MaxSumController>
-#include <maxsum/common>
-#include <maxsum/exceptions>
-#include <maxsum/register>
+#include "maxsum/DiscreteFunction.h"
+#include "maxsum/DomainIterator.h"
+#include "maxsum/MaxSumController.h"
+#include "maxsum/common.h"
+#include "maxsum/exceptions.h"
+#include "maxsum/register.h"

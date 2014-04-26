@@ -6,6 +6,12 @@ maxsum_libfile = find_library("MaxSum")
 print maxsum_libfile
 lib_maxsum = CDLL(maxsum_libfile)
 
+# Specify argument types where required
+lib_maxsum.newMaxSumController_ms.argtypes = [c_int,c_double]
+lib_maxsum.newMaxSumController_ms.restype = c_void_p
+lib_maxsum.deleteMaxSumController_ms.argtypes = [c_void_p]
+lib_maxsum.deleteMaxSumController_ms.restype = None
+
 class MaxSumException(Exception):
    """Exception raised for errors caused by maxsum library.
 
@@ -16,6 +22,15 @@ class MaxSumException(Exception):
 
    def __init__(self, msg):
       self.msg = msg
+
+class MaxSumController:
+   """Python Wrapper for MaxSumController in maxsum-cpp library."""
+
+  def __init__(self,maxIterations=100,maxnorm=0.0000001):
+     self.obj = lib_maxsum.newMaxSumController_ms(maxIterations,maxnorm)
+
+  def __del__(self):
+     lib_maxsum.deleteMaxSumController_ms(self.obj)
 
 # Returns true if the specified variable is registered.
 # @param var id of the variable to search for.

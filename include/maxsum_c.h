@@ -72,6 +72,24 @@ int ind2sub_ms
  */
 int sub2ind_ms(const int nDims, const int* const pSiz, int* const pSub);
 
+/**
+ * Create a new maxsum controller.
+ */
+void* newMaxSumController_ms
+(
+ int maxIterations,
+ ValType maxnorm
+);
+
+/**
+ * Delete maxsum controller.
+ */
+void deleteMaxSumController_ms
+(
+ void* pController
+);
+
+
 #ifdef __cplusplus /* If this is a C++ compiler, end C linkage */
 }
 #endif
