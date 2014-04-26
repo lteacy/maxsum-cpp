@@ -79,6 +79,13 @@ namespace
 } // module namespace
 
 /**
+ * Default maximum maxnorm allowed between the old and new values
+ * of a message, before it is assumed to have converged.
+ */
+const ValType maxsum::MaxSumController::DEFAULT_MAXNORM_THRESHOLD
+   = 0.0000001;
+
+/**
  * Utility function used to dump the current state of this controller
  * for debugging purposes.
  */
