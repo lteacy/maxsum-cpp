@@ -171,3 +171,125 @@ void deleteMaxSumController_ms
    delete static_cast<MaxSumController*>(pController);
 }
 
+/**
+ * Set/Add factor to factor graph
+ * returns -1 on error
+ */
+int setFactor_ms
+(
+ void* pController,
+ const FactorID id,
+ const int nVars,
+ const VarID* const pDomain,
+ const ValType* pData
+)
+{
+   try
+   {
+      //***********************************************************************
+      // Construct discrete function from variables
+      //***********************************************************************
+      maxsum::DiscreteFunction factor(pDomain,pDomain+nVars);
+
+      //***********************************************************************
+      // Copy data into function
+      //***********************************************************************
+      for(int k=0; k<factor.domainSize(); ++k)
+      {
+         factor(k) = *(pData++);
+      }
+   
+      //***********************************************************************
+      // set the factor
+      //***********************************************************************
+      static_cast<maxsum::MaxSumController*>(pController)->setFactor(id,factor);
+
+   }
+   // return -1 on error
+   catch(maxsum::UnknownVariableException& e)
+   {
+      return -1;
+   }
+
+   return 0;
+}
+
+/**
+ * Remove factor from factor graph.
+ */
+void removeFactor_ms(void* pController, FactorID id)
+{
+   static_cast<maxsum::MaxSumController*>(pController)->removeFactor(id);
+}
+
+/**
+ * Remove all factors.
+ */
+void clearAll_ms(void* pController)
+{
+   static_cast<maxsum::MaxSumController*>(pController)->clear();
+}
+
+/**
+ * Report number of factors in factor graph.
+ */
+int noFactors_ms(void* pController)
+{
+   return static_cast<maxsum::MaxSumController*>(pController)->noFactors();
+}
+
+/**
+ * Report number of variables in factor graph.
+ */
+int noVars_ms(void* pController)
+{
+   return static_cast<maxsum::MaxSumController*>(pController)->noVars();
+}
+
+/**
+ * Run the max-sum algorithm on factor graph.
+ * @returns number of iterations performed.
+ */
+int optimise_ms(void* pController)
+{
+   return static_cast<maxsum::MaxSumController*>(pController)->optimise();
+}
+
+/**
+ * After calling optimise_ms, returns the optimal value for each
+ * variable in the factor graph.
+ * @param[in] pController pointer to the max-sum controller
+ * @param[out] pVars ordered list of all variable ids in graph
+ * @param[out] pVals correspond optimal values for each variable in list
+ * @returns number of values written
+ */
+int getValues_ms
+(
+ void* pController,
+ VarID* pVars,
+ ValIndex* pVals
+)
+{
+   maxsum::MaxSumController* pTypedController =
+      static_cast<maxsum::MaxSumController*>(pController);
+
+   maxsum::MaxSumController::ConstValueIterator pCur = pTypedController->valBegin();
+   maxsum::MaxSumController::ConstValueIterator pEnd = pTypedController->valEnd();
+
+   int count = 0;
+
+   while(pCur != pEnd)
+   {
+      (*pVars) = pCur->first;
+      (*pVals) = pCur->second;
+
+      ++count;
+      ++pVars;
+      ++pVals;
+      ++pCur;
+   }
+
+   return count;
+}
+
+

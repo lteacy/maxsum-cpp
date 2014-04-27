@@ -89,6 +89,59 @@ void deleteMaxSumController_ms
  void* pController
 );
 
+/**
+ * Set/Add factor to factor graph
+ * @returns -1 on error
+ */
+int setFactor_ms
+(
+ void* pController,
+ const FactorID id,
+ const int nVars,
+ const VarID* const pDomain,
+ const ValType* const pData
+);
+
+/**
+ * Remove factor from factor graph.
+ */
+void removeFactor_ms(void* pController, const FactorID id);
+
+/**
+ * Remove all factors.
+ */
+void clearAll_ms(void* pController);
+
+/**
+ * Report number of factors in factor graph.
+ */
+int noFactors_ms(void* pController);
+
+/**
+ * Report number of variables in factor graph.
+ */
+int noVars_ms(void* pController);
+
+/**
+ * Run the max-sum algorithm on factor graph.
+ * @returns number of iterations performed.
+ */
+int optimise_ms(void* pController);
+
+/**
+ * After calling optimise_ms, returns the optimal value for each
+ * variable in the factor graph.
+ * @param[in] pController pointer to the max-sum controller
+ * @param[out] pVars ordered list of all variable ids in graph
+ * @param[out] pVals correspond optimal values for each variable in list
+ * @returns number of values written
+ */
+int getValues_ms
+(
+ void* pController,
+ VarID* pVars,
+ ValIndex* pVals
+);
 
 #ifdef __cplusplus /* If this is a C++ compiler, end C linkage */
 }
