@@ -55,8 +55,13 @@ SET(EXECUTABLE_OUTPUT_PATH ${BIN} CACHE PATH "Output directory for the executabl
 
 find_package(Eigen3 3.1.0)
 # allow linking to these directories
-INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include ${EIGEN3_INCLUDE_DIR} ${Boost_INCLUDE_DIRS})
+INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include ${EIGEN3_INCLUDE_DIR} ${Boost_INCLUDE_DIRS} /usr/include)
 LINK_DIRECTORIES(${LIBRARY_OUTPUT_PATH})
+
+get_property(dirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
+foreach(dir ${dirs})
+  message(STATUS "dir='${dir}'")
+endforeach()
 
 ############################
 # make an uninstall target #
