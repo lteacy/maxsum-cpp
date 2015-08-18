@@ -53,7 +53,6 @@ endif(DOXYGEN_FOUND)
 SET(LIBRARY_OUTPUT_PATH ${LIB} CACHE PATH "Output directory for the libraries")
 SET(EXECUTABLE_OUTPUT_PATH ${BIN} CACHE PATH "Output directory for the executables")
 
-find_package(Eigen3 3.1.0)
 # allow linking to these directories
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include ${EIGEN3_INCLUDE_DIR} ${Boost_INCLUDE_DIRS} /usr/include)
 LINK_DIRECTORIES(${LIBRARY_OUTPUT_PATH})
