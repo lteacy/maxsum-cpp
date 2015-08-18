@@ -174,6 +174,43 @@ int main()
       registerVariables(vars,vars+7,sizes,sizes+7);
 
       //************************************************************************
+      // Test max between function and scalar
+      //************************************************************************
+      std::cout << "******************************************\n";
+      std::cout << " Testing max with scalar\n";
+      std::cout << "******************************************\n";
+      DiscreteFunction maxtest(2,0.0);
+      maxtest(0) = 10.0;
+      maxtest(1) = 11.0;
+      maxtest(2) = 12.0;
+      maxtest(3) = 13.0;
+      maxtest(4) = 14.0;
+
+      DiscreteFunction maxCorrect(2,0.0);
+      maxCorrect(0) = 12.0;
+      maxCorrect(1) = 12.0;
+      maxCorrect(2) = 12.0;
+      maxCorrect(3) = 13.0;
+      maxCorrect(4) = 14.0;
+
+      DiscreteFunction maxresult(2,0.0);
+      maxtest.max(12.0,maxresult);
+
+      if(maxresult != maxCorrect)
+      {
+          std::cout << "max with 12.0 in correct!" << std::endl;
+          std::cout << "original:" << std::endl;
+          std::cout << maxtest << std::endl;
+          std::cout << "should be:" << std::endl;
+          std::cout << maxCorrect << std::endl;
+          std::cout << "but is:" << std::endl;
+          std::cout << maxresult << std::endl;
+          return EXIT_FAILURE;
+      }
+
+      std::cout << "max with scalar appears OK" << std::endl;
+
+      //************************************************************************
       // Quick test for argmax and argmax2
       //************************************************************************
       std::cout << "******************************************\n";

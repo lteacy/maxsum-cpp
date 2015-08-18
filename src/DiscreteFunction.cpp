@@ -443,8 +443,22 @@ DiscreteFunction& DiscreteFunction::operator/=(const DiscreteFunction& rhs)
  */
 void DiscreteFunction::max(const ValType s, DiscreteFunction& result)
 {
+
+// If possible use eigen array op
+#if ((EIGEN_WORLD_VERSION == 3) && (EIGEN_MAJOR_VERSION >= 1)) || (EIGEN_WORLD_VERSION > 3)
    result.values_i = this->values_i.max(s);
-}
+
+// Otherwise use basic implementation
+#else
+    result = *this;
+    for(int k=0; k<result.domainSize(); k++)
+    {
+        result(k) = (s > result(k)) ? s : result(k);
+    }
+
+#endif
+
+} // max
 
 
 /**
