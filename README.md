@@ -1,7 +1,6 @@
-![Build Status](https://api.travis-ci.org/lteacy/maxsum-cpp.svg?branch=master)
-
 maxsum-cpp
 ==========
+![Build Status](https://api.travis-ci.org/lteacy/maxsum-cpp.svg?branch=master)
 
 Implementation of the Max-Sum Algorithm in C++
 
