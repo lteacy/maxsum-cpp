@@ -11,9 +11,14 @@
 
 #include <cassert>
 #include <map>
-#include <boost/container/flat_map.hpp>
 
+#include <boost/version.hpp>
+#if BOOST_VERSION >= 104800
+#include <boost/container/flat_map.hpp>
 #define MAXSUM_DEFAULT_MAP boost::container::flat_map
+#else
+#define MAXSUM_DEFAULT_MAP std::map
+#endif
 
 namespace maxsum
 {
