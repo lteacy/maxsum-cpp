@@ -23,13 +23,13 @@ SET(LIB ${CMAKE_SOURCE_DIR}/lib)
 
 # find eigen linear algebra library
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR})
-find_package(Eigen3 3.1.0)
+find_package(Eigen3 3.0.5)
 
 # find boost
 set(Boost_USE_STATIC_LIBS        ON)
 set(Boost_USE_MULTITHREADED      ON)
 set(Boost_USE_STATIC_RUNTIME    OFF)
-find_package(Boost 1.48.0)
+find_package(Boost 1.46.0)
 
 ###########################################
 # Generate Documentation                  #
