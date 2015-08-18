@@ -1,3 +1,5 @@
+![Build Status](https://api.travis-ci.org/lteacy/maxsum-cpp.svg?branch=master)
+
 maxsum-cpp
 ==========
 
