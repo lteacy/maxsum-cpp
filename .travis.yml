@@ -6,10 +6,13 @@ compiler:
 addons:
   apt:
     packages:
-    - libboost1.48-all-dev
+    - libboost-all-dev
     - libeigen3-dev
 
 before_script:
+  - ls -ld /usr/include
+  - ls -ld /usr/include/boost
+  - ls /usr/include/boost
   - cmake .
 
 script:
