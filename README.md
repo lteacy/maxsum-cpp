@@ -41,7 +41,7 @@ For example, on a 4 core machine, run:
 
 Known Issues
 ============
-This library is not complete yet!! The initial phase of development is still underway, so there is nothing worthing linking to just yet. 
+Currently builds with Eigen 3.2.5 and Boost 1.58.0 on Mac OS X. There may be issues with other versions of these libraries that need to be resolved.  
 
 License
 =======
